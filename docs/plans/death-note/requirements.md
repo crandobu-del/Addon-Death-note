@@ -67,6 +67,7 @@ Identité corrigée : la référence visuelle courante est [Le Syndicat Rouge �
 À la demande de l'utilisateur, déclinaison des onglets Vengeurs, Journal et Notifications : voir [les concepts d'onglets](onglets-maquettes.md). Même identité et cadre que le concept v3 ; données fictives. Discord doit rester visiblement non configuré. Ces propositions ne modifient pas les règles de calcul ni les limites Forever.
 Aperçu fonctionnel hors jeu : [guide](../../../demo/README.md), utilisant le même socle Lua que les futurs appels du client. Les contrôles, listes et valeurs sont dynamiques ; les ressources natives et la fidélité visuelle exacte restent ouvertes. [Tests et différences connues](../../testing/offline-core.md).
 Atelier de partage ajouté en version 0.2.0 : deux registres simulés, rattrapage, doublons et conflits conservés sans double récompense. Protocole logique et fusion testés en Lua ; aucun transport réel Forever. [Périmètre et politique provisoire](offline-sync.md), [tests](../../testing/offline-sync.md).
+Version 0.3.0 : exporteur Lua de démonstration, relais Python, file persistante et aperçu des formats Discord. Le relais est désactivé par défaut ; les exports fictifs sont refusés par la commande d'envoi réel. Aucun export du jeu, salon ou webhook actif. [Périmètre](offline-discord.md), [guide](../../../bridge/README.md), [tests](../../testing/offline-discord.md).
 
 ## Questions ouvertes
 

@@ -30,6 +30,14 @@ Tout se déroule dans le navigateur. Cette page repart à zéro à l'ouverture ;
 
 `python tools/package-demo.py` produit l'archive de démonstration version 0.2.0, à extraire avant d'ouvrir `index.html` ou `sync.html`.
 
+## Exemples Discord
+
+La livraison courante 0.3.0 inclut aussi `discord.html`, accessible par **Aperçu Discord** depuis la page principale. Afficher ou masquer les catégories ne change que cette prévisualisation. Les annonces proviennent du formateur du relais Python et d'un scénario fictif indépendant ; le bouton d'export télécharge ce scénario, pas l'état sauvegardé de ton registre.
+
+Le relais reste non configuré et tous les exports actuels portent le mode fictif. Aucun message n'est envoyé. Pour régénérer ces exemples lors d'un développement : `node tools/export-discord-fixture.mjs`, puis `python tools/generate-discord-preview.py`, puis recompiler la démonstration.
+
+`python tools/package-demo.py` produit désormais `dist/SyndicatRouge-demo-hors-jeu-0.3.0.zip`, avec les trois pages et leurs ressources locales.
+
 Le cadre supérieur et les portraits proviennent des images de concept générées pour le projet ; les contenus, onglets et contrôles sont dynamiques. Les portraits sont génériques, pas des captures de personnages réels. La carte reste illustrative et montre un lieu passé du scénario.
 
 Ce livrable est un aperçu fonctionnel hors jeu, pas un paquet installable WoW. La reproduction exacte des textures, la conversion en ressources du client et le rendu Lua natif restent à développer.

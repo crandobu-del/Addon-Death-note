@@ -4,11 +4,11 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 root = Path(__file__).resolve().parents[1]
 build = root / "demo" / "build"
-required = ["index.html", "app.js", "app.css", "sync.html", "sync.js", "sync.css", "assets/register.png", "assets/avengers.png", "assets/map.png"]
+required = ["index.html", "app.js", "app.css", "sync.html", "sync.js", "sync.css", "discord.html", "discord.js", "discord.css", "assets/register.png", "assets/avengers.png", "assets/map.png"]
 missing = [name for name in required if not (build / name).is_file()]
 if missing:
     raise SystemExit("Build the preview first. Missing: " + ", ".join(missing))
-destination = root / "dist" / "SyndicatRouge-demo-hors-jeu-0.2.0.zip"
+destination = root / "dist" / "SyndicatRouge-demo-hors-jeu-0.3.0.zip"
 destination.parent.mkdir(parents=True, exist_ok=True)
 with ZipFile(destination, "w", ZIP_DEFLATED) as archive:
     for name in required:

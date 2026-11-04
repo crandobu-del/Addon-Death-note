@@ -1,7 +1,7 @@
 # Arborescence de développement — Death Note
 
 Guilde : **Le Syndicat Rouge**. Client unique : **WoW Forever**.
-État : socle de règles Lua et partage logique implémentés/testés hors jeu, aperçu navigateur dans `demo/`, dont un atelier à deux registres. Le reste de l'arborescence ci-dessous reste prévu ; notamment aucun TOC, transport du client ou relais Discord fonctionnel n'est livré. Les maquettes restent dans `docs/plans/death-note/assets/`. Voir [le socle](plans/death-note/offline-core.md) et [le partage hors jeu](plans/death-note/offline-sync.md).
+État : socle Lua, partage logique, export de démonstration et relais Discord optionnel développés/testés hors jeu. Aperçu navigateur dans `demo/`, atelier à deux registres et exemples Discord. Le reste de l'arborescence ci-dessous reste prévu ; aucun TOC, transport du client ou export réel Forever livré. Le relais est désactivé et n'a pas envoyé de message réel. Les maquettes restent dans `docs/plans/death-note/assets/`. Voir [le socle](plans/death-note/offline-core.md), [le partage](plans/death-note/offline-sync.md) et [le relais](../bridge/README.md).
 
 ## Arborescence prévue
 

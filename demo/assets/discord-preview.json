@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "mode": "demo",
+  "guildName": "Le Syndicat Rouge",
+  "delivery_enabled": false,
+  "messages": [
+    {
+      "id": "wanted:aa2e7e0034e685b2dc5facdad2092524a9236321c0094053f36b3b2a579271ab",
+      "category": "new_wanted",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Nouveau recherché**\nMornecroc (Forever) — prime de recherche : 4.\nDernier incident : Lÿra, Strangleronce · Grom’gol · 04/11/2026 19:06 UTC.\nRécompense actuellement disponible : +3 réputation.",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "wanted:1f9d99ae29a87e3af76be79c4aed848bfda532325adc6ed65c3d4ea3e5ab8e31",
+      "category": "new_wanted",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Nouveau recherché**\nNoctis (Forever) — prime de recherche : 1.\nDernier incident : Faëlin, Les Paluns · 04/11/2026 18:32 UTC.\nRécompense actuellement disponible : +1 réputation.",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "wanted:ebd7dac854a37f6c2ff1a909dbc5f037564c86e10f1a77d8fe030a60c9f92e04",
+      "category": "new_wanted",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Nouveau recherché**\nSélénombre (Forever) — prime de recherche : 2.\nDernier incident : Thörin, Bois de la Pénombre · 04/11/2026 18:51 UTC.\nRécompense actuellement disponible : +1 réputation.",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "vengeance:b3f9c5d22f6c61f23a7fe504cbde0972bf21262e9aef6cdab8d25a6816436c5f",
+      "category": "vengeance",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Vengeance accomplie**\nKaëlan a éliminé Brisecroc.\nMembres vengés : Lÿra.\n+1 réputation · 1 incident(s) clôturé(s).",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "vengeance:48c9b2c92f75dabc917606a85830cda89697b7ebbfce0a4248b1d4ef1703a5a6",
+      "category": "vengeance",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Vengeance accomplie**\nLÿra a éliminé Mornecroc.\nMembres vengés : Maëlys.\n+1 réputation · 1 incident(s) clôturé(s).",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "vengeance:aa654130677c3e24fcc0613540abce9e55989646b350cfc52eca1fa723c0f95f",
+      "category": "vengeance",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Vengeance accomplie**\nThörin a éliminé Sélénombre.\nMembres vengés : Thörin.\n+1 réputation · 1 incident(s) clôturé(s).",
+        "username": "Le Syndicat Rouge — Death Note"
+      }
+    },
+    {
+      "id": "bounty:4885f81ec82311c843bdd8921c52494f09496b140c1136793c56ba67bfc9e84e",
+      "category": "bounty_increased",
+      "status": "pending",
+      "attempts": 0,
+      "next_at": 0.0,
+      "message_id": null,
+      "code": null,
+      "payload": {
+        "allowed_mentions": {
+          "parse": []
+        },
+        "content": "**DÉMONSTRATION — Prime augmentée**\nMornecroc (Forever) — prime de recherche : 4.\nDernier incident : Lÿra, Strangleronce · Grom’gol · 04/11/2026 19:06 UTC.\nRécompense actuellement disponible : +3 réputation.",
+        "username": "Le Syndicat Rouge — Death Note"
+      },
+      "example": "Exemple de récidive"
+    }
+  ],
+  "not_published": 1
+}

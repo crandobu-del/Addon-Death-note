@@ -1,0 +1,6 @@
+{
+  "enabled": false,
+  "guild_id": "demo:forever:le-syndicat-rouge",
+  "categories": ["new_wanted", "bounty_increased", "vengeance"],
+  "webhook_env": "SYNDICAT_DISCORD_WEBHOOK"
+}

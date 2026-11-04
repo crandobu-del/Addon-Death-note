@@ -4,6 +4,8 @@
 
 Notifier le Discord de la guilde lors d'événements du registre. Fonction optionnelle ; catégories configurables. Aucun salon, webhook ou bot n'a été créé et aucun message n'a été envoyé.
 
+État 0.3.0 : export Lua de démonstration et relais Python implémentés, testés avec transports factices uniquement. Nouvelle cible, hausse de prime et vengeance sont couvertes ; les corrections de vengeances contestées sont préparées si nécessaire. Le récapitulatif de classement reste une proposition non implémentée. La configuration est désactivée, aucun service n'est connecté. Voir [le guide du relais](../../../bridge/README.md) et [les vérifications](../../testing/offline-discord.md).
+
 ## Présentation proposée
 
 - Nouveau recherché : ennemi, victime, zone, date/heure et récompense en réputation.

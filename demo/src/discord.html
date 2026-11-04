@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aperçu Discord — Le Syndicat Rouge</title><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="discord.css"></head>
+<body>
+<div class="development-bar"><strong>DÉMONSTRATION HORS JEU</strong><span>Exemples indépendants du scénario du registre</span><a href="index.html">Retour au registre</a></div>
+<div class="book discord-book">
+ <header class="relay-header"><h1>Le Syndicat Rouge</h1><p>Les nouvelles de la guilde, jusque sur Discord.</p></header>
+ <main>
+  <p class="relay-disabled" role="status">APERÇU UNIQUEMENT · Relais non configuré · Aucun message envoyé</p>
+  <div class="relay-layout"><aside class="paper relay-settings"><h2>Quelles nouvelles afficher ?</h2><label><input type="checkbox" data-category="new_wanted" checked> Nouveaux recherchés</label><label><input type="checkbox" data-category="bounty_increased" checked> Primes augmentées</label><label><input type="checkbox" data-category="vengeance" checked> Vengeances accomplies</label><p class="small">Ces choix filtrent seulement les exemples ci-contre. Ils n’activent aucune publication.</p><hr><h3>Essayer le relais hors jeu</h3><button id="download-export" type="button">Télécharger l’export fictif</button><p class="small">Fichier JSON pour le mode de simulation du relais. Aucun secret Discord inclus.</p><p id="download-status" class="small" aria-live="polite"></p></aside>
+  <section class="channel" aria-label="Exemples de messages Discord"><header><strong># registre-de-la-guilde</strong><span>Salon fictif</span></header><p id="message-count" aria-live="polite"></p><button id="toggle-examples" type="button" aria-pressed="false">Voir les autres exemples</button><div id="discord-messages"></div><p id="no-messages" hidden>Aucune catégorie sélectionnée.</p></section></div>
+  <section class="paper relay-note"><h2>Des annonces, pas du spam</h2><p>Le relais regroupe les mises à jour de prime et ne republie pas un événement déjà confirmé. Si une vengeance annoncée devient contestée, une correction peut signaler que la réputation est suspendue.</p><p class="small">Le mode de simulation est disponible. La connexion réelle à Forever et la configuration du salon Discord restent à faire.</p></section>
+ </main><footer><span>Le Syndicat Rouge</span><span>WoW Forever · Exemples de notifications</span></footer>
+</div><script src="discord.js" defer></script>
+</body></html>

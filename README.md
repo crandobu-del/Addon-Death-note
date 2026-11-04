@@ -19,6 +19,8 @@ Le moteur Lua calcule les incidents, primes, vengeances, réputation, classement
 
 La version 0.2.0 ajoute un atelier **Tester le partage de guilde** : deux registres simulés, rattrapage après déconnexion, doublons et revendications contradictoires mises en attente. Le protocole est testé hors jeu ; le transport réel Forever reste à implémenter. [Tests de partage](docs/testing/offline-sync.md).
 
+La version 0.3.0 ajoute **Aperçu Discord**, un export fictif et un [relais Python optionnel](bridge/README.md) : validation des données, file persistante, catégories, regroupement, doublons, corrections et gestion des confirmations incertaines. La configuration est désactivée ; aucun message réel envoyé. Le branchement à un export réel Forever reste à développer. [Tests Discord](docs/testing/offline-discord.md).
+
 - [Arborescence et architecture prévues](docs/architecture.md)
 - [Besoins du projet](docs/plans/death-note/requirements.md)
 - [Suivi de réalisation](docs/plans/death-note/implementation-matrix.md)
