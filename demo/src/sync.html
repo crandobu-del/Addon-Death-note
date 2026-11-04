@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Partager les registres — Le Syndicat Rouge</title><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="sync.css"></head>
+<body>
+<div class="development-bar"><strong>DÉMONSTRATION HORS JEU</strong><span>Deux membres simulés sur ce navigateur · Aucun envoi réel</span><a href="index.html">Retour au registre</a></div>
+<div class="book sync-book">
+ <header class="sync-header"><h1>Le Syndicat Rouge</h1><p>Deux membres. Une mémoire commune.</p></header>
+ <main>
+  <div class="sync-toolbar"><button id="exchange" type="button" class="primary">Synchroniser les registres</button><button id="repeat" type="button" disabled>Rejouer le dernier échange</button><button id="conflict-scenario" type="button">Essayer un conflit</button><button id="reset-sync" type="button">Réinitialiser</button></div>
+  <p class="sync-explanation">Lÿra a enregistré une attaque. Kaëlan ne la connaît pas encore. Synchronise leurs registres, puis simule une vengeance chez l’un des membres.</p>
+  <div id="sync-status" class="sync-message" role="status" aria-live="polite"></div>
+  <div id="registers" class="sync-registers"></div>
+  <section class="paper sync-note"><h2>En cas de désaccord</h2><p>Deux revendications différentes sur le même incident restent en attente. La réputation correspondante est suspendue jusqu’à un futur arbitrage. Le registre conserve les deux versions, sans récompenser deux fois la même mort.</p><p class="small">Cette démonstration teste les règles de partage. Les messages de guilde, la preuve des combats et les permissions du client Forever restent à intégrer.</p></section>
+ </main>
+ <footer><span>Le Syndicat Rouge</span><span>WoW Forever · Atelier hors jeu</span></footer>
+</div>
+<script src="sync.js" defer></script>
+</body></html>

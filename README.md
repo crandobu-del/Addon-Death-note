@@ -2,7 +2,7 @@
 
 Projet d'addon de guilde pour **WoW Forever uniquement** : joueurs recherchés, incidents, vengeances, réputation, classement, notifications et relais Discord optionnel.
 
-Le socle Lua et un aperçu interactif hors jeu sont développés. La démonstration utilise des données fictives et le même moteur de règles que les modules de l'addon. Aucun addon installable n'est encore livré et aucune connexion Discord n'est active.
+Le socle Lua, le protocole de partage logique et un aperçu interactif hors jeu sont développés. La démonstration utilise des données fictives et le même moteur de règles que les modules de l'addon. Aucun addon installable n'est encore livré et aucune connexion Discord n'est active.
 
 ## Essayer sans WoW
 
@@ -16,6 +16,8 @@ pnpm demo
 ```
 
 Le moteur Lua calcule les incidents, primes, vengeances, réputation, classement et notifications. Les tests navigateur couvrent les quatre onglets, la simulation d'une vengeance, les remerciements et la sauvegarde locale. [Résultats et limites](docs/testing/offline-core.md).
+
+La version 0.2.0 ajoute un atelier **Tester le partage de guilde** : deux registres simulés, rattrapage après déconnexion, doublons et revendications contradictoires mises en attente. Le protocole est testé hors jeu ; le transport réel Forever reste à implémenter. [Tests de partage](docs/testing/offline-sync.md).
 
 - [Arborescence et architecture prévues](docs/architecture.md)
 - [Besoins du projet](docs/plans/death-note/requirements.md)

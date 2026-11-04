@@ -66,6 +66,7 @@ Retour artistique : remplacer l'aspect initial par une direction défias / mafia
 Identité corrigée : la référence visuelle courante est [Le Syndicat Rouge — v3](assets/death-note-syndicat-rouge-v3.png). Contrôle visuel : nom de guilde et sous-titre corrigés, inscription de faction retirée. Le concept v2 reste historique. Voir [identité courante](identite-syndicat-rouge.md).
 À la demande de l'utilisateur, déclinaison des onglets Vengeurs, Journal et Notifications : voir [les concepts d'onglets](onglets-maquettes.md). Même identité et cadre que le concept v3 ; données fictives. Discord doit rester visiblement non configuré. Ces propositions ne modifient pas les règles de calcul ni les limites Forever.
 Aperçu fonctionnel hors jeu : [guide](../../../demo/README.md), utilisant le même socle Lua que les futurs appels du client. Les contrôles, listes et valeurs sont dynamiques ; les ressources natives et la fidélité visuelle exacte restent ouvertes. [Tests et différences connues](../../testing/offline-core.md).
+Atelier de partage ajouté en version 0.2.0 : deux registres simulés, rattrapage, doublons et conflits conservés sans double récompense. Protocole logique et fusion testés en Lua ; aucun transport réel Forever. [Périmètre et politique provisoire](offline-sync.md), [tests](../../testing/offline-sync.md).
 
 ## Questions ouvertes
 
@@ -76,6 +77,7 @@ Aperçu fonctionnel hors jeu : [guide](../../../demo/README.md), utilisant le m�
 - Q-005 : déclaration manuelle, corrections et droits des officiers ?
 - Q-006 différée à la sortie : l'utilisateur indique que le jeu n'est pas encore sorti et fournira sa version plus tard. Ne pas exiger de test en jeu pour avancer sur la maquette. Les sources consultées restent de la documentation, pas une preuve de disponibilité publique ni de fonctionnement.
 - Q-007 : attribution en groupe, clôture de plusieurs incidents lors d'une seule vengeance et barème des points ; proposition initiale ci-dessus.
+- Q-007a : politique provisoire des revendications concurrentes dans le simulateur : conserver toutes les versions et suspendre les récompenses des revendications en conflit, sans appliquer une revendication partiellement. L'arbitrage d'officier reste ouvert.
 - Q-008 : forme des remerciements (message privé, réaction interne ou autre) et réception des notifications hors ligne.
 - Q-009 : Discord — salon, catégories, mentions éventuelles et mode de relais externe. Aucun webhook créé, aucun secret demandé ni message envoyé. Ne pas promettre un envoi instantané depuis l'addon. Les canaux d'export et leur délai restent à vérifier sur Forever.
 
