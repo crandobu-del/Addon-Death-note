@@ -1,0 +1,19 @@
+# Paquets, caches et résultats locaux
+/dist/
+/tmp/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Secrets et configuration personnelle du relais
+.env
+.env.*
+!.env.example
+/bridge/config.local.json
+/bridge/state/
+/bridge/logs/
+
+# Captures de données personnelles du jeu
+/tests/fixtures/private/
+/docs/testing/private/
