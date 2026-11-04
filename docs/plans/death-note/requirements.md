@@ -1,6 +1,6 @@
 # Death Note — cadrage du projet
 
-Mis à jour le 4 novembre 2026. Projet neuf, sans code existant observé.
+Mis à jour le 4 novembre 2026. Socle Lua et aperçu navigateur hors jeu développés ; intégration réelle Forever à réaliser.
 Cible exclusive confirmée : WoW Forever. Ne pas substituer Retail ou Classic. Guilde : **Le Syndicat Rouge**. Suivi : [implementation-matrix.md](implementation-matrix.md).
 
 ## Objectif
@@ -18,7 +18,7 @@ Permettre aux membres d'une guilde de partager un registre de joueurs ennemis à
 | REQ-005 | Utilisateur, idée à préciser | Augmenter la prime et la visibilité des récidivistes ; plusieurs incidents distincts font progresser leur classement selon une règle à définir. | Proposition |
 | REQ-006 | Hypothèse de conception | Conserver les incidents après rechargement et reconnexion ; les fiches réapparaissent sans duplication. | Proposition |
 | REQ-007 | Utilisateur, précision du 4 novembre 2026 | Utiliser des primes symboliques, sans financement en or. Distinguer le niveau de recherche d'un ennemi et les points gagnés par un membre qui venge la guilde. | Requis |
-| REQ-008 | Utilisateur | Attribuer des points de vengeance aux membres ; une vengeance validée associe le membre, l'ennemi et les incidents vengés, et ne crédite pas deux fois le même événement synchronisé. | Requis ; barème à définir |
+| REQ-008 | Utilisateur | Attribuer des points de vengeance aux membres ; une vengeance validée associe le membre, l'ennemi et les incidents vengés, et ne crédite pas deux fois le même événement synchronisé. | Requis ; 1 réputation par incident clôturé, réseau et groupes à définir |
 | REQ-009 | Utilisateur, proposition | Afficher un classement des membres ayant vengé la guilde, calculé à partir des points de vengeance et cohérent après synchronisation. | Proposition utilisateur à inclure au périmètre |
 | REQ-010 | Utilisateur | Notifier chaque victime concernée lorsqu'elle a été vengée ; identifier le vengeur et l'ennemi. Prévoir la réception après reconnexion et dédupliquer les notifications. | Requis ; rattrapage proposé |
 | REQ-011 | Utilisateur | Laisser la victime remercier librement le vengeur ; aucune émission automatique de remerciement, aucun paiement imposé. La forme du remerciement reste à définir. | Requis |
@@ -38,7 +38,7 @@ Permettre aux membres d'une guilde de partager un registre de joueurs ennemis à
 - Journal de guilde avec notifications configurables.
 - Prime symbolique confirmée par l'utilisateur ; formule et éventuelle expiration à définir.
 - Classement distinct des vengeurs de la guilde, avec points et nombre de membres vengés.
-- Proposition de règle initiale, non encore acceptée : +1 point par incident encore ouvert vengé ; un incident déjà clôturé ne rapporte plus de points. Les morts suivantes du même ennemi ne rapportent rien sans nouvel incident ouvert. Règles de contribution en groupe et preuve de mise à mort à étudier.
+- Règle de base retenue après « ok super » : +1 réputation par incident encore ouvert vengé ; un incident déjà clôturé ne rapporte plus de points. Les morts suivantes du même ennemi ne rapportent rien sans nouvel incident ouvert. Règles de contribution en groupe et preuve de mise à mort à étudier.
 - Notification personnelle de vengeance avec possibilité de remercier volontairement ; canal et texte à préciser.
 - Clarification du vocabulaire : les points de vengeance sont désormais nommés « réputation ». Barème initial conservé : 1 réputation par incident encore ouvert vengé. Une récompense de +3 réputation correspond donc à trois incidents ouverts clôturés ; les modalités d'attribution en groupe restent ouvertes. Aucune dépense de réputation n'est encore spécifiée.
 - Stockage local et synchronisation entre membres équipés ; protocole, rattrapage hors ligne et limites à étudier.
@@ -65,6 +65,7 @@ Deux dispositions initiales : « Registre de chasse » (liste et fiche) et « Ta
 Retour artistique : remplacer l'aspect initial par une direction défias / mafia avec parchemin, manuscrit, portraits, niveaux, carte du dernier meurtre, tampons et récompense en réputation. Concept v2 réalisé : [image](assets/death-note-defias-v2.png) et [direction artistique](direction-artistique-defias.md). Ce concept ne constitue pas encore un design intégralement accepté ni une modification de l'interface Lua. Le prototype HTML initial n'a pas encore été adapté à cette nouvelle direction.
 Identité corrigée : la référence visuelle courante est [Le Syndicat Rouge — v3](assets/death-note-syndicat-rouge-v3.png). Contrôle visuel : nom de guilde et sous-titre corrigés, inscription de faction retirée. Le concept v2 reste historique. Voir [identité courante](identite-syndicat-rouge.md).
 À la demande de l'utilisateur, déclinaison des onglets Vengeurs, Journal et Notifications : voir [les concepts d'onglets](onglets-maquettes.md). Même identité et cadre que le concept v3 ; données fictives. Discord doit rester visiblement non configuré. Ces propositions ne modifient pas les règles de calcul ni les limites Forever.
+Aperçu fonctionnel hors jeu : [guide](../../../demo/README.md), utilisant le même socle Lua que les futurs appels du client. Les contrôles, listes et valeurs sont dynamiques ; les ressources natives et la fidélité visuelle exacte restent ouvertes. [Tests et différences connues](../../testing/offline-core.md).
 
 ## Questions ouvertes
 

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Death Note — Le Syndicat Rouge · Démonstration</title><link rel="stylesheet" href="app.css"></head>
+<body>
+<div class="development-bar"><strong>DÉMONSTRATION HORS JEU</strong><span>WoW Forever · Personnage : Lÿra · Données fictives</span><button id="reopen" type="button" hidden>Afficher le registre</button><button id="reset" type="button">Réinitialiser le scénario</button></div>
+<div id="storage-warning" class="warning" role="status" hidden></div>
+<div class="book">
+  <header class="brand"><h1>DEATH NOTE — Le registre du Syndicat Rouge</h1><span>WoW Forever</span><button id="close-window" type="button" aria-label="Masquer le registre"></button></header>
+  <nav class="tabs" role="tablist" aria-label="Rubriques">
+    <button id="tab-wanted" role="tab" aria-controls="panel-wanted" aria-selected="true" data-tab="wanted" type="button">Recherchés</button>
+    <button id="tab-avengers" role="tab" aria-controls="panel-avengers" aria-selected="false" data-tab="avengers" type="button">Vengeurs</button>
+    <button id="tab-journal" role="tab" aria-controls="panel-journal" aria-selected="false" data-tab="journal" type="button">Journal</button>
+    <button id="tab-notifications" role="tab" aria-controls="panel-notifications" aria-selected="false" data-tab="notifications" type="button">Notifications <span id="unread">0</span></button>
+  </nav>
+  <main>
+    <section id="panel-wanted" role="tabpanel" aria-labelledby="tab-wanted"><div class="register-layout"><aside class="paper roster"><h2>Les noms à retenir</h2><label class="search-label" for="search">Rechercher un ennemi</label><input id="search" type="search" placeholder="Nom ou royaume…"><div id="wanted-list"></div><p class="motto">La guilde n’oublie pas.</p></aside><article id="dossier" class="paper dossier" aria-label="Dossier du joueur sélectionné"></article></div></section>
+    <section id="panel-avengers" role="tabpanel" aria-labelledby="tab-avengers" hidden><header class="page-title"><h2>Ceux qui règlent les comptes</h2><p>La réputation se gagne. La guilde se souvient.</p></header><div class="ranking-layout"><div class="paper"><div class="table-wrap"><table><caption>Classement des vengeurs</caption><thead><tr><th>Rang</th><th>Membre</th><th>Réputation</th><th>Membres vengés</th></tr></thead><tbody id="ranking"></tbody></table></div></div><article id="avenger-detail" class="paper"></article></div><p class="rule">1 réputation par incident vengé · Un incident clôturé ne compte qu’une fois.</p></section>
+    <section id="panel-journal" role="tabpanel" aria-labelledby="tab-journal" hidden><header class="page-title"><h2>La mémoire du Syndicat</h2><p>Chaque affront. Chaque vengeance.</p></header><div class="filters" aria-label="Filtrer le journal"><button data-filter="all" aria-pressed="true" type="button">Tout</button><button data-filter="incident" aria-pressed="false" type="button">Attaques</button><button data-filter="vengeance" aria-pressed="false" type="button">Vengeances</button></div><div id="journal" class="paper"></div></section>
+    <section id="panel-notifications" role="tabpanel" aria-labelledby="tab-notifications" hidden><header class="page-title"><h2>Le Syndicat veille</h2><p>Les nouvelles qui te concernent.</p></header><div class="notifications-layout"><div id="notifications"></div><aside class="paper preferences"><h3>Tes alertes</h3><label><input id="alert-vengeance" type="checkbox" checked> Alerte locale quand je suis vengé</label><hr><h3>Discord de la guilde</h3><p class="inactive">Non configuré</p><p>Relais externe requis.</p><p class="small">Aucun envoi Discord dans cette démonstration.</p><fieldset disabled><legend>Catégories prévues</legend><label><input type="checkbox"> Nouveaux recherchés</label><label><input type="checkbox"> Primes augmentées</label><label><input type="checkbox"> Vengeances accomplies</label></fieldset></aside></div></section>
+  </main>
+  <footer><span>Le Syndicat Rouge</span><span>Moteur Lua partagé · Scénario local uniquement</span></footer>
+</div>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<noscript>Active JavaScript pour utiliser la démonstration locale.</noscript>
+<script src="app.js" defer></script>
+</body></html>

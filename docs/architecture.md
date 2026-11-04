@@ -1,7 +1,7 @@
 # Arborescence de développement — Death Note
 
 Guilde : **Le Syndicat Rouge**. Client unique : **WoW Forever**.
-État : architecture prévue le 4 novembre 2026 ; les fichiers Lua, TOC et Python ci-dessous ne sont pas encore implémentés. Les maquettes existantes restent dans `docs/plans/death-note/assets/`.
+État : socle de règles Lua implémenté et testé hors jeu, aperçu navigateur dans `demo/`. Le reste de l'arborescence ci-dessous reste prévu ; notamment aucun TOC, intégration du client ou relais Discord fonctionnel n'est livré. Les maquettes restent dans `docs/plans/death-note/assets/`. Voir [la tranche hors jeu](plans/death-note/offline-core.md).
 
 ## Arborescence prévue
 

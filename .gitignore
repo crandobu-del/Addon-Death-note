@@ -5,6 +5,9 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
+node_modules/
+/demo/build/
+/docs/testing/screenshots/
 
 # Secrets et configuration personnelle du relais
 .env
