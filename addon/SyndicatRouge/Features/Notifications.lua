@@ -16,7 +16,7 @@ function ns.Notifications.All(db)
         for victimId, details in pairs(victims) do
             local id = tostring(#claim.id) .. ":" .. claim.id .. victimId
             local state = db.notificationState[id] or { read = false, thanked = false }
-            notifications[id] = { id = id, victimId = victimId, victim = V.Copy(details.victim),
+            notifications[id] = { id = id, claimId = claim.id, victimId = victimId, victim = V.Copy(details.victim),
                 enemy = V.Copy(details.enemy), avenger = V.Copy(claim.avenger),
                 occurredAt = claim.occurredAt, reward = claim.reward, incidentCount = details.count,
                 read = state.read, thanked = state.thanked }

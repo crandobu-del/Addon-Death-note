@@ -36,6 +36,39 @@ local function state(target)
     if not envelope then return false,reason end
     return N.Enqueue(envelope,true)
 end
+function N.Notify()
+    if not N.channel then return end
+    local delivery,vengeances,thanks=ns.Delivery.Alerts(N.channel.delivery,N.channel.session)
+    if not delivery then N.lastError=vengeances;return end
+    local ok,reason=Ch.Commit(N.channel,N.channel.session,delivery)
+    if not ok then N.lastError=reason;return end
+    local function alert(rows,isThanks)
+        if #rows==0 then return end
+        for i=1,math.min(#rows,3) do
+            local row=rows[i]
+            local function name(actor)return actor.name:gsub("|","||") end
+            say(isThanks and (name(row.victim).." te remercie d’avoir vengé sa mort contre "..name(row.enemy)..".")
+                or (name(row.avenger).." t’a vengé contre "..name(row.enemy).." !"))
+        end
+        if #rows>3 then say((#rows-3).." autre(s) "..(isThanks and "remerciement(s)" or "notification(s) de vengeance").." à consulter dans /sr, onglet Notifications.") end
+    end
+    alert(vengeances,false);alert(thanks,true)
+end
+function N.PumpThanks()
+    if not N.channel or #N.queue>100 then return end
+    local rows=ns.Delivery.Pending(N.channel.delivery,N.channel.session)
+    if #rows==0 then return end
+    for _=1,math.min(4,#rows) do
+        N.thankCursor=((N.thankCursor or 0)%#rows)+1
+        local row=rows[N.thankCursor]
+        if C.Member(N.channel.session.members[row.toId]) then
+            local envelope=Ch.Envelope(N.channel,"thank",nextId(),row.toId)
+            envelope.notificationId=row.notificationId;envelope.claimId=row.claimId
+            local ok,reason=N.Enqueue(envelope,false)
+            if not ok then N.lastError=reason;return end
+        end
+    end
+end
 function N.Start()
     if not N.runtime or not N.runtime.writable then return false,"profile_not_writable" end
     clear("initializing")
@@ -54,8 +87,9 @@ function N.Start()
     local committed
     committed,reason=Ch.Commit(N.channel,N.channel.session)
     if not committed then clear(reason);return false,reason end
-    N.status="active";N.cooldowns={}
+    N.status="active";N.cooldowns={};N.thankCursor=0;N.nextThanks=N.clock+3
     N.Enqueue(Ch.Envelope(N.channel,"hello",nextId()),false)
+    N.Notify()
     refresh();return true
 end
 function N.Receive(prefix,packet,distribution,sender)
@@ -73,13 +107,20 @@ function N.Receive(prefix,packet,distribution,sender)
     if not roster then N.lastError=reason;return end
     local ok,kind=Ch.Receive(N.channel,envelope,actor.id,roster)
     if not ok then if kind~="duplicate" and kind~="other_target" then N.lastError=kind end;return end
-    if kind=="ack" then
+    if kind=="thank" then
+        local ack=Ch.Envelope(N.channel,"thank_ack",nextId(),actor.id)
+        ack.notificationId=envelope.notificationId;ack.claimId=envelope.claimId
+        N.Enqueue(ack,false);N.Notify();refresh()
+    elseif kind=="thank_ack" then
+        refresh()
+    elseif kind=="ack" then
         local request=N.pending[envelope.ack]
         if request and not request.peers[actor.id] then
             request.peers[actor.id]=true;N.channel.acks=N.channel.acks+1
             say("réception confirmée par "..actor.name.." ("..request.kind..").")
         end
     elseif kind=="hello" then
+        N.nextThanks=N.clock+3
         if not N.cooldowns[actor.id] or N.clock-N.cooldowns[actor.id]>30 then
             N.cooldowns[actor.id]=N.clock;state(actor.id)
         end
@@ -88,14 +129,19 @@ function N.Receive(prefix,packet,distribution,sender)
         if kind=="state" then
             -- One targeted union in response to a targeted catch-up; a broadcast has no reply loop.
             if envelope.target then state(nil) end
-            refresh()
+            N.Notify();refresh()
         elseif kind=="test" then say("signal de partage reçu de "..actor.name..".") end
     end
 end
 function N.Tick(elapsed)
     N.clock=N.clock+elapsed
     for id,p in pairs(N.pending) do if N.clock-p.at>600 then N.pending[id]=nil end end
-    if not N.channel then return end
+    if not N.channel then
+        if N.runtime and N.runtime.writable and N.runtime.root.syncEnabled==true and N.clock>=(N.nextConnect or 0) then
+            N.nextConnect=N.clock+15;N.Start()
+        end
+        return
+    end
     N.wait=(N.wait or 0)-elapsed
     if N.wait>0 then return end
     N.wait=0.3
@@ -103,6 +149,7 @@ function N.Tick(elapsed)
     if not context or context.guildId~=N.channel.context.guildId or context.owner.id~=N.channel.context.owner.id then clear("guild_context_changed");return end
     if restricted() then N.status="restricted";return end
     N.status="active"
+    if N.clock>=(N.nextThanks or 0) then N.nextThanks=N.clock+15;N.PumpThanks() end
     if #N.queue==0 then return end
     local ok,result=pcall(C_ChatInfo.SendAddonMessage,N.prefix,N.queue[1],"GUILD")
     if not ok or not C.Public(result) then N.lastError="send_failed";N.wait=3;return end
@@ -122,11 +169,12 @@ function N.Change(operation,payload)
         N.channel.session.members=roster
     end
     local ok,reason=Ch.Change(N.channel,operation,payload)
+    if ok and operation=="thank" then N.nextThanks=N.clock+0.5 end
     if ok and (operation=="incident" or operation=="claim") then
         local queued,errorCode=state(nil)
         if not queued then N.lastError=errorCode;say("événement sauvegardé, diffusion en attente ("..errorCode..").") end
     end
-    if ok then refresh() end
+    if ok then N.Notify();refresh() end
     return ok,reason
 end
 function N.Bind(runtime,changed)
@@ -152,7 +200,7 @@ function N.Bind(runtime,changed)
             say(ok and "demande mise en file ; en attente d’un membre connecté." or "demande refusée ("..tostring(reason)..").")
         else
             local c=N.channel
-            say("partage : "..N.status.." ; membres vus : "..(c and ns.Validation.Count(c.peers) or 0).." ; accusés reçus : "..(c and c.acks or 0).." ; messages en file : "..#N.queue..(N.lastError and " ; dernier problème : "..N.lastError or "")..". /srsync activer | test | actualiser | arreter")
+            say("partage : "..N.status.." ; membres vus : "..(c and ns.Validation.Count(c.peers) or 0).." ; accusés reçus : "..(c and c.acks or 0).." ; messages en file : "..#N.queue.." ; mercis en attente : "..(c and #ns.Delivery.Pending(c.delivery,c.session) or 0)..(N.lastError and " ; dernier problème : "..N.lastError or "")..". /srsync activer | test | actualiser | arreter")
         end
     end
     local f=CreateFrame("Frame");N.frame=f

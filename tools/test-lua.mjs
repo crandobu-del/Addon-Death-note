@@ -5,7 +5,7 @@ const sources = await Promise.all(manifest.map(async name => ({ name, source: aw
 const engine = createEngine(sources);
 try {
   let total = 0;
-  for (const file of ['core_spec.lua','sync_spec.lua','outbox_spec.lua','wire_spec.lua']) {
+  for (const file of ['core_spec.lua','sync_spec.lua','outbox_spec.lua','wire_spec.lua','delivery_spec.lua']) {
     const result = engine.test(await readFile(new URL('../tests/lua/'+file, import.meta.url), 'utf8'));
     total += result.passed;
     console.log(`${file}: ${result.passed} tests passed.`);

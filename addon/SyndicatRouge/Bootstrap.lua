@@ -27,7 +27,9 @@ local function provider(db, viewerId, demo)
         demo = demo, readOnly=not demo and not live.writable,
         shared=not demo and ns.GuildNative.channel~=nil,
         View = function()
-            if not demo and ns.GuildNative.channel then return ns.Guild.View(ns.GuildNative.channel.session) end
+            if not demo and ns.GuildNative.channel then
+                local c=ns.GuildNative.channel;return ns.Delivery.View(c.delivery,c.session)
+            end
             return ns.Core.View(current(), viewerId)
         end,
         Read = function(_, id) return change(ns.Notifications.Read,id) end,

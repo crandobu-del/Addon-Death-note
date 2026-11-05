@@ -12,7 +12,7 @@ for line in toc.read_text(encoding='utf-8').splitlines():
         assert (addon / line).is_file(), line
 
 for demo in (False, True):
-    name = 'SyndicatRouge-forever-0.4.0-dev' + ('-avec-demo' if demo else '')
+    name = 'SyndicatRouge-forever-0.5.0-dev' + ('-avec-demo' if demo else '')
     with ZipFile(OUT / (name + '.zip'), 'w', ZIP_DEFLATED) as z:
         for folder in ([addon, ROOT / 'dev' / 'SyndicatRougeDemo'] if demo else [addon]):
             for source in sorted(folder.rglob('*')):

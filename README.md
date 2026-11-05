@@ -2,13 +2,13 @@
 
 Projet d'addon de guilde pour **WoW Forever uniquement** : joueurs recherchés, incidents, vengeances, réputation, classement, notifications et relais Discord optionnel.
 
-Version **0.4.0-dev — alpha** : interface native à quatre onglets, sauvegarde par personnage et transport de guilde implémentés. L'interface, les cartes et la conservation des réglages après `/reload` ont été observées sur Forever. Le partage à deux membres est en cours de validation ; l'identification automatique des meurtres et des vengeances reste à finaliser. Aucun service Discord actif.
+Version **0.5.0-dev — alpha** : interface native à quatre onglets, sauvegarde par personnage, partage de guilde et livraison des remerciements avec accusés de réception. L'interface, les cartes et la conservation des réglages après `/reload` ont été observées sur Forever. Le parcours de livraison est testé entre clients simulés ; sa validation dans le jeu à deux membres et l'identification automatique des meurtres/vengeances restent ouvertes. Aucun service Discord actif.
 
 ## Installer l'addon sur WoW Forever
 
-Projet soumis : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). La première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, est en cours de traitement et attend l'approbation de CurseForge. Le lien ne devient accessible aux autres joueurs qu'après validation. Le portail indique que les fichiers Alpha sont proposés par lien direct et n'apparaissent pas dans l'application CurseForge.
+Projet soumis : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). Une première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, y a été déposée ; son dernier état observé était « Processing ». La version 0.5 ci-dessous est distribuée sur GitHub. Le portail CurseForge indique que les Alpha sont proposés par lien direct après validation et n'apparaissent pas dans son application.
 
-1. Télécharger [l'archive installable SyndicatRouge-forever-0.4.0-dev.zip](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.4.0-alpha.1/SyndicatRouge-forever-0.4.0-dev.zip). Pour essayer les exemples, choisir [l'archive avec démonstration](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.4.0-alpha.1/SyndicatRouge-forever-0.4.0-dev-avec-demo.zip). Les deux fichiers sont disponibles dans les **Assets** de [la préversion GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.4.0-alpha.1), sans attendre CurseForge. Les fichiers **Source code** sont les sources du dépôt et ne constituent pas directement le paquet à installer.
+1. Télécharger [l'archive installable SyndicatRouge-forever-0.5.0-dev.zip](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev.zip). Pour essayer les exemples et diagnostics, choisir [l'archive avec compagnon](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev-avec-demo.zip). Les deux fichiers se trouvent dans les **Assets** de [la préversion GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.5.0-alpha.1), sans attendre CurseForge. Les fichiers **Source code** sont les sources du dépôt et ne constituent pas directement le paquet à installer.
 2. Fermer WoW si c'est la première installation. Lors d'une mise à jour, conserver une copie de l'ancien dossier de l'addon.
 3. Extraire le dossier **SyndicatRouge** dans le dossier du client Forever : `World of Warcraft/_forever_/Interface/AddOns/`.
 4. Vérifier que le fichier se trouve directement ici : `_forever_/Interface/AddOns/SyndicatRouge/SyndicatRouge.toc`. Éviter un dossier supplémentaire tel que `SyndicatRouge/SyndicatRouge/`.
@@ -32,6 +32,10 @@ Le test échange uniquement un signal : aucun incident ni point fictif n'est ajo
 Si `restricted`, `send_code_11` ou une identité inaccessible est signalé, recopier ce résultat pour diagnostic : le partage respecte les restrictions de Forever. Le succès d'un envoi ne prouve pas sa réception ; attendre l'accusé de l'autre membre. [Périmètre, tests et limites du partage](docs/testing/guild-transport.md).
 
 ## Commandes et sauvegarde
+
+Dans **Notifications**, une vengeance acceptée déclenche une alerte et apparaît pour chaque victime concernée, y compris après rattrapage. Le bouton **Remercier** enregistre une demande volontaire puis affiche **En attente**. Lorsque le vengeur l'a reçue, l'état devient **Merci reçu** ; le vengeur voit le remerciement dans son propre onglet et peut le marquer comme lu. Les mercis ne rapportent aucun point supplémentaire.
+
+L'envoi est repris après rechargement et retenté tant que la réception n'est pas confirmée. Les deux personnages doivent finir par être connectés ensemble, avec le partage actif et la version 0.5 installée. Un ancien merci enregistré uniquement localement propose **Envoyer le merci** : il ne part pas sans nouveau clic. Les messages ciblés passent par le canal technique GUILD ; ils ne sont pas privés vis-à-vis des autres clients de guilde. [Livraison, tests et limites](docs/testing/notification-delivery.md).
 
 | Commande | Fonction |
 |---|---|

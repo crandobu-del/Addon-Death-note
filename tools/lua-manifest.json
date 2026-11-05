@@ -2,5 +2,5 @@
   "Init.lua", "Config.lua", "Data/Validation.lua", "Data/Store.lua",
   "Features/Incidents.lua", "Features/Wanted.lua", "Features/Vengeance.lua",
   "Features/Reputation.lua", "Features/Notifications.lua", "Core.lua", "Data/Persistence.lua",
-  "Sync/Protocol.lua", "Sync/Guild.lua", "Sync/Wire.lua", "Sync/Context.lua", "Sync/Channel.lua", "Sync/Native.lua", "Export/DiscordOutbox.lua"
+  "Sync/Protocol.lua", "Sync/Guild.lua", "Sync/Wire.lua", "Sync/Context.lua", "Sync/Delivery.lua", "Sync/Channel.lua", "Sync/Native.lua", "Export/DiscordOutbox.lua"
 ]

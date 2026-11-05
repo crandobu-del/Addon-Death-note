@@ -8,7 +8,9 @@ function UI.Refresh()
     f.view = UI.provider:View()
     f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or UI.provider.shared and "Registre de guilde · partage activé" or "Registre personnel · sauvegarde activée")
     for i, button in ipairs(f.tabs) do
-        button.label:SetText((i == f.tab and "• " or "") .. names[i])
+        local unread=0
+        if i==4 then for _,note in ipairs(f.view.notifications) do if not note.read then unread=unread+1 end end end
+        button.label:SetText((i == f.tab and "• " or "") .. names[i] .. (unread>0 and " ("..unread..")" or ""))
     end
     -- Each view owns a bounded pool and only updates existing widgets on refresh.
     UI.Render(f)

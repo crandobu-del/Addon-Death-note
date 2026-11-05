@@ -46,7 +46,7 @@ local key = function(row) return row.id or row.enemy and row.enemy.id or row.mem
 local function searchable(row)
     if row.incident then return row.incident.enemy.name .. " " .. row.incident.victim.name .. " " .. row.incident.location.zone end
     if row.vengeance then return row.enemy.name .. " " .. row.vengeance.avenger.name end
-    if row.avenger then return row.enemy.name .. " " .. row.avenger.name end
+    if row.avenger then return row.enemy.name .. " " .. row.avenger.name .. " " .. row.victim.name end
     return row.enemy and row.enemy.name or row.member.name
 end
 
@@ -78,13 +78,16 @@ function UI.Render(f)
         elseif f.tab == 3 then
             set(row.title, item.kind == "incident" and item.incident.enemy.name or (item.vengeance.avenger.name .. " · vengeance"))
             set(row.sub, M.Date(item.occurredAt))
+        elseif item.kind=="thanks" then
+            set(row.title,item.victim.name.." · merci")
+            set(row.sub,item.read and "Lu" or "Nouveau · remerciement reçu")
         else
             set(row.title, item.enemy.name .. " · VENGÉ")
-            set(row.sub, item.thanked and "Remerciement enregistré" or item.read and "Lu" or "Nouveau · vous avez été vengé")
+            set(row.sub,item.deliveryStatus=="delivered" and "Remerciement reçu" or item.deliveryStatus=="pending" and "Merci en attente de livraison" or item.thanked and "Remerciement enregistré" or item.read and "Lu" or "Nouveau · vous avez été vengé")
         end
     end
     p.list:SetHeight(math.max(445, #rows * 76))
-    set(f.footer, #rows .. " résultat(s)  ·  /syndicat ou /sr  ·  " .. (UI.provider.demo and "Aucune donnée réelle modifiée" or "En attente des adaptateurs Forever"))
+    set(f.footer, #rows .. " résultat(s)  ·  /syndicat ou /sr  ·  " .. (UI.provider.demo and "Aucune donnée réelle modifiée" or UI.provider.shared and "Registre partagé · sauvegarde activée" or "Registre personnel · sauvegarde activée"))
     if not current then
         set(p.title, "Le registre est silencieux")
         set(p.meta, f.query ~= "" and "Aucun résultat pour cette recherche." or "Aucune entrée disponible dans cet onglet.")
@@ -127,16 +130,25 @@ function UI.Render(f)
         detailLine(p, 1, incident and incident.location.zone or ("Cible : " .. current.enemy.name))
         detailLine(p, 2, incident and M.Actor(incident.enemy) or ("Réputation attribuée : " .. claim.reward))
         p.detail:SetHeight(445)
+    elseif current.kind=="thanks" then
+        set(p.title,"Le Syndicat te remercie")
+        set(p.meta,M.Date(current.occurredAt).." · vengeance concernée")
+        set(p.summary,current.victim.name.." te remercie pour "..current.enemy.name..".")
+        p.summary:ClearAllPoints();p.summary:SetPoint("TOPLEFT",p.detail,"TOPLEFT",14,-94)
+        set(p.status,"");p.read:Show()
+        if current.read then p.read:Disable() else p.read:Enable() end
+        detailLine(p,1,"Remerciement volontaire reçu et sauvegardé. Aucun point supplémentaire attribué.")
+        p.detail:SetHeight(445)
     else
         set(p.title, "Vous avez été vengé !"); set(p.meta, M.Date(current.occurredAt))
         set(p.summary, current.avenger.name .. " a éliminé " .. current.enemy.name)
         p.summary:ClearAllPoints(); p.summary:SetPoint("TOPLEFT", p.detail, "TOPLEFT", 14, -94)
         set(p.status, "")
         p.read:Show(); p.thank:Show()
-        p.thank.label:SetText(current.thanked and "Remerciement enregistré" or "Remercier")
-        if current.thanked then p.thank:Disable() else p.thank:Enable() end
+        p.thank.label:SetText(current.deliveryStatus=="delivered" and "Merci reçu" or current.deliveryStatus=="pending" and "En attente" or current.deliveryStatus=="local" and "Envoyer le merci" or current.thanked and "Remerciement enregistré" or "Remercier")
+        if current.canThank==false or (current.thanked and current.deliveryStatus~="local") then p.thank:Disable() else p.thank:Enable() end
         if current.read then p.read:Disable() else p.read:Enable() end
-        detailLine(p, 1, "Le remerciement est conservé localement ; sa livraison au vengeur reste à connecter.")
+        detailLine(p,1,UI.provider.demo and "Démonstration : le remerciement reste local." or current.deliveryStatus=="delivered" and "Le vengeur a confirmé la réception du remerciement." or current.deliveryStatus=="pending" and "Merci sauvegardé. Livraison à la prochaine connexion simultanée avec le vengeur." or UI.provider.shared and "Remercier envoie un message au vengeur via le partage de guilde." or "Active le partage de guilde pour livrer les remerciements.")
         detailLine(p, 3, "Discord : non configuré. Aucun message envoyé.")
         p.detail:SetHeight(445)
     end

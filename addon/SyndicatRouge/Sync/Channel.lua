@@ -8,13 +8,19 @@ function Channel.New(context,root,roster)
     if saved then session,reason=G.Restore(saved,context.guildId,context.owner.id,roster)
     else session,reason=G.New(context.guildId,context.owner.id,roster) end
     if not session then return nil,reason end
-    return {context=context,root=root,session=session,seen={},peers={},acks=0,received=0}
+    local delivery;delivery,reason=ns.Delivery.Open(root,context)
+    if not delivery then return nil,reason end
+    return {context=context,root=root,session=session,delivery=delivery,seen={},peers={},acks=0,received=0}
 end
-function Channel.Commit(channel,session)
+function Channel.Commit(channel,session,delivery)
     local snapshot=G.Snapshot(session)
     local checked,reason=G.Restore(snapshot,session.guildId,session.ownerId,session.members)
     if not checked then return false,reason end
+    local valid;valid,reason=ns.Delivery.Validate(delivery or channel.delivery,channel.context)
+    if not valid then return false,reason end
     channel.root.guilds=channel.root.guilds or {}
+    channel.root.guildDelivery=channel.root.guildDelivery or {}
+    channel.root.guildDelivery[session.guildId]=valid;channel.delivery=valid
     channel.root.guilds[session.guildId]=snapshot;channel.session=checked
     return true
 end
@@ -46,6 +52,13 @@ function Channel.Receive(c,envelope,sender,roster)
         ok,reason=Channel.Commit(c,candidate)
         if not ok then return false,reason end
         c.received=c.received+1
+    elseif envelope.kind=="thank" or envelope.kind=="thank_ack" then
+        local delivery,reason
+        if envelope.kind=="thank" then delivery,reason=ns.Delivery.Receive(c.delivery,c.session,envelope,sender)
+        else delivery,reason=ns.Delivery.Acknowledge(c.delivery,c.session,envelope,sender) end
+        if not delivery then return false,reason end
+        local ok,errorCode=Channel.Commit(c,c.session,delivery)
+        if not ok then return false,errorCode end
     elseif envelope.kind=="ack" then
         if not V.String(envelope.ack,64) then return false,"invalid_ack" end
     elseif envelope.kind~="hello" and envelope.kind~="test" then return false,"unknown_kind" end
@@ -55,9 +68,21 @@ function Channel.Receive(c,envelope,sender,roster)
 end
 function Channel.Change(c,operation,payload)
     if operation=="incident" and type(payload)=="table" and payload.source=="demo" then return false,"demo_not_shareable" end
+    if operation=="read" and type(payload)=="string" and payload:sub(1,7)=="thanks:" then
+        local delivery,reason=ns.Delivery.Read(c.delivery,payload)
+        if not delivery then return false,reason end
+        return Channel.Commit(c,c.session,delivery)
+    end
+    local delivery=c.delivery
+    if operation=="thank" then
+        local reason;delivery,reason=ns.Delivery.Queue(c.delivery,c.session,payload)
+        if not delivery then return false,reason end
+        local note=ns.Notifications.All(c.session.db)[payload]
+        if note.thanked then return Channel.Commit(c,c.session,delivery) end
+    end
     local result=G.Execute(G.Snapshot(c.session),c.context.guildId,c.context.owner.id,c.session.members,operation,payload)
     if not result.ok then return false,result.reason end
     local session,reason=G.Restore(result.snapshot,c.context.guildId,c.context.owner.id,c.session.members)
     if not session then return false,reason end
-    return Channel.Commit(c,session)
+    return Channel.Commit(c,session,delivery)
 end

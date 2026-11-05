@@ -13,3 +13,4 @@ const guildEngine=createEngine(sources);
 try { const result=guildEngine.test(await readFile(new URL('tests/lua/guild_native_spec.lua',root),'utf8'));console.log(`guild_native_spec.lua: ${result.passed} API/security tests passed (not in-game validation).`); }
 finally { guildEngine.close(); }
 await import('./test-persistence-reload.mjs');
+await import('./test-delivery-lifecycle.mjs');

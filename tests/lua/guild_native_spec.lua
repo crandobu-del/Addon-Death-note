@@ -83,6 +83,12 @@ end)
 test("read only profile never starts",function()
     N.runtime={writable=false};eq(N.Start(),false);N.runtime=runtime
 end)
+test("saved activation retries after guild identity finishes loading",function()
+    local original=C_Club.GetGuildClubId
+    C_Club.GetGuildClubId=function()return nil end
+    runtime.root.syncEnabled=true;eq(N.Start(),false);eq(N.channel,nil)
+    C_Club.GetGuildClubId=original;guild=123;N.Tick(20);assert(N.channel)
+end)
 test("bootstrap opens shared provider, checkpoints and demo stays isolated",function()
     guild=123
     for _,f in ipairs(SR_TEST_FRAMES) do
