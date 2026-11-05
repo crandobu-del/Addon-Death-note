@@ -26,6 +26,7 @@ function methods:IsShown() return self.shown end
 function methods:SetSize(w,h) self.width=w;self.height=h end
 function methods:SetPoint(...) self.point={...} end
 function methods:SetTexture(texture) self.texture=texture end
+function methods:IsObjectLoaded() return SR_TEST_TEXTURES_READY~=false end
 function methods:SetAtlas(name,useAtlasSize) assert(type(useAtlasSize)=="boolean"); self.atlas=name end
 function methods:SetTexCoord(...) self.uv={...} end
 function methods:SetHeight(h) self.height=h end
@@ -45,6 +46,7 @@ for _,method in ipairs({"SetAllPoints","ClearAllPoints","SetTextColor","SetJusti
     methods[method]=function() end
 end
 UIParent = new("Frame","UIParent")
+Enum={UIMapType={Zone=3}}
 C_Map = {
     GetMapInfo=function(id) if id==101 then return {mapID=id,name="Strangleronce"} end end,
     GetFallbackWorldMapID=function() return 1 end,

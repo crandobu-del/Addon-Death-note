@@ -21,6 +21,7 @@ end)
 
 -- Explicit development extension point; no fixtures, network receiver or rewards here.
 SyndicatRouge = {
+    MapPreview = { Create = ns.UI.Maps.Create, Display = ns.UI.Maps.Display },
     ShowDemo = function(incidents, claims, guildId, viewerId)
         local db = assert(ns.Core.New(guildId))
         for _, incident in ipairs(incidents) do assert(ns.Incidents.Add(db, incident)) end

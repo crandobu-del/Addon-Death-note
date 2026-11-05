@@ -16,6 +16,8 @@ python tools/package-native.py
 
 Les textures TGA et la police manuscrite libre sont incluses. Les sources graphiques et leur conversion reproductible sont documentées dans `addon/SyndicatRouge/Media/ASSETS.txt`. L'archive avec démonstration peut être importée dans UIForever sans posséder le jeu.
 
+Le compagnon fournit `/sraudit lancer` pour inventorier les zones du client et contrôler le chargement de leurs fonds, puis `/sraudit` pour la galerie de vérification manuelle. Le premier bilan transmis en jeu est de **50 fonds chargés sur 50, sans anomalie technique** ; ce n'est pas une validation visuelle de chaque carte. [Résultats, limites et conservation du rapport](docs/testing/all-zone-maps.md).
+
 ## Essayer sans WoW
 
 Voir [le guide de démonstration](demo/README.md). L'aperçu compilé s'ouvre directement dans un navigateur, sans serveur et sans accès au jeu.
