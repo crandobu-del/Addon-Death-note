@@ -1,6 +1,6 @@
 # Death Note — cadrage du projet
 
-Mis à jour le 4 novembre 2026. Socle Lua et aperçu navigateur hors jeu développés ; intégration réelle Forever à réaliser.
+Suivi actualisé le 5 novembre 2026 : interface native installée, cartes et icônes du client affichées, sauvegarde personnelle ajoutée et réglages confirmés après /reload. Collecte et partage réels restent à réaliser. Les observations initiales ci-dessous sont complétées par implementation-matrix.md et les rapports de tests successifs.
 Cible exclusive confirmée : WoW Forever. Ne pas substituer Retail ou Classic. Guilde : **Le Syndicat Rouge**. Suivi : [implementation-matrix.md](implementation-matrix.md).
 
 ## Objectif
@@ -16,7 +16,7 @@ Permettre aux membres d'une guilde de partager un registre de joueurs ennemis à
 | REQ-003 | Utilisateur | Informer les autres membres de la guilde ; deux membres équipés de l'addon reçoivent le même événement sans doublon. | Requis |
 | REQ-004 | Utilisateur | Voir qui a attaqué qui, où et quand ; chaque incident affiche auteur observé, victime, zone et date/heure, ou une indication explicite de donnée inconnue. | Requis |
 | REQ-005 | Utilisateur, idée à préciser | Augmenter la prime et la visibilité des récidivistes ; plusieurs incidents distincts font progresser leur classement selon une règle à définir. | Proposition |
-| REQ-006 | Hypothèse de conception | Conserver les incidents après rechargement et reconnexion ; les fiches réapparaissent sans duplication. | Proposition |
+| REQ-006 | Utilisateur, « la sauvegarde go » | Conserver les incidents après rechargement et reconnexion ; les fiches réapparaissent sans duplication. | Requis ; profil personnel implémenté, réglages confirmés après /reload, cycle des faits testé hors jeu ; reconnexion/redémarrage différés |
 | REQ-007 | Utilisateur, précision du 4 novembre 2026 | Utiliser des primes symboliques, sans financement en or. Distinguer le niveau de recherche d'un ennemi et les points gagnés par un membre qui venge la guilde. | Requis |
 | REQ-008 | Utilisateur | Attribuer des points de vengeance aux membres ; une vengeance validée associe le membre, l'ennemi et les incidents vengés, et ne crédite pas deux fois le même événement synchronisé. | Requis ; 1 réputation par incident clôturé, réseau et groupes à définir |
 | REQ-009 | Utilisateur, proposition | Afficher un classement des membres ayant vengé la guilde, calculé à partir des points de vengeance et cohérent après synchronisation. | Proposition utilisateur à inclure au périmètre |

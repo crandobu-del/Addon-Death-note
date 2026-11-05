@@ -21,10 +21,11 @@ function methods:SetText(text)
 end
 function methods:GetText() return self.text end
 function methods:Show() self.shown=true end
-function methods:Hide() self.shown=false end
+function methods:Hide() local shown=self.shown;self.shown=false;if shown and self.scripts.OnHide then self.scripts.OnHide(self) end end
 function methods:IsShown() return self.shown end
 function methods:SetSize(w,h) self.width=w;self.height=h end
 function methods:SetPoint(...) self.point={...} end
+function methods:GetPoint() return unpack(self.point or {}) end
 function methods:SetTexture(texture) self.texture=texture end
 function methods:IsObjectLoaded() return SR_TEST_TEXTURES_READY~=false end
 function methods:SetAtlas(name,useAtlasSize) assert(type(useAtlasSize)=="boolean"); self.atlas=name end

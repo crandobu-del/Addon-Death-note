@@ -12,7 +12,8 @@ UI.Toggle()
 check(UI.window:IsShown() and #UI.window.view.wanted==0,"production starts empty")
 check(UI.window.search.font.flags=="", "Forever edit box receives explicit font flags")
 check(not UI.provider.demo,"production never loads fixtures")
-for _,frame in ipairs(SR_TEST_FRAMES) do if frame.event=="PLAYER_LOGIN" then frame.scripts.OnEvent(frame,"PLAYER_LOGIN") end end
+check(not UI.provider.demo,"companion never replaces real ledger automatically on login")
+SlashCmdList.SYNDICATROUGEDEMO()
 check(UI.provider.demo and #UI.window.view.wanted==4,"separate companion installs demo")
 for tab=1,4 do UI.window.tabs[tab].scripts.OnClick() end
 local count=#SR_TEST_FRAMES

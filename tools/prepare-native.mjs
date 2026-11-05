@@ -6,7 +6,7 @@ const ui = ['UI/Model.lua','UI/Widgets.lua','UI/Portrait.lua','UI/Map.lua','UI/W
 await writeFile(new URL('addon/SyndicatRouge/SyndicatRouge.toc',root), [
   '## Interface: 16001','## Title: DEATH NOTE — Le Syndicat Rouge',
   '## Notes: Registre de guilde — Forever — développement, client réel non validé',
-  '## Author: Le Syndicat Rouge','## Version: 0.4.0-dev', '', ...manifest, ...ui, ''
+  '## Author: Le Syndicat Rouge','## Version: 0.4.0-dev','## SavedVariablesPerCharacter: SyndicatRougeCharacterDB', '', ...manifest, ...ui, ''
 ].join('\n'));
 function lua(value) {
   if (typeof value==='string') return '"'+value.replaceAll('\\','\\\\').replaceAll('"','\\"').replaceAll('\n','\\n')+'"';
@@ -21,6 +21,5 @@ await writeFile(new URL('dev/SyndicatRougeDemo/Demo.lua',root),
   '-- Generated from demo/src/scenario.js; DEVELOPMENT ONLY. No persistence.\n'+
   'local _, demo = ...\nlocal function show() SyndicatRouge.ShowDemo(demo.MapLocations('+lua(incidents)+'),'+[vengeances,guildId,viewer.id].map(lua).join(',')+') end\n'+
   'SLASH_SYNDICATROUGEDEMO1="/srdemo"\nSlashCmdList.SYNDICATROUGEDEMO=show\n'+
-  'local frame=CreateFrame("Frame")\nframe:RegisterEvent("PLAYER_LOGIN")\n'+
-  'frame:SetScript("OnEvent",function() show() end)\n');
+  '-- Open explicitly with /srdemo; never replace the real ledger on login.\n');
 console.log('Native TOC and separate demo companion generated.');

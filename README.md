@@ -6,7 +6,9 @@ Le socle Lua, le protocole de partage logique et un aperçu interactif hors jeu 
 
 ## Interface native Forever
 
-Voir [le guide et les résultats de test](docs/testing/native-ui.md). Ouvrir avec `/syndicat` ou `/sr` ; `/srdemo` charge les exemples lorsque l'extension de démonstration est installée. Le paquet principal démarre vide : collecte et sauvegarde réelle restent à connecter.
+Voir [le guide et les résultats de test](docs/testing/native-ui.md). Ouvrir avec `/syndicat` ou `/sr` ; `/srdemo` charge explicitement les exemples lorsque l'extension de démonstration est installée. Le paquet principal ouvre un registre personnel sauvegardé par personnage. La collecte réelle et le transport de guilde restent à connecter.
+
+La sauvegarde conserve le registre validé, les notifications et les préférences de fenêtre ; la réputation est recalculée à la restauration. `/srsave` affiche l'état et prépare un checkpoint ; WoW écrit les données au rechargement/déconnexion. Le test réel confirme la position et l'onglet après `/reload`. Les tests de reconnexion et de redémarrage après modification restent différés. [Résultats et protection des données existantes](docs/testing/persistence.md).
 
 ```text
 node tools/prepare-native.mjs

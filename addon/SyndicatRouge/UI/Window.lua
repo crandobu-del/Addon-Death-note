@@ -6,7 +6,7 @@ function UI.Refresh()
     local f = UI.window
     if not f then return end
     f.view = UI.provider:View()
-    f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or "Registre local · collecte non connectée")
+    f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or "Registre personnel · sauvegarde activée")
     for i, button in ipairs(f.tabs) do
         button.label:SetText((i == f.tab and "• " or "") .. names[i])
     end
@@ -19,6 +19,31 @@ function UI.SetProvider(provider)
     if UI.window then UI.window.selection = {}; UI.window.query = ""; UI.window.search:SetText(""); UI.Refresh() end
 end
 
+function UI.CapturePreferences()
+    local f=UI.window
+    if not f then return ns.Persistence.UI(UI.preferences) end
+    local result={tab=f.tab}
+    local point,parent,relativePoint,x,y=f:GetPoint(1)
+    local function ordinary(value) return not (type(issecretvalue)=="function" and issecretvalue(value)) end
+    if ordinary(point) and ordinary(parent) and ordinary(relativePoint) and ordinary(x) and ordinary(y)
+        and (parent==nil or parent==UIParent) then
+        result.position={point=point,relativePoint=relativePoint or point,x=x or 0,y=y or 0}
+    end
+    return ns.Persistence.UI(result)
+end
+function UI.ApplyPreferences(preferences)
+    UI.preferences=ns.Persistence.UI(preferences)
+    local f=UI.window
+    if not f then return end
+    f.tab=UI.preferences.tab
+    local p=UI.preferences.position
+    f:ClearAllPoints()
+    if p then f:SetPoint(p.point,UIParent,p.relativePoint,p.x,p.y) else f:SetPoint("CENTER") end
+end
+local function changed()
+    if UI.OnPreferencesChanged then UI.OnPreferencesChanged() end
+end
+
 function UI.Create()
     if UI.window then return UI.window end
     local f = CreateFrame("Frame", "SyndicatRougeWindow", UIParent)
@@ -27,16 +52,16 @@ function UI.Create()
     f:SetClampedToScreen(true); f:SetMovable(true); f:EnableMouse(true)
     f:RegisterForDrag("LeftButton")
     f:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+    f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); changed() end)
     local art = f:CreateTexture(nil, "BACKGROUND"); art:SetAllPoints(f); art:SetTexture(W.media .. "Textures\\Register.tga")
     W.Text(f, "DEATH NOTE", 180, 24, 450, 38, W.ink)
     W.Text(f, "Le Syndicat Rouge", 640, 28, 320, 28, W.red, true)
     f.mode = W.Text(f, "", 180, 65, 700, 12)
     W.Button(f, "X", 1010, 25, 36, 34, function() f:Hide() end)
-    f.tabs, f.tab, f.selection, f.query = {}, 1, {}, ""
+    f.tabs, f.tab, f.selection, f.query = {}, ns.Persistence.UI(UI.preferences).tab, {}, ""
     for i, name in ipairs(names) do
         f.tabs[i] = W.Button(f, name, 43 + (i - 1) * 249, 86, 238, 38, function()
-            f.tab = i; f.query = ""; f.search:SetText(""); UI.Refresh()
+            f.tab = i; f.query = ""; f.search:SetText(""); UI.Refresh(); changed()
         end)
     end
     W.Text(f, "Rechercher", 44, 145, 130, 15)
@@ -56,6 +81,8 @@ function UI.Create()
     f.content = W.Frame(f, 42, 185, 996, 450)
     f.footer = W.Text(f, "", 46, 668, 970, 13, W.gold)
     if UISpecialFrames then table.insert(UISpecialFrames, "SyndicatRougeWindow") end
+    UI.ApplyPreferences(UI.preferences)
+    f:SetScript("OnHide",changed)
     f:Hide()
     return f
 end
