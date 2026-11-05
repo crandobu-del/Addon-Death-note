@@ -19,6 +19,7 @@ Sync/Guild.lua
 Export/DiscordOutbox.lua
 UI/Model.lua
 UI/Widgets.lua
+UI/Portrait.lua
 UI/Map.lua
 UI/Window.lua
 UI/Views.lua

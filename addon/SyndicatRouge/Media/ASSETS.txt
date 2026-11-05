@@ -1,5 +1,7 @@
 Register.tga: original generated artwork for this project, source art/native/register.png.
-Portraits.tga: illustrative concept atlas, generated for this project; demo only.
+Portraits.tga: retired concept atlas; never used by the current UI, excluded from packages.
+Character icons: C_Texture/C_CreatureInfo atlas references and UI-Classes-Circles from the installed Forever client.
+Race art is selected only with a known sex and an atlas confirmed present in that client. No default male portrait.
 IllustrativeMap.tga: retired fictional artwork, no longer referenced by the UI or included in packages.
 Game maps: native C_Map texture file IDs from the installed Forever client; not redistributed.
 TGA conversions: uncompressed RGB24, power-of-two dimensions. No embedded interactive labels.

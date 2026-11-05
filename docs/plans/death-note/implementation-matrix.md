@@ -38,6 +38,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Nouvelle demande REQ-015 : images de personnages issues de Forever, pas IA. UI/Portrait.lua remplace le portrait conceptuel par race/sexe connu + icône de classe du client ; champs d'acteur optionnels validés et conservés, lecteur du relais adapté. Capture utilisateur : fenêtre fonctionnelle, mais Strangleronce non identifiée ; recherche du compagnon étendue aux parents/enfants et alias. Tests 85 Lua et 39 Python passés ; présence des atlas et rendu final des cartes à confirmer après /reload. Lire client-portraits.md et docs/testing/native-ui.md.
+
 Tranche cartes natives : UI/Map.lua remplace l'illustration par les tuiles C_Map du client ; la démo résout ses zones via l'arbre des cartes Forever. Coordonnées absentes = pas de marqueur ; carte inconnue = message explicite. 19 UI + 14 cartes + 39 moteur passés. REQ-013 / IMP-011 : rendu implémenté, collecte des coordonnées réelles et validation visuelle après installation encore ouvertes. Voir game-maps.md et docs/testing/native-ui.md.
 
 Retour du client réel le 5 novembre : `/srdemo` s'arrête sur SetFont dans Window.lua:44 (capture utilisateur). Arguments de police corrigés dans les deux helpers, test de régression reproduit puis passé : 19 UI + 39 moteur. Correctif copié et vérifié dans l'installation Forever, originaux sauvegardés. Rechargement et validation visuelle après correction attendus ; voir docs/testing/native-ui.md. Ne pas présenter le test en jeu comme passé.

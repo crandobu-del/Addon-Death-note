@@ -26,6 +26,7 @@ function methods:IsShown() return self.shown end
 function methods:SetSize(w,h) self.width=w;self.height=h end
 function methods:SetPoint(...) self.point={...} end
 function methods:SetTexture(texture) self.texture=texture end
+function methods:SetAtlas(name,useAtlasSize) assert(type(useAtlasSize)=="boolean"); self.atlas=name end
 function methods:SetTexCoord(...) self.uv={...} end
 function methods:SetHeight(h) self.height=h end
 function methods:SetScrollChild(child) self.child=child end
@@ -50,4 +51,11 @@ C_Map = {
     GetMapChildrenInfo=function() return {{mapID=101,name="Strangleronce"}} end,
     GetMapArtLayers=function() return {{layerWidth=1002,layerHeight=668,tileWidth=256,tileHeight=256}} end,
     GetMapArtLayerTextures=function() return {11,12,13,14,15,16,17,18,19,20,21,22} end,
+}
+C_Texture={GetAtlasInfo=function(name)
+    if name=="raceicon128-orc-male" or name=="raceicon128-orc-female" or name=="classicon-warrior" then return {} end
+end}
+C_CreatureInfo={
+    GetRaceInfo=function(id) if id==2 then return {clientFileString="Orc",raceID=2} end end,
+    GetClassInfo=function(id) if id==1 then return {classFile="WARRIOR",classID=1} end end,
 }

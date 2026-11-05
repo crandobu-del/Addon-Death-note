@@ -2,7 +2,7 @@ import {readFile, writeFile, mkdir, copyFile} from 'node:fs/promises';
 import {guildId, viewer, incidents, vengeances} from '../demo/src/scenario.js';
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('tools/lua-manifest.json',root), 'utf8'));
-const ui = ['UI/Model.lua','UI/Widgets.lua','UI/Map.lua','UI/Window.lua','UI/Views.lua','Bootstrap.lua'];
+const ui = ['UI/Model.lua','UI/Widgets.lua','UI/Portrait.lua','UI/Map.lua','UI/Window.lua','UI/Views.lua','Bootstrap.lua'];
 await writeFile(new URL('addon/SyndicatRouge/SyndicatRouge.toc',root), [
   '## Interface: 16001','## Title: DEATH NOTE — Le Syndicat Rouge',
   '## Notes: Registre de guilde — Forever — développement, client réel non validé',

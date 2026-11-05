@@ -7,5 +7,5 @@ const sources = [{name:'WoW contract double',source:await readFile(new URL('test
 for (const name of files) sources.push({name,source:await readFile(new URL('addon/SyndicatRouge/'+name,root),'utf8')});
 for (const name of ['MapLocations.lua','Demo.lua']) sources.push({name:'Separate demo companion '+name,source:await readFile(new URL('dev/SyndicatRougeDemo/'+name,root),'utf8')});
 const engine = createEngine(sources);
-try { for(const name of ['native_spec.lua','map_spec.lua']) {const result = engine.test(await readFile(new URL('tests/lua/'+name,root),'utf8')); console.log(`${name}: ${result.passed} contract/behavior tests passed (not visual or in-game validation).`);} }
+try { for(const name of ['native_spec.lua','map_spec.lua','portrait_spec.lua']) {const result = engine.test(await readFile(new URL('tests/lua/'+name,root),'utf8')); console.log(`${name}: ${result.passed} contract/behavior tests passed (not visual or in-game validation).`);} }
 finally { engine.close(); }

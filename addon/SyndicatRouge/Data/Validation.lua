@@ -17,8 +17,12 @@ function V.Actor(value)
     if value.level ~= nil and not V.Integer(value.level, 1, 100) then return nil end
     if value.race ~= nil and not V.String(value.race, 40) then return nil end
     if value.class ~= nil and not V.String(value.class, 40) then return nil end
+    if value.raceID ~= nil and not V.Integer(value.raceID, 1, 1000) then return nil end
+    if value.classID ~= nil and not V.Integer(value.classID, 1, 1000) then return nil end
+    if value.sex ~= nil and value.sex ~= "male" and value.sex ~= "female" then return nil end
     return { id = value.id, name = value.name, realm = value.realm,
-        race = value.race, class = value.class, level = value.level }
+        race = value.race, class = value.class, level = value.level,
+        raceID = value.raceID, classID = value.classID, sex = value.sex }
 end
 function V.Location(value)
     if type(value) ~= "table" or not V.String(value.zone, 160) then return nil end

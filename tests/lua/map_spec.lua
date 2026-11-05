@@ -31,7 +31,22 @@ check(source[1].location.mapId==101,"demo resolves client map rather than histor
 check(source[2].location.mapId==nil and source[2].location.x==nil,"unresolved demo map clears incompatible coordinates")
 local children=C_Map.GetMapChildrenInfo
 C_Map.GetMapChildrenInfo=function()return {{mapID=101,name="Strangleronce"},{mapID=102,name="Strangleronce"}}end
+source[1].location.mapId=nil
 ns.MapLocations(source)
 check(source[1].location.mapId==nil,"ambiguous zone names never select a guessed map")
 C_Map.GetMapChildrenInfo=children
+local getInfo, getBest=C_Map.GetMapInfo,C_Map.GetBestMapForUnit
+C_Map.GetBestMapForUnit=function()return 500 end
+C_Map.GetMapInfo=function(id)
+    if id==500 then return {mapID=500,name="Elwynn",parentMapID=501} end
+    if id==501 then return {mapID=501,name="World",parentMapID=0} end
+end
+C_Map.GetMapChildrenInfo=function(id,_,all)
+    if id==501 and not all then return {{mapID=502,name="Vallée de Strangleronce"}} end
+    return {}
+end
+local nested={{location={zone="Strangleronce · Grom’gol"}}}
+ns.MapLocations(nested)
+check(nested[1].location.mapId==502,"demo finds localized alias through player's world and direct descendants")
+C_Map.GetMapInfo=getInfo;C_Map.GetBestMapForUnit=getBest;C_Map.GetMapChildrenInfo=children
 return {passed=passed}

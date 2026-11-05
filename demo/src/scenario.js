@@ -10,6 +10,12 @@ export const actors = {
   brise: {id:'Forever:Brisecroc',name:'Brisecroc',realm:'Forever',race:'Nain',class:'Paladin',level:60},
   noctis: {id:'Forever:Noctis',name:'Noctis',realm:'Forever',race:'Humain',class:'Voleur',level:60}
 };
+// Explicit attributes of fictional characters, never inferred from a live player's name.
+for (const [key,raceID,classID,sex] of [
+ ['lyra',4,8,'female'],['kaelan',1,2,'male'],['thorin',3,1,'male'],
+ ['maelys',1,4,'female'],['faelin',1,5,'male'],['morne',2,1,'male'],
+ ['selene',4,8,'female'],['brise',3,2,'male'],['noctis',1,4,'male']
+]) Object.assign(actors[key],{raceID,classID,sex});
 export const viewer = actors.lyra;
 const day = Date.UTC(2026,10,4,0,0,0)/1000;
 export const at = (hour, minute) => day + hour*3600 + minute*60;

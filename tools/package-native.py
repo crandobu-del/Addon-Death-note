@@ -16,7 +16,7 @@ for demo in (False, True):
     with ZipFile(OUT / (name + '.zip'), 'w', ZIP_DEFLATED) as z:
         for folder in ([addon, ROOT / 'dev' / 'SyndicatRougeDemo'] if demo else [addon]):
             for source in sorted(folder.rglob('*')):
-                if source.is_file() and source.name not in {'.gitkeep', 'IllustrativeMap.tga'}:
+                if source.is_file() and source.name not in {'.gitkeep', 'IllustrativeMap.tga', 'Portraits.tga'}:
                     assert source.suffix.lower() in {'.lua','.toc','.ttf','.tga','.txt'}
                     z.write(source, str(Path(folder.name) / source.relative_to(folder)))
         z.write(ROOT / 'LICENSE', 'SyndicatRouge/LICENSE.txt')

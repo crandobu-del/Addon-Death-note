@@ -31,13 +31,20 @@ def fields(value, required, optional=()):
 
 
 def actor(value):
-    fields(value, ("id", "name", "realm"), ("race", "class", "level"))
+    fields(value, ("id", "name", "realm"), ("race", "class", "level", "raceID", "classID", "sex"))
     result = {"id": text(value["id"]), "name": text(value["name"], 80), "realm": text(value["realm"], 80)}
     for key in ("race", "class"):
         if key in value:
             result[key] = text(value[key], 40)
     if "level" in value:
         result["level"] = integer(value["level"], 1, 100)
+    for key in ("raceID", "classID"):
+        if key in value:
+            result[key] = integer(value[key], 1, 1000)
+    if "sex" in value:
+        if value["sex"] not in ("male", "female"):
+            raise BridgeError("invalid_actor_sex")
+        result["sex"] = value["sex"]
     return result
 
 

@@ -1,5 +1,19 @@
 # Interface native 0.4.0-dev — résultats du 5 novembre 2026
 
+## Icônes de race/sexe et classe provenant du client
+
+La nouvelle capture utilisateur confirme le fonctionnement de la fenêtre et des données de démo après le correctif SetFont, mais signale « Carte non identifiée » pour Strangleronce. Elle montre encore l'ancien portrait généré. Cette capture n'est pas une validation des cartes natives.
+
+UI/Portrait.lua remplace entièrement le portrait IA par les ressources du client : atlas de race/sexe (uniquement si le sexe est connu), puis vignette de classe. Les atlas candidats sont vérifiés par C_Texture.GetAtlasInfo avant SetAtlas(name, false). C_CreatureInfo résout les noms de fichiers depuis raceID/classID. Sans atlas de race ou sexe connu, la classe est affichée seule ; sans ressource reconnue, un état inconnu remplace l'image. La texture officielle UI-Classes-Circles sert de repli si CLASS_ICON_TCOORDS est chargé. Aucun appel aux modules Glue de création de personnage n'est ajouté.
+
+Les acteurs conservent maintenant les champs optionnels raceID, classID et sex (chaînes internes male/female, pas les valeurs numériques UnitSex). Le compagnon les renseigne explicitement pour ses personnages fictifs. Le lecteur du relais accepte et valide ces attributs ; les anciens registres restent lisibles. Aucun sexe n'est inféré d'un nom ou d'une image. La collecte de ces attributs sur les vrais ennemis reste à implémenter avec les adaptateurs.
+
+Portraits.tga est exclu des archives et n'est plus référencé par les contrôles. Les atlas Blizzard sont lus dans le client, jamais copiés dans le dépôt. Les cadres/parchemins conservent l'illustration du projet : cette modification concerne les personnages.
+
+Recherche de carte renforcée : alias exacts français/anglais, ascension des parents de la carte du joueur, descente des enfants directs en plus de la liste récursive du monde par défaut. Les identifiants historiques des exemples sont acceptés seulement si le client confirme le nom exact de zone. Parcours borné et identifiants dédupliqués ; aucune carte d'une autre zone choisie en secours. Le succès visuel pour Strangleronce reste à confirmer par une nouvelle capture, la cause exacte du résultat précédent n'ayant pas été mesurée dans le client.
+
+Tests : 19 UI, 15 cartes, 12 portraits/métadonnées et 39 moteur (85 contrôles Lua), plus 39 tests Python du relais. Les essais de portraits utilisent un registre d'atlas factice : ils vérifient la sélection, l'absence de sexe, les ressources manquantes, le nettoyage, la réutilisation et la restauration des attributs, sans prouver que chaque atlas existe dans le client réel. Nouveau rendu réel et nouveau parcours UIForever non exécutés ; recharge utilisateur requise après installation. Aucune nouvelle capture de validation n'est fabriquée.
+
 ## Remplacement de la carte illustrative par les cartes du jeu
 
 UI/Map.lua utilise C_Map.GetMapInfo/GetMapArtLayers/GetMapArtLayerTextures du client 1.60.1.70790 (source épinglée identique ci-dessous). Les tuiles sont ordonnées par lignes, les marges des dernières tuiles recadrées et l'ensemble ajusté proportionnellement dans l'encart 360×180. Le marqueur utilise la même transformation que le fond et uniquement les coordonnées enregistrées. Il ne représente jamais la position actuelle de l'ennemi. Sans coordonnées : carte de zone et mention de position précise inconnue. Sans carte/API/textures : état indisponible explicite, sans ancienne illustration de secours.
