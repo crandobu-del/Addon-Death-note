@@ -51,7 +51,7 @@ events:SetScript("OnEvent", function(_, event, name)
     live=ns.Persistence.Open(SyndicatRougeCharacterDB)
     ns.Runtime=live
     if live.writable then SyndicatRougeCharacterDB=live.root
-    else print("DEATH NOTE : sauvegarde conservée sans modification ; registre en lecture seule ("..live.status..").") end
+    else print("Tableau des primes : sauvegarde conservée sans modification ; registre en lecture seule ("..live.status..").") end
     events:RegisterEvent("PLAYER_LOGOUT")
     ns.UI.OnPreferencesChanged=function()
         if ns.UI.provider and not ns.UI.provider.demo then save() end
@@ -71,10 +71,10 @@ events:SetScript("OnEvent", function(_, event, name)
     end
     SLASH_SYNDICATROUGESAVE1="/srsave"
     SlashCmdList.SYNDICATROUGESAVE=function()
-        if ns.UI.provider and ns.UI.provider.demo then print("DEATH NOTE : les exemples ne sont pas sauvegardés. /sr ouvre ton registre personnel.");return end
+        if ns.UI.provider and ns.UI.provider.demo then print("Tableau des primes : les exemples ne sont pas sauvegardés. /sr ouvre ton registre personnel.");return end
         local ok,reason=save()
-        if not ok then print("DEATH NOTE : sauvegarde non modifiée ("..tostring(reason)..").");return end
-        print("DEATH NOTE : profil "..live.status..", révision "..live.root.revision..", "..ns.Validation.Count(live.db.incidents).." incident(s). Écriture sur disque au rechargement ou à la déconnexion.")
+        if not ok then print("Tableau des primes : sauvegarde non modifiée ("..tostring(reason)..").");return end
+        print("Tableau des primes : profil "..live.status..", révision "..live.root.revision..", "..ns.Validation.Count(live.db.incidents).." incident(s). Écriture sur disque au rechargement ou à la déconnexion.")
     end
 end)
 

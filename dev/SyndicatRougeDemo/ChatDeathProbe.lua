@@ -43,7 +43,7 @@ local function correlate(candidate)
     C.report.correlated=C.report.correlated+1
     C.report.lastResult=candidate.playerLink and "player_link_candidate" or "plain_name_candidate"
     C.report.lastSource=candidate.event
-    print("DEATH NOTE : message personnel de mort reconnu. Consulte /srchat bilan avant de recharger.")
+    print("Tableau des primes : message personnel de mort reconnu. Consulte /srchat bilan avant de recharger.")
 end
 function C.Receive(event,value)
     if not C.report or not C.report.running then return end
@@ -83,8 +83,8 @@ function C.Start()
 end
 function C.Show()
     local r=C.report
-    if not r then print("DEATH NOTE : test inactif. Tape /srchat debut ; après rechargement, il faut le réactiver.");return end
-    print("DEATH NOTE — test du message : "..(r.running and "actif" or "arrêté").." ; morts observées="..r.deaths..", candidats associés="..r.correlated)
+    if not r then print("Tableau des primes : test inactif. Tape /srchat debut ; après rechargement, il faut le réactiver.");return end
+    print("Tableau des primes — test du message : "..(r.running and "actif" or "arrêté").." ; morts observées="..r.deaths..", candidats associés="..r.correlated)
     for _,event in ipairs({"CHAT_MSG_SYSTEM","CHAT_MSG_COMBAT_MISC_INFO"}) do
         local row=r.events[event]
         if row then print(event.." : "..row.subscription..", reçus="..row.received..", reconnus="..(row.status.matched or 0)..", protégés="..((row.status.secret or 0)+(row.status.protected_text or 0))) end
@@ -99,5 +99,5 @@ SlashCmdList.SYNDICATROUGECHATDEATH=function(command)
     if command=="debut" then C.Start();C.Show()
     elseif command=="fin" then C.Stop();C.Show()
     elseif command=="" or command=="bilan" then C.Show()
-    else print("DEATH NOTE : commande inconnue. Utilise /srchat debut, /srchat bilan ou /srchat fin.") end
+    else print("Tableau des primes : commande inconnue. Utilise /srchat debut, /srchat bilan ou /srchat fin.") end
 end

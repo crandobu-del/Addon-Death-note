@@ -1,7 +1,7 @@
 local _,ns=...
 local N={prefix="SRGuild1",queue={},pool={},pending={},counter=0,status="inactive",clock=0};ns.GuildNative=N
 local C,Ch=ns.GuildContext,ns.Channel
-local function say(s) print("DEATH NOTE : "..s) end
+local function say(s) print("Tableau des primes : "..s) end
 local function refresh()
     if N.changed then N.changed() end
 end

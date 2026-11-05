@@ -1,5 +1,5 @@
 ## Interface: 16001
-## Title: DEATH NOTE — Le Syndicat Rouge
+## Title: Tableau des primes — Le Syndicat Rouge
 ## Notes: Registre de guilde — Forever — développement, client réel non validé
 ## Author: Le Syndicat Rouge
 ## Version: 0.5.0-dev

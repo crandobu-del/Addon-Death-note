@@ -23,7 +23,7 @@ def payload(title, description, mode):
     content = f"**{prefix}{title}**\n{description}"
     if len(content) > 2000:
         raise BridgeError("message_limit")
-    return {"username": "Le Syndicat Rouge — Death Note", "content": content,
+    return {"username": "Le Syndicat Rouge — Tableau des primes", "content": content,
             "allowed_mentions": {"parse": []}}
 
 

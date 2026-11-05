@@ -1,4 +1,6 @@
-# Death Note — Le Syndicat Rouge
+# Tableau des primes — Le Syndicat Rouge
+
+Nom affiché demandé le 5 novembre 2026. Les dossiers `SyndicatRouge`, les commandes et les sauvegardes gardent leurs identifiants internes. Les archives et fiches déjà publiées sous l'ancien nom conservent leur historique ; le renommage est présent dans les sources et l'installation locale mises à jour, et sera inclus dans le prochain paquet.
 
 Projet d'addon de guilde pour **WoW Forever uniquement** : joueurs recherchés, incidents, vengeances, réputation, classement, notifications et relais Discord optionnel.
 
@@ -6,14 +8,14 @@ Version **0.5.0-dev — alpha** : interface native à quatre onglets, sauvegarde
 
 ## Installer l'addon sur WoW Forever
 
-Projet soumis : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). Une première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, y a été déposée ; son dernier état observé était « Processing ». La version 0.5 ci-dessous est distribuée sur GitHub. Le portail CurseForge indique que les Alpha sont proposés par lien direct après validation et n'apparaissent pas dans son application.
+Projet soumis sous l’ancien nom : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). Une première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, y a été déposée ; son dernier état observé était « Processing ». La version 0.5 ci-dessous est distribuée sur GitHub. Le portail CurseForge indique que les Alpha sont proposés par lien direct après validation et n'apparaissent pas dans son application.
 
 1. Télécharger [l'archive installable SyndicatRouge-forever-0.5.0-dev.zip](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev.zip). Pour essayer les exemples et diagnostics, choisir [l'archive avec compagnon](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev-avec-demo.zip). Les deux fichiers se trouvent dans les **Assets** de [la préversion GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.5.0-alpha.1), sans attendre CurseForge. Les fichiers **Source code** sont les sources du dépôt et ne constituent pas directement le paquet à installer.
 2. Fermer WoW si c'est la première installation. Lors d'une mise à jour, conserver une copie de l'ancien dossier de l'addon.
 3. Extraire le dossier **SyndicatRouge** dans le dossier du client Forever : `World of Warcraft/_forever_/Interface/AddOns/`.
 4. Vérifier que le fichier se trouve directement ici : `_forever_/Interface/AddOns/SyndicatRouge/SyndicatRouge.toc`. Éviter un dossier supplémentaire tel que `SyndicatRouge/SyndicatRouge/`.
 5. Si l'archive avec exemples a été choisie, placer aussi **SyndicatRougeDemo** à côté de **SyndicatRouge** dans `AddOns/`.
-6. Relancer le jeu, puis activer **DEATH NOTE — Le Syndicat Rouge** dans la liste des addons de l'écran des personnages. Le compagnon de démonstration est facultatif.
+6. Relancer le jeu, puis activer **Tableau des primes — Le Syndicat Rouge** dans la liste des addons de l'écran des personnages. Le compagnon de démonstration est facultatif.
 7. En jeu, saisir `/sr` ou `/syndicat` pour ouvrir le registre. Après une mise à jour d'une installation déjà chargée, saisir `/reload`.
 
 L'addon cible **Forever uniquement**, actuellement le client 1.60.1/interface 16001. Le partage est réservé à la guilde **Le Syndicat Rouge**. Le registre réel démarre vide ; installer l'addon ne crée pas automatiquement de prime à chaque mort dans cette version.

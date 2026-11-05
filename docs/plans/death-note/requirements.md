@@ -1,4 +1,4 @@
-# Death Note — cadrage du projet
+# Tableau des primes — cadrage du projet
 
 Suivi actualisé le 5 novembre 2026 : interface native installée, cartes et icônes du client affichées, sauvegarde personnelle et réglages confirmés après /reload. Transport de guilde implémenté et installé ; validation réelle à deux membres en cours. Collecte automatique encore non validée. Les observations initiales ci-dessous sont complétées par implementation-matrix.md et les rapports de tests successifs.
 Cible exclusive confirmée : WoW Forever. Ne pas substituer Retail ou Classic. Guilde : **Le Syndicat Rouge**. Suivi : [implementation-matrix.md](implementation-matrix.md).
@@ -28,7 +28,7 @@ Permettre aux membres d'une guilde de partager un registre de joueurs ennemis à
 | REQ-015 | Utilisateur | Dossier détaillé avec portrait ou image race/classe, niveau de l'ennemi et prime ; n'afficher que les attributs réellement connus en production. | Requis ; illustrations fictives dans la maquette |
 | REQ-016 | Utilisateur | Nommer la monnaie virtuelle de récompense « réputation » et afficher la quantité offerte pour une vengeance. Réputation interne à l'addon, distincte de la réputation de faction Blizzard et de la prime de recherche de l'ennemi. | Requis |
 | REQ-017 | Utilisateur | Afficher en jeu un marqueur au-dessus du pseudo des joueurs recherchés. Proposition visuelle : petit emblème rouge propre à la guilde et récompense en réputation, sur la plaque de nom lorsqu'elle est visible. L'affichage est local chez chaque membre équipé de l'addon. Retirer le marqueur après clôture des incidents selon la règle de vengeance, à la disparition de la plaque ou lors de sa réutilisation pour un autre joueur. | Requis ; faisabilité Forever à tester |
-| REQ-018 | Utilisateur | La guilde s'appelle exactement « Le Syndicat Rouge ». Afficher ce nom dans l'identité de l'interface. Supprimer les références textuelles aux Défias, y compris devises et inscriptions décoratives. DEATH NOTE reste le nom de l'addon sauf nouvelle instruction. | Requis |
+| REQ-018 | Utilisateur | La guilde s'appelle exactement « Le Syndicat Rouge ». Afficher ce nom dans l'identité de l'interface. Supprimer les références textuelles aux Défias, y compris devises et inscriptions décoratives. Le nom affiché de l'addon est désormais « Tableau des primes », selon la demande du 5 novembre 2026. | Requis |
 | REQ-019 | Utilisateur | Prévoir des notifications Discord en cas d'événement, désactivables et configurables par catégorie. Propositions de catégories : nouveau recherché, prime augmentée, vengeance accomplie et récapitulatif du classement. Un événement partagé entre plusieurs membres ne doit produire qu'une notification logique ; stratégie de déduplication et cas de résultat réseau incertain à définir. | Requis ; catégories proposées, intégration non configurée |
 
 ## Proposition de première version — non encore acceptée

@@ -76,9 +76,9 @@ end
 function P.Show()
     local report=P.report
     if not report and type(SyndicatRougePvpProbe)=="table" and SyndicatRougePvpProbe.version==1 then report=SyndicatRougePvpProbe end
-    if not report then print("DEATH NOTE : lance /srpvp debut pour vérifier le client.");return end
+    if not report then print("Tableau des primes : lance /srpvp debut pour vérifier le client.");return end
     local labels={['true']="oui",['false']="non",unavailable="API absente",operation_failed="appel impossible",restricted_value="valeur protégée"}
-    print("DEATH NOTE — diagnostic PvP : "..tostring(report.clientVersion or "version inconnue").." / "..tostring(report.build or "build inconnu"))
+    print("Tableau des primes — diagnostic PvP : "..tostring(report.clientVersion or "version inconnue").." / "..tostring(report.build or "build inconnu"))
     print("Cible Forever confirmée : "..(report.targetMatches and "oui" or "non"))
     print("Journal de combat restreint : "..(labels[report.combatRestriction] or "non mesuré"))
     local log=report.events and report.events[combatEvent]

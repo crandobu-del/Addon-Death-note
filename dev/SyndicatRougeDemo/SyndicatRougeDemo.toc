@@ -1,5 +1,5 @@
 ## Interface: 16001
-## Title: DEATH NOTE — Démonstration
+## Title: Tableau des primes — Démonstration
 ## Dependencies: SyndicatRouge
 ## Version: 0.5.0-dev
 ## SavedVariables: SyndicatRougeMapAudit, SyndicatRougePvpProbe

@@ -75,8 +75,8 @@ function K.Start()
 end
 function K.Show()
     local r=K.report
-    if not r then print("DEATH NOTE : diagnostic de kill inactif. /srkill debut pour le lancer.");return end
-    print("DEATH NOTE — preuve de kill : "..(r.running and "actif" or "arrêté"))
+    if not r then print("Tableau des primes : diagnostic de kill inactif. /srkill debut pour le lancer.");return end
+    print("Tableau des primes — preuve de kill : "..(r.running and "actif" or "arrêté"))
     print("PARTY_KILL : valide="..r.valid..", callback="..r.callback..", abonnement="..r.subscription)
     print("Réceptions="..r.received.." ; paires lisibles="..r.publicPairs.." ; attribuées à toi="..r.ownPairs.." ; protégées="..r.blocked.." ; autres attaquants="..r.otherAttacker.." ; invalides="..r.invalid)
     print("Résultat="..r.lastResult..". Aucun nom/GUID conservé ; aucune vengeance ni réputation attribuée.")
@@ -87,5 +87,5 @@ SlashCmdList.SYNDICATROUGEKILLPROOF=function(command)
     if command=="debut" then K.Start();K.Show()
     elseif command=="fin" then K.Stop();K.Show()
     elseif command=="" or command=="bilan" then K.Show()
-    else print("DEATH NOTE : /srkill debut | bilan | fin") end
+    else print("Tableau des primes : /srkill debut | bilan | fin") end
 end
