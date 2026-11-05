@@ -1,6 +1,6 @@
 # Death Note — cadrage du projet
 
-Suivi actualisé le 5 novembre 2026 : interface native installée, cartes et icônes du client affichées, sauvegarde personnelle ajoutée et réglages confirmés après /reload. Collecte et partage réels restent à réaliser. Les observations initiales ci-dessous sont complétées par implementation-matrix.md et les rapports de tests successifs.
+Suivi actualisé le 5 novembre 2026 : interface native installée, cartes et icônes du client affichées, sauvegarde personnelle et réglages confirmés après /reload. Transport de guilde implémenté et installé ; validation réelle à deux membres en cours. Collecte automatique encore non validée. Les observations initiales ci-dessous sont complétées par implementation-matrix.md et les rapports de tests successifs.
 Cible exclusive confirmée : WoW Forever. Ne pas substituer Retail ou Classic. Guilde : **Le Syndicat Rouge**. Suivi : [implementation-matrix.md](implementation-matrix.md).
 
 ## Objectif

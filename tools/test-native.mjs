@@ -9,4 +9,7 @@ for (const name of ['MapLocations.lua','MapCatalog.lua','MapAudit.lua','PvpProbe
 const engine = createEngine(sources);
 try { for(const name of ['native_spec.lua','map_spec.lua','portrait_spec.lua','map_audit_spec.lua','pvp_probe_spec.lua','chat_death_spec.lua','persistence_spec.lua']) {const result = engine.test(await readFile(new URL('tests/lua/'+name,root),'utf8')); console.log(`${name}: ${result.passed} contract/behavior tests passed (not visual or in-game validation).`);} }
 finally { engine.close(); }
+const guildEngine=createEngine(sources);
+try { const result=guildEngine.test(await readFile(new URL('tests/lua/guild_native_spec.lua',root),'utf8'));console.log(`guild_native_spec.lua: ${result.passed} API/security tests passed (not in-game validation).`); }
+finally { guildEngine.close(); }
 await import('./test-persistence-reload.mjs');

@@ -6,7 +6,7 @@ function UI.Refresh()
     local f = UI.window
     if not f then return end
     f.view = UI.provider:View()
-    f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or "Registre personnel · sauvegarde activée")
+    f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or UI.provider.shared and "Registre de guilde · partage activé" or "Registre personnel · sauvegarde activée")
     for i, button in ipairs(f.tabs) do
         button.label:SetText((i == f.tab and "• " or "") .. names[i])
     end

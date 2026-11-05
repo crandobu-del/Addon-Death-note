@@ -10,6 +10,9 @@ local function provider(db, viewerId, demo)
     local function current() return demo and db or live.db end
     local function change(method,id)
         if demo then return method(db,id,viewerId) end
+        if ns.GuildNative.channel then
+            return ns.GuildNative.Change(method==ns.Notifications.Read and "read" or "thank",id)
+        end
         if not live.writable then return false,"read_only" end
         local candidate,reason=ns.Store.Restore(ns.Store.Snapshot(live.db),ns.Persistence.scope)
         if not candidate then return false,reason end
@@ -22,7 +25,11 @@ local function provider(db, viewerId, demo)
     end
     return {
         demo = demo, readOnly=not demo and not live.writable,
-        View = function() return ns.Core.View(current(), viewerId) end,
+        shared=not demo and ns.GuildNative.channel~=nil,
+        View = function()
+            if not demo and ns.GuildNative.channel then return ns.Guild.View(ns.GuildNative.channel.session) end
+            return ns.Core.View(current(), viewerId)
+        end,
         Read = function(_, id) return change(ns.Notifications.Read,id) end,
         Thank = function(_, id) return change(ns.Notifications.Thank,id) end,
     }
@@ -48,6 +55,11 @@ events:SetScript("OnEvent", function(_, event, name)
         if ns.UI.provider and not ns.UI.provider.demo then save() end
     end
     realView()
+    ns.GuildNative.Bind(live,function()
+        if not ns.UI.provider or not ns.UI.provider.demo then
+            ns.UI.SetProvider(provider(nil,nil,false));ns.UI.Refresh()
+        end
+    end)
     SLASH_SYNDICATROUGE1 = "/syndicat"
     SLASH_SYNDICATROUGE2 = "/sr"
     SlashCmdList.SYNDICATROUGE = function()
@@ -64,7 +76,7 @@ events:SetScript("OnEvent", function(_, event, name)
     end
 end)
 
--- Explicit development extension point; no fixtures, network receiver or rewards here.
+-- Explicit demo extension point; fixtures never enter the shared guild provider.
 SyndicatRouge = {
     MapPreview = { Create = ns.UI.Maps.Create, Display = ns.UI.Maps.Display },
     ShowDemo = function(incidents, claims, guildId, viewerId)
