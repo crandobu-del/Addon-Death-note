@@ -1,5 +1,15 @@
 # Capacités PvP — première tranche
 
+## Résultat réel transmis par l'utilisateur
+
+Après `/srpvp debut`, l'utilisateur rapporte : cible Forever confirmée **oui** ; journal de combat restreint **oui** ; COMBAT_LOG_EVENT_UNFILTERED valide **oui**, callback **oui**, lecture **non tentée**. Ces lignes proviennent du retour utilisateur, pas d'une lecture directe du rapport par l'agent. Le build complet du rapport, l'abonnement à PLAYER_DEAD et une livraison après mort n'ont pas été transmis.
+
+Conclusion : aucun accès autorisé et vérifié à l'identité du tueur n'est établi par cette voie. La restriction déclarée est confirmée dans la session testée. La validité de l'événement ne donne pas permission d'en extraire le contenu. Aucune lecture n'a été tentée, aucun contournement ajouté, aucune attribution automatique activée. Ce résultat ne démontre pas à lui seul l'impossibilité de toute autre méthode sur tous les builds.
+
+Recherche complémentaire au même commit : HARDCORE_DEATHS ne porte que memberName ; UNIT_COMBAT n'expose pas d'identité source et son amount est SecretValue ; PLAYER_PVP_KILLS_CHANGED indique un unitTarget, sans couple tueur/victime documenté. CHAT_MSG_COMBAT_HONOR_GAIN contient du texte et des champs de chat, sans garantie que l'émetteur ou un nom extrait soit le tueur d'une victime précise. Aucun de ces contrats examinés n'établit l'attribution requise. Aucun payload de ces événements n'a été capturé.
+
+Piste produit pour une première version utilisable : incidents explicitement déclarés/confirmés, sans désigner le dernier attaquant ou la dernière cible comme tueur certain, puis sauvegarde réelle et transport de guilde. Cette solution doit être présentée comme manuelle ou assistée, pas comme la détection automatique initialement souhaitée. Aucun formulaire ni changement de règle n'est implémenté dans cette mise à jour de preuve.
+
 Date : 5 novembre 2026. Cible : Forever uniquement. Wow.exe installé : 1.60.1.70790. Source épinglée identique : `eac30af597e5aaa43a60f6675ef5fdcea100375f`.
 
 ## Ce que les sources établissent
@@ -29,6 +39,6 @@ Le rapport est une nouvelle SavedVariables `SyndicatRougePvpProbe` du compagnon,
 
 `node tools/test-native.mjs` : 16 contrôles propres au diagnostic passés. Ils vérifient activation explicite, cible, distinction présence/opération, abonnement et livraison séparés, absence d'abonnement restreint, absence d'appel au getter, compteur sans inférence de tueur, réinitialisation, arrêt, absence d'API, valeurs protégées, erreurs et autre client. Total Lua de cette version : 119 contrôles, dont 39 moteur. Archives natives reconstruites, deux fichiers installés et vérifiés par empreinte, originaux conservés sous dist/client-backups/pvp-probe-*.
 
-Profil réel non isolé : les autres addons n'ont pas été désactivés par l'agent. Aucun test de mort ou combat automatisé. L'utilisateur a été invité à lancer `/reload` puis `/srpvp debut` et à fournir les lignes du bilan. Résultat réel en attente ; aucune réussite de détection ni attribution au tueur n'est annoncée.
+Profil réel non isolé : les autres addons n'ont pas été désactivés par l'agent. Aucun test de mort ou combat automatisé. L'utilisateur a transmis les lignes du premier bilan, consignées ci-dessus ; aucune réussite de détection ni attribution au tueur n'est annoncée.
 
 La suite dépend de ce retour. Si l'identité n'est pas accessible par un contrat autorisé et vérifiable, une première version peut proposer des signalements manuels clairement distingués ; elle ne doit pas attribuer automatiquement le dernier attaquant supposé.

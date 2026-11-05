@@ -38,6 +38,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Retour réel du diagnostic PvP : utilisateur confirme Forever=oui, journal restreint=oui, événement valide=oui/callback=oui, lecture non tentée. Aucune attribution automatique autorisée et vérifiée. Les autres contrats examinés (UNIT_COMBAT, PLAYER_PVP_KILLS_CHANGED, HARDCORE_DEATHS, gain d'honneur) n'établissent pas de couple tueur/victime fiable. Voir docs/testing/pvp-capabilities.md. Prochaine proposition : une V1 avec signalements confirmés manuellement, sauvegarde et partage réel ; ne pas présenter cette adaptation comme une détection automatique ni la coder silencieusement comme si elle était déjà acceptée.
+
 Première tranche d'étude PvP : diagnostic explicite `/srpvp debut` installé dans le compagnon, 16 contrôles dédiés passés (119 Lua au total). Sources : PLAYER_DEAD sans tueur ; journal de combat déclaré restreint/callback ; récapitulatif non établi pour camelot. Aucun accès interne/sécurisé ou lecture de payload, aucune création d'incident. Retour réel des restrictions/validité/catégorie demandé à l'utilisateur, en attente. Voir docs/testing/pvp-capabilities.md avant tout branchement automatique ou affirmation de faisabilité.
 
 Bilan réel transmis par l'utilisateur après `/sraudit lancer` : 50 cartes détectées, 50 fonds chargés, 0 anomalie technique, 0 en attente. Chargement positif pour ces 50 zones ; contrôle visuel individuel encore limité à la capture de Strangleronce. Fichier détaillé non retrouvé, persistance de la nouvelle variable à vérifier après redémarrage complet. Ne pas confondre ce bilan utilisateur avec une capture/lecture automatique de l'agent ni affirmer la couverture de racines non recensées.
