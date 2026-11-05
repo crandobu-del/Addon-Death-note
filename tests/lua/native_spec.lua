@@ -10,6 +10,7 @@ check(M.Selected({},"missing",function(r)return r.id end)==nil,"empty selection"
 for _,frame in ipairs(SR_TEST_FRAMES) do if frame.event=="ADDON_LOADED" then frame.scripts.OnEvent(frame,"ADDON_LOADED","SyndicatRouge") end end
 UI.Toggle()
 check(UI.window:IsShown() and #UI.window.view.wanted==0,"production starts empty")
+check(UI.window.search.font.flags=="", "Forever edit box receives explicit font flags")
 check(not UI.provider.demo,"production never loads fixtures")
 for _,frame in ipairs(SR_TEST_FRAMES) do if frame.event=="PLAYER_LOGIN" then frame.scripts.OnEvent(frame,"PLAYER_LOGIN") end end
 check(UI.provider.demo and #UI.window.view.wanted==4,"separate companion installs demo")

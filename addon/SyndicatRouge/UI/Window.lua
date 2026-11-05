@@ -41,7 +41,7 @@ function UI.Create()
     end
     W.Text(f, "Rechercher", 44, 145, 130, 15)
     local edit = W.Frame(f, 170, 139, 470, 30, "EditBox")
-    W.Fill(edit, {0.32, 0.13, 0.04, 0.13}); edit:SetFont("Fonts\\FRIZQT__.TTF", 15)
+    W.Fill(edit, {0.32, 0.13, 0.04, 0.13}); edit:SetFont("Fonts\\FRIZQT__.TTF", 15, "")
     edit:SetTextColor(unpack(W.ink)); edit:SetAutoFocus(false); edit:SetMaxLetters(80)
     edit:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
     edit:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)

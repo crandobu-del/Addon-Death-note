@@ -19,7 +19,7 @@ end
 function W.Text(parent, text, x, y, width, size, color, hand, height)
     local t = parent:CreateFontString(nil, "OVERLAY")
     t:SetPoint("TOPLEFT", parent, "TOPLEFT", x, -y); t:SetSize(width, height or size * 2.5)
-    t:SetFont(hand and (W.media .. "Fonts\\Handlee-Regular.ttf") or "Fonts\\FRIZQT__.TTF", size)
+    t:SetFont(hand and (W.media .. "Fonts\\Handlee-Regular.ttf") or "Fonts\\FRIZQT__.TTF", size, "")
     t:SetTextColor(unpack(color or W.ink)); t:SetJustifyH("LEFT"); t:SetJustifyV("TOP")
     t:SetWordWrap(true); t:SetText(ns.UI.Model.Text(text))
     return t

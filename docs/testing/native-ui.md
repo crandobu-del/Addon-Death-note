@@ -1,5 +1,13 @@
 # Interface native 0.4.0-dev — résultats du 5 novembre 2026
 
+## Premier retour du client réel — correction SetFont
+
+Client installé identifié par les métadonnées Wow.exe : 1.60.1.70790. Capture fournie par l'utilisateur après `/srdemo` : en-tête, textures et onglets visibles, puis erreur `UI/Window.lua:44: bad argument #3 to 'SetFont'`. L'ouverture complète échoue ; ce retour ne constitue donc pas une validation du client. La capture automatique du jeu reste indisponible.
+
+Cause : `EditBox:SetFont(fontFile, height, flags)` requiert le troisième argument sur Forever. La déclaration épinglée `Blizzard_APIDocumentationGenerated/SimpleEditBoxAPIDocumentation.lua` marque flags non nullable. Le simulateur et le double de test acceptaient à tort son omission. Le champ de recherche fournit maintenant `""` ; le helper FontString utilise aussi explicitement cette valeur.
+
+Vérification : double renforcé sur EditBox, échec reproduit avant correction, puis 19 tests UI et 39 tests moteur passés. Les deux archives sont reconstruites. Window.lua et Widgets.lua sont copiés dans l'installation avec sauvegarde sous dist/client-backups et comparaison des empreintes. Étape restante : `/reload`, puis `/srdemo` dans le jeu et nouveau retour utilisateur ; le succès après correction n'est pas encore observé. Aucun réglage global du jeu n'est modifié par le correctif.
+
 Demande : programmer directement l'interface Forever à partir du concept v3. Branche `codex/structure-syndicat-rouge`, base `c9aa7401aaa457e71e2034d023136b8ad061d348`.
 
 ## Livraison

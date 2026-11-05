@@ -31,7 +31,13 @@ function methods:GetVerticalScroll() return self.scroll end
 function methods:GetVerticalScrollRange() return math.max(0,(self.child and self.child.height or 0)-self.height) end
 function methods:Enable() self.disabled=false end
 function methods:Disable() self.disabled=true end
-for _,method in ipairs({"SetPoint","SetAllPoints","ClearAllPoints","SetFont","SetTextColor","SetJustifyH","SetJustifyV","SetWordWrap","SetTexture","SetTexCoord","SetColorTexture","EnableMouseWheel","EnableMouse","SetFrameStrata","SetClampedToScreen","SetMovable","RegisterForDrag","StartMoving","StopMovingOrSizing","SetAutoFocus","SetMaxLetters","ClearFocus"}) do
+function methods:SetFont(fontFile, height, flags)
+    assert(type(fontFile)=="string" and type(height)=="number", "invalid font arguments")
+    if self.kind=="EditBox" then assert(type(flags)=="string", "EditBox:SetFont requires flags (Forever runtime)") end
+    self.font = {file=fontFile,height=height,flags=flags}
+    return true
+end
+for _,method in ipairs({"SetPoint","SetAllPoints","ClearAllPoints","SetTextColor","SetJustifyH","SetJustifyV","SetWordWrap","SetTexture","SetTexCoord","SetColorTexture","EnableMouseWheel","EnableMouse","SetFrameStrata","SetClampedToScreen","SetMovable","RegisterForDrag","StartMoving","StopMovingOrSizing","SetAutoFocus","SetMaxLetters","ClearFocus"}) do
     methods[method]=function() end
 end
 UIParent = new("Frame","UIParent")
