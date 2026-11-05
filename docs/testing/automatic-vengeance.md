@@ -29,6 +29,8 @@ Installés : `KillProofProbe.lua` et `SyndicatRougeDemo.toc`, copies vérifiées
 
 ## Étapes utilisateur en attente
 
+Premier bilan réel transmis : `valide=yes, callback=no, abonnement=registered` ; réceptions/paires lisibles/attribuées à soi/protégées/autres attaquants/invalides tous à **0**, `Résultat=not_observed`. Cela confirme les requêtes et l'abonnement selon le retour utilisateur, **pas la livraison sur kill PvP**. Aucune occurrence réelle de kill n'est attestée dans ce retour ; attendre le bilan après un combat PvP normal. Aucun GUID ou nom demandé à l'utilisateur.
+
 1. `/reload`, puis `/srkill debut`. Recopier la ligne `PARTY_KILL` et `Résultat` pour vérifier disponibilité/abonnement.
 2. Lors d'un prochain combat PvP normal, après un kill réellement réalisé par l'utilisateur, `/srkill bilan` avant de recharger. Recopier les compteurs.
 3. `/srkill fin` arrête le diagnostic ; un reload le désactive également. `/srchat debut` doit être réactivé séparément si le test de message personnel doit continuer.
