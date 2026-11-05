@@ -26,6 +26,8 @@ La sauvegarde est un checkpoint en mémoire ; WoW écrit le fichier sur reload/l
 
 ## Recette en jeu à réaliser
 
+[Préversion GitHub 0.5](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.5.0-alpha.1) publiée sur le commit **6f038500fb59e317c7206fb4866cf4303f80545b**, avec les deux ZIP dans Assets. Empreinte affichée publiquement de l'archive principale vérifiée identique à la locale. Capture de publication conservée hors git sous `docs/testing/screenshots/notification-delivery-release.png`. CurseForge reste sur la soumission 0.4 ; son état actuel n'a pas été revérifié ici.
+
 Installation locale confirmée par empreintes : 31 fichiers principaux ; sauvegarde des anciens sous `dist/client-backups/guild-transport-20261105-200813`. Le compagnon de diagnostic déjà installé reste présent. Les deux archives 0.5 contiennent le principal à jour, celle avec compagnon contient aussi le diagnostic `/srkill`. L'archive principale a pour SHA256 `b4350bfa1fc7f3dc47540b37b27a6e614a93fb62ff06779cb93c150791681675`.
 
 Les deux membres installent la version **0.5.0-dev**, font `/reload`, puis `/srsync activer`. `/srsync test` vérifie le transport sans créer de fait fictif. Sur une vengeance réelle déjà validée et partagée, la victime reçoit une alerte, ouvre `/sr` → Notifications, clique **Remercier**. Le vengeur doit recevoir l'alerte et l'entrée ; la victime doit voir **Merci reçu**. Refaire après un reload et avec le vengeur reconnecté après le clic : une seule entrée et aucun point supplémentaire.
