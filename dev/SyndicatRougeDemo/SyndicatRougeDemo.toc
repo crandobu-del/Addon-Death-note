@@ -2,4 +2,5 @@
 ## Title: DEATH NOTE — Démonstration
 ## Dependencies: SyndicatRouge
 ## Version: 0.4.0-dev
+MapLocations.lua
 Demo.lua

@@ -36,11 +36,8 @@ local function makePanel(f)
     p.portrait:SetTexCoord(0.377, 0.520, 0.285, 0.512)
     p.summary = W.Text(p.detail, "", 170, 94, 430, 23, W.red, true, 95)
     p.status = W.Text(p.detail, "", 170, 170, 430, 20, W.red, false, 28)
-    p.map = p.detail:CreateTexture(nil, "ARTWORK")
-    p.map:SetPoint("TOPLEFT", p.detail, "TOPLEFT", 14, -250); p.map:SetSize(360, 180)
-    p.map:SetTexture(W.media .. "Textures\\IllustrativeMap.tga")
-    p.mapNote = W.Text(p.detail, "Carte fictive\n\nEmplacement\nillustratif\n\nVoir l'historique\nci-dessous", 390, 260, 190, 14, W.red, false, 170)
-    p.marker = W.Text(p.detail, "X", 185, 330, 30, 25, W.red, false, 35)
+    p.map = UI.Maps.Create(p.detail)
+    p.mapNote = W.Text(p.detail, "", 390, 260, 190, 14, W.red, false, 170)
     p.read = W.Button(p.detail, "Marquer comme lu", 14, 150, 205, 38, function()
         if p.current then UI.provider:Read(p.current.id); UI.Refresh() end
     end)
@@ -65,7 +62,7 @@ function UI.Render(f)
     p:Show()
     for _, row in ipairs(p.rows) do row:Hide() end
     for _, line in ipairs(p.lines) do line:Hide() end
-    p.map:Hide(); p.mapNote:Hide(); p.marker:Hide(); p.portrait:Hide(); p.read:Hide(); p.thank:Hide()
+    p.map:Hide(); p.mapNote:Hide(); p.portrait:Hide(); p.read:Hide(); p.thank:Hide()
     local data = ({f.view.wanted, f.view.ranking, f.view.journal, f.view.notifications})[f.tab]
     local rows = M.Filter(data, f.query, searchable)
     local current = M.Selected(rows, f.selection[f.tab], key)
@@ -107,9 +104,13 @@ function UI.Render(f)
         detailLine(p, 2, incident.victim.name .. " · " .. M.Date(incident.occurredAt))
         p.lines[1]:ClearAllPoints(); p.lines[1]:SetPoint("TOPLEFT", p.detail, "TOPLEFT", 14, -200)
         p.lines[2]:ClearAllPoints(); p.lines[2]:SetPoint("TOPLEFT", p.detail, "TOPLEFT", 14, -224)
-        local offset = UI.provider.demo and 5 or 4
-        if UI.provider.demo then p.map:Show(); p.mapNote:Show(); p.marker:Show()
-        else detailLine(p, 3, "Carte native et portrait du joueur : connexion à réaliser.") end
+        local offset = 5
+        local available, marked, mapName = UI.Maps.Display(p.map, incident.location)
+        local note = available and (mapName .. "\n\nDernier incident enregistré") or "Lieu : zone connue uniquement"
+        if marked then note = note .. string.format("\n\n%.1f%% · %.1f%%", incident.location.x * 100, incident.location.y * 100)
+        elseif available then note = note .. "\n\nPosition précise inconnue" end
+        if UI.provider.demo then note = note .. "\n\nIncident fictif" end
+        set(p.mapNote, note); p.mapNote:Show()
         for i, entry in ipairs(current.incidents) do
             detailLine(p, offset + i, entry.victim.name .. " · " .. entry.location.zone .. "\n" .. M.Date(entry.occurredAt) .. (entry.vengeanceId and " · vengé" or " · à venger"))
         end

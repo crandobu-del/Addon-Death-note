@@ -38,6 +38,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Tranche cartes natives : UI/Map.lua remplace l'illustration par les tuiles C_Map du client ; la démo résout ses zones via l'arbre des cartes Forever. Coordonnées absentes = pas de marqueur ; carte inconnue = message explicite. 19 UI + 14 cartes + 39 moteur passés. REQ-013 / IMP-011 : rendu implémenté, collecte des coordonnées réelles et validation visuelle après installation encore ouvertes. Voir game-maps.md et docs/testing/native-ui.md.
+
 Retour du client réel le 5 novembre : `/srdemo` s'arrête sur SetFont dans Window.lua:44 (capture utilisateur). Arguments de police corrigés dans les deux helpers, test de régression reproduit puis passé : 19 UI + 39 moteur. Correctif copié et vérifié dans l'installation Forever, originaux sauvegardés. Rechargement et validation visuelle après correction attendus ; voir docs/testing/native-ui.md. Ne pas présenter le test en jeu comme passé.
 
 Dernière tranche : IMP-020, base `c9aa7401aaa457e71e2034d023136b8ad061d348`. L'interface native et les paquets 0.4.0-dev sont préparés. Le détail de la comparaison visuelle et les limites du dernier import se trouvent dans `docs/testing/native-ui.md`. Les paragraphes ci-dessous conservent l'historique de la tranche Discord ; la prochaine priorité est de compléter les portraits/tampon et le fournisseur de données/persistance Forever, avant transport et combats réels.

@@ -1,5 +1,15 @@
 # Interface native 0.4.0-dev — résultats du 5 novembre 2026
 
+## Remplacement de la carte illustrative par les cartes du jeu
+
+UI/Map.lua utilise C_Map.GetMapInfo/GetMapArtLayers/GetMapArtLayerTextures du client 1.60.1.70790 (source épinglée identique ci-dessous). Les tuiles sont ordonnées par lignes, les marges des dernières tuiles recadrées et l'ensemble ajusté proportionnellement dans l'encart 360×180. Le marqueur utilise la même transformation que le fond et uniquement les coordonnées enregistrées. Il ne représente jamais la position actuelle de l'ennemi. Sans coordonnées : carte de zone et mention de position précise inconnue. Sans carte/API/textures : état indisponible explicite, sans ancienne illustration de secours.
+
+La démonstration résout ses noms de zones auprès de l'arbre réel du client via GetFallbackWorldMapID/GetMapChildrenInfo. Les identifiants historiques des fixtures ne sont plus imposés au client ; un nom ambigu ou inconnu ne produit ni carte devinée ni coordonnées. Les lieux de démonstration restent fictifs même lorsque leur fond provient du jeu. Aucun fond Blizzard n'est téléchargé, copié ou redistribué ; l'ancienne illustration est exclue des nouvelles archives.
+
+Tests après modification : 19 UI, 14 cartes et 39 moteur passés (72 contrôles locaux). Couverture cartes : assemblage, tuiles de bord, proportions, coordonnées, absence de position, indisponibilité API/fond, nettoyage et réutilisation des textures, résolution des noms et ambiguïtés. Les tests utilisent des identifiants synthétiques, pas une preuve de présence des cartes réelles.
+
+Installation : sept fichiers copiés et vérifiés par empreinte dans le client, avec sauvegarde sous dist/client-backups/game-maps-*. Validation visuelle de cette nouvelle version dans le client : en attente du `/reload` utilisateur et d'une capture. Nouveau parcours UIForever non exécuté pour cette tranche ; les captures précédentes illustrent l'ancien fond et ne valident pas les cartes natives. La capture automatique du client avait échoué lors des essais précédents. Recharger, ouvrir `/srdemo`, sélectionner Mornecroc puis une cible sans coordonnées et vérifier carte/lieu/marqueur et absence d'erreur Lua.
+
 ## Premier retour du client réel — correction SetFont
 
 Client installé identifié par les métadonnées Wow.exe : 1.60.1.70790. Capture fournie par l'utilisateur après `/srdemo` : en-tête, textures et onglets visibles, puis erreur `UI/Window.lua:44: bad argument #3 to 'SetFont'`. L'ouverture complète échoue ; ce retour ne constitue donc pas une validation du client. La capture automatique du jeu reste indisponible.
