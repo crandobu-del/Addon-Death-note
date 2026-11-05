@@ -20,6 +20,8 @@ Le compagnon fournit `/sraudit lancer` pour inventorier les zones du client et c
 
 `/srpvp debut` lance la première vérification des capacités de mort/combat du client, `/srpvp` affiche le bilan et `/srpvp fin` l'arrête. Le retour réel confirme un journal restreint ; aucune identification automatique fiable du tueur n'est encore établie. Le diagnostic ne lit pas de données protégées et ne crée aucune prime. [Contrats et résultats](docs/testing/pvp-capabilities.md).
 
+La piste du message personnel « Vous avez été tué par… » dispose d'un test distinct : `/srchat debut`, puis `/srchat bilan` après une occurrence normale et avant de recharger. `/srchat fin` arrête l'écoute. Aucun nom ou texte de chat sauvegardé ; [réception réelle encore à vérifier](docs/testing/death-chat.md).
+
 ## Essayer sans WoW
 
 Voir [le guide de démonstration](demo/README.md). L'aperçu compilé s'ouvre directement dans un navigateur, sans serveur et sans accès au jeu.

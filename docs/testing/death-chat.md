@@ -1,0 +1,22 @@
+# Test ciblé du message personnel de mort
+
+Phrase fournie par l'utilisateur : `Vous avez été tué par "JoueurX"`. Il rapporte qu'elle apparaît dans Général et Journal de combat. Son événement d'origine, sa provenance Blizzard/serveur/autre addon, sa lisibilité en contexte et sa corrélation avec une mort réelle ne sont pas encore observés par l'agent.
+
+Module ajouté au compagnon seulement : ChatDeathProbe.lua. Aucun abonnement à COMBAT_LOG_MESSAGE ni au journal restreint ; aucune lecture de cadre ou de chaîne protégée par une autre voie. Les événements testés sont CHAT_MSG_SYSTEM, CHAT_MSG_COMBAT_MISC_INFO et PLAYER_DEAD. Le premier est déclaré SecretInChatMessagingLockdown dans ChatInfoDocumentation.lua au commit Forever eac30af597e5aaa43a60f6675ef5fdcea100375f ; sa présence dans le chat n'implique donc pas qu'il soit toujours lisible.
+
+Avant toute inspection, le module exige issecretvalue et refuse les valeurs secrètes ou un garde absent/en erreur. Il rejette les enveloppes |K/|k, ne les décode pas. Pour un texte ordinaire, le parseur accepte la phrase entière, des guillemets droits/français, la ponctuation finale et des liens player publics dont cible et libellé concordent. Il ne prend ni les canaux de guilde ni les chuchotements ni les messages ordinaires des joueurs.
+
+Les seuls candidats conservés sont des noms reconnus et leur source, dans une mémoire de session bornée. Leur fenêtre de corrélation avec PLAYER_DEAD est de cinq secondes, avant ou après. Les passages par deux événements sont dédupliqués ; des noms concurrents donnent un résultat ambigu. Une chaîne simple peut désigner un PNJ : ce n'est pas à elle seule une preuve PvP. Aucun registre, incident, point ou message extérieur n'est créé ; les textes bruts et noms candidats ne sont pas écrits dans SavedVariables.
+
+Vérification locale : 19 tests ajoutés et passés pour le texte utilisateur, accents, guillemets, liens ordinaires, lien incohérent, autre type de lien, faux préfixe, nom non valide, wrapper protégé, valeur secrète, garde absent, allowlist, corrélation avant/après mort, délai, doublons, ambiguïté et arrêt. Total Lua de cette version : 138 contrôles. Cela prouve le comportement sur des entrées synthétiques, pas la réception du message dans Forever.
+
+Les archives sont reconstruites ; ChatDeathProbe.lua et le TOC du compagnon sont installés avec sauvegarde et comparaison d'empreinte. L'installation du jeu n'est pas déclarée validée après ce changement.
+
+## Test réel à effectuer lors d'une occurrence normale
+
+1. `/reload`, puis `/srchat debut` pour activer le diagnostic.
+2. À la prochaine mort PvP rencontrée pendant le jeu, observer le message. Aucune action de combat n'est automatisée et il n'est pas nécessaire de provoquer une mort pour ce test.
+3. Sans recharger entre-temps, `/srchat bilan` et transmettre le bilan : source d'événement, compteurs reçus/reconnus/protégés, résultat et nom candidat éventuel.
+4. `/srchat fin` arrête l'écoute. Le bilan de session reste visible jusqu'au rechargement ; aucune conservation de noms n'est attendue après celui-ci.
+
+La suite dépend de cette observation. Un compteur nul peut signifier un autre événement, un autre format ou un message ajouté uniquement à l'affichage ; il ne démontre pas une interdiction globale. Un texte protégé reste exclu. Une reconnaissance positive sera encore à vérifier pour distinguer joueur/PNJ, identité inter-royaume et preuve fiable de l'incident avant automatisation.

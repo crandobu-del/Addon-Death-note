@@ -7,4 +7,5 @@ MapLocations.lua
 MapCatalog.lua
 MapAudit.lua
 PvpProbe.lua
+ChatDeathProbe.lua
 Demo.lua
