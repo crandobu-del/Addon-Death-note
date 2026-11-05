@@ -6,6 +6,8 @@ Version **0.4.0-dev — alpha** : interface native à quatre onglets, sauvegarde
 
 ## Installer l'addon sur WoW Forever
 
+Projet soumis : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). La première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, est en cours de traitement et attend l'approbation de CurseForge. Le lien ne devient accessible aux autres joueurs qu'après validation. Le portail indique que les fichiers Alpha sont proposés par lien direct et n'apparaissent pas dans l'application CurseForge.
+
 1. Récupérer `SyndicatRouge-forever-0.4.0-dev.zip`. Pour essayer les exemples, utiliser plutôt `SyndicatRouge-forever-0.4.0-dev-avec-demo.zip`. Les archives préparées se trouvent dans `dist/` ; ce dossier n'est pas versionné sur GitHub. L'archive du code source GitHub ne constitue pas directement le paquet à installer.
 2. Fermer WoW si c'est la première installation. Lors d'une mise à jour, conserver une copie de l'ancien dossier de l'addon.
 3. Extraire le dossier **SyndicatRouge** dans le dossier du client Forever : `World of Warcraft/_forever_/Interface/AddOns/`.
