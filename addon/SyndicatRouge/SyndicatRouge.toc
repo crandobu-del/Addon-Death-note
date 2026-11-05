@@ -2,7 +2,7 @@
 ## Title: Tableau des primes — Le Syndicat Rouge
 ## Notes: Registre de guilde — Forever — développement, client réel non validé
 ## Author: Le Syndicat Rouge
-## Version: 0.5.0-dev
+## Version: 0.5.1-dev
 ## SavedVariablesPerCharacter: SyndicatRougeCharacterDB
 
 Init.lua

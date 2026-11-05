@@ -72,6 +72,7 @@ end
 function N.Start()
     if not N.runtime or not N.runtime.writable then return false,"profile_not_writable" end
     clear("initializing")
+    if C_GuildInfo and C_GuildInfo.GuildRoster then pcall(C_GuildInfo.GuildRoster) end
     local context,reason=current()
     if not context then N.status=reason;return false,reason end
     if not C_ChatInfo or not C_ChatInfo.RegisterAddonMessagePrefix or not C_ChatInfo.SendAddonMessage then N.status="chat_api_unavailable";return false,N.status end
@@ -98,7 +99,8 @@ function N.Receive(prefix,packet,distribution,sender)
     local context=current()
     if not context or context.guildId~=N.channel.context.guildId or context.owner.id~=N.channel.context.owner.id then clear("guild_context_changed");return end
     local actor=C.Actor(sender,context.owner.realm)
-    if not actor or actor.id==context.owner.id or not C.Member(actor) then return end
+    if not actor or actor.id==context.owner.id then return end
+    if not C.Member(actor,context) then N.lastError="sender_membership_unavailable";return end
     local envelope,reason=ns.Wire.Receive(N.pool,actor.id,packet,N.clock)
     if not envelope then if reason~="pending" then N.lastError=reason end;return end
     if type(envelope)~="table" then N.lastError="invalid_envelope";return end
@@ -184,9 +186,14 @@ function N.Bind(runtime,changed)
     SlashCmdList.SYNDICATROUGESYNC=function(command)
         command=command:lower():match("^%s*(.-)%s*$")
         if command=="activer" or command=="reprendre" then
+            if runtime.writable then runtime.root.syncEnabled=true end
             local ok,reason=N.Start()
             if ok then runtime.root.syncEnabled=true;say("partage de guilde activé. /srsync test pour vérifier la réception.")
-            else say("partage indisponible ("..tostring(reason)..").") end
+            else say("partage en attente ("..tostring(reason).."). "..(runtime.writable and "Nouvelle tentative automatique ; " or "Profil en lecture seule ; ").."/srsync diagnostic pour le détail.") end
+        elseif command=="diagnostic" then
+            local context,reason=current()
+            local check=C.lastCheck or {}
+            say("version "..ns.version.." ; identité="..(context and "ready" or tostring(reason)).." ; nom="..(check.name or "not_checked").." ; royaume="..(check.realm or "not_checked").." ; membre="..(check.member or "not_checked")..".")
         elseif command=="arreter" or command=="arrêter" then
             if runtime.writable then runtime.root.syncEnabled=false end
             clear("inactive");say("partage arrêté.")

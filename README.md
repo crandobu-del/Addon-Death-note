@@ -1,16 +1,16 @@
 # Tableau des primes — Le Syndicat Rouge
 
-Nom affiché demandé le 5 novembre 2026. Les dossiers `SyndicatRouge`, les commandes et les sauvegardes gardent leurs identifiants internes. Les archives et fiches déjà publiées sous l'ancien nom conservent leur historique ; le renommage est présent dans les sources et l'installation locale mises à jour, et sera inclus dans le prochain paquet.
+Nom affiché demandé le 5 novembre 2026. Les dossiers `SyndicatRouge`, les commandes et les sauvegardes gardent leurs identifiants internes. Les anciennes publications gardent leur historique ; la version 0.5.1 inclut le nouveau nom, le bouton de minicarte et le correctif de carte Arathi.
 
 Projet d'addon de guilde pour **WoW Forever uniquement** : joueurs recherchés, incidents, vengeances, réputation, classement, notifications et relais Discord optionnel.
 
-Version **0.5.0-dev — alpha** : interface native à quatre onglets, sauvegarde par personnage, partage de guilde et livraison des remerciements avec accusés de réception. L'interface, les cartes et la conservation des réglages après `/reload` ont été observées sur Forever. Le parcours de livraison est testé entre clients simulés ; sa validation dans le jeu à deux membres et l'identification automatique des meurtres/vengeances restent ouvertes. Aucun service Discord actif.
+Version **0.5.1-dev — alpha** : interface native à quatre onglets, sauvegarde par personnage, partage de guilde et livraison des remerciements avec accusés de réception. L'interface, les cartes et la conservation des réglages après `/reload` ont été observées sur Forever. Le parcours de livraison est testé entre clients simulés ; sa validation dans le jeu à deux membres et l'identification automatique des meurtres/vengeances restent ouvertes. Aucun service Discord actif.
 
 ## Installer l'addon sur WoW Forever
 
 Projet soumis sous l’ancien nom : [Death Note - Guild Ledger sur CurseForge](https://www.curseforge.com/wow/addons/death-note-guild-ledger). Une première archive **Alpha 0.4.0-dev**, pour **Forever 1.60.1**, y a été déposée ; son dernier état observé était « Processing ». La version 0.5 ci-dessous est distribuée sur GitHub. Le portail CurseForge indique que les Alpha sont proposés par lien direct après validation et n'apparaissent pas dans son application.
 
-1. Télécharger [l'archive installable SyndicatRouge-forever-0.5.0-dev.zip](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev.zip). Pour essayer les exemples et diagnostics, choisir [l'archive avec compagnon](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.0-alpha.1/SyndicatRouge-forever-0.5.0-dev-avec-demo.zip). Les deux fichiers se trouvent dans les **Assets** de [la préversion GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.5.0-alpha.1), sans attendre CurseForge. Les fichiers **Source code** sont les sources du dépôt et ne constituent pas directement le paquet à installer.
+1. Télécharger [l'archive installable SyndicatRouge-forever-0.5.1-dev.zip](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.1-alpha.1/SyndicatRouge-forever-0.5.1-dev.zip). Pour essayer les exemples et diagnostics, choisir [l'archive avec compagnon](https://github.com/crandobu-del/Addon-Death-note/releases/download/v0.5.1-alpha.1/SyndicatRouge-forever-0.5.1-dev-avec-demo.zip). Les deux fichiers se trouvent dans les **Assets** de [la préversion GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.5.1-alpha.1), sans attendre CurseForge. Les fichiers **Source code** sont les sources du dépôt et ne constituent pas directement le paquet à installer.
 2. Fermer WoW si c'est la première installation. Lors d'une mise à jour, conserver une copie de l'ancien dossier de l'addon.
 3. Extraire le dossier **SyndicatRouge** dans le dossier du client Forever : `World of Warcraft/_forever_/Interface/AddOns/`.
 4. Vérifier que le fichier se trouve directement ici : `_forever_/Interface/AddOns/SyndicatRouge/SyndicatRouge.toc`. Éviter un dossier supplémentaire tel que `SyndicatRouge/SyndicatRouge/`.
@@ -46,6 +46,7 @@ L'envoi est repris après rechargement et retenté tant que la réception n'est 
 | `/sr` ou `/syndicat` | Ouvrir/fermer le vrai registre ; quitter la démonstration |
 | `/srsave` | Vérifier et préparer la sauvegarde locale |
 | `/srsync` | Afficher l'état du partage et ses sous-commandes |
+| `/srsync diagnostic` | Afficher la version et les étapes de reconnaissance du personnage, sans révéler de nom ni royaume |
 | `/srdemo` | Ouvrir les exemples, uniquement avec le compagnon installé |
 | `/srkill debut`, `/srkill bilan`, `/srkill fin` | Diagnostic optionnel de preuve de kill, avec le compagnon de diagnostic récent ; aucun point attribué |
 

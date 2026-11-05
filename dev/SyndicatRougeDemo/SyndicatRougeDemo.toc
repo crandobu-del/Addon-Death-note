@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: Tableau des primes — Démonstration
 ## Dependencies: SyndicatRouge
-## Version: 0.5.0-dev
+## Version: 0.5.1-dev
 ## SavedVariables: SyndicatRougeMapAudit, SyndicatRougePvpProbe
 MapLocations.lua
 MapCatalog.lua

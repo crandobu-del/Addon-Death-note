@@ -25,12 +25,73 @@ end
 test("Forever guild and canonical own identity",function()
     local c=assert(C.Current());eq(c.guildId,"guild:123");eq(c.owner.id,"Lyra-Forever")
 end)
+test("missing local realm uses public normalized realm API",function()
+    local original,realmAPI=UnitFullName,GetNormalizedRealmName
+    UnitFullName=function()return "Lyra",nil end
+    GetNormalizedRealmName=function()return "Forever" end
+    local context=assert(C.Current());eq(context.owner.id,"Lyra-Forever");eq(C.lastCheck.realm,"normalized_local")
+    UnitFullName=original;GetNormalizedRealmName=realmAPI
+end)
+test("missing realm without public fallback has a specific reason",function()
+    local original,realmAPI=UnitFullName,GetNormalizedRealmName
+    UnitFullName=function()return "Lyra","" end;GetNormalizedRealmName=nil
+    local context,reason=C.Current();eq(context,nil);eq(reason,"player_realm_unavailable")
+    UnitFullName=original;GetNormalizedRealmName=realmAPI
+end)
+test("protected own identity never triggers public fallback",function()
+    local original,realmAPI=UnitFullName,GetNormalizedRealmName;local calls=0
+    GetNormalizedRealmName=function()calls=calls+1;return "Forever" end
+    UnitFullName=function()return "Lyra",secret end
+    local context,reason=C.Current();eq(context,nil);eq(reason,"player_identity_protected");eq(calls,0)
+    UnitFullName=function()return secret,nil end
+    eq(C.Current(),nil);eq(calls,0)
+    UnitFullName=original;GetNormalizedRealmName=realmAPI
+end)
+test("hyphenated explicit character name is not parsed as a realm",function()
+    local original=UnitFullName
+    UnitFullName=function()return "Nom-Compose","Forever" end
+    local context=assert(C.Current());eq(context.owner.name,"Nom-Compose");eq(context.owner.id,"Nom-Compose-Forever")
+    eq(C.Actor("Nom-Compose-Forever","Forever").name,"Nom-Compose")
+    UnitFullName=original
+end)
+test("short guild lookup allowed only for a proven local realm",function()
+    local original,realmAPI=C_GuildInfo.MemberExistsByName,GetNormalizedRealmName
+    GetNormalizedRealmName=function()return "Forever" end
+    local queries={};C_GuildInfo.MemberExistsByName=function(name)queries[#queries+1]=name;return name=="Lyra" end
+    assert(C.Member({id="Lyra-Forever",name="Lyra",realm="Forever"}));eq(#queries,2)
+    queries={};eq(C.Member({id="Lyra-Other",name="Lyra",realm="Other"}),false);eq(#queries,1)
+    C_GuildInfo.MemberExistsByName=original;GetNormalizedRealmName=realmAPI
+end)
+test("protected membership lookup never retries with a short name",function()
+    local original,realmAPI=C_GuildInfo.MemberExistsByName,GetNormalizedRealmName;local calls=0
+    C_GuildInfo.MemberExistsByName=function()return secret end
+    GetNormalizedRealmName=function()calls=calls+1;return "Forever" end
+    eq(C.Member({id="Lyra-Forever",name="Lyra",realm="Forever"}),false);eq(calls,0)
+    C_GuildInfo.MemberExistsByName=original;GetNormalizedRealmName=realmAPI
+end)
+test("ambiguous hyphenated name cannot use short-name membership fallback",function()
+    local original,realmAPI=C_GuildInfo.MemberExistsByName,GetNormalizedRealmName;local calls=0
+    GetNormalizedRealmName=function()return "Forever" end
+    C_GuildInfo.MemberExistsByName=function(name)calls=calls+1;return name=="Lyra-Other" end
+    eq(C.Member({id="Lyra-Other-Forever",name="Lyra-Other",realm="Forever"}),false);eq(calls,1)
+    C_GuildInfo.MemberExistsByName=original;GetNormalizedRealmName=realmAPI
+end)
+test("diagnostic reports only categories without changing data or queuing messages",function()
+    local before=V.Copy(runtime.root);local queued=#N.queue
+    SlashCmdList.SYNDICATROUGESYNC("diagnostic")
+    assert(V.Same(before,runtime.root));eq(#N.queue,queued);eq(C.lastCheck.name,"public")
+end)
 test("protected names and K wrappers refused",function()
     eq(C.Actor(secret,"Forever"),nil);eq(C.Actor("|Kabc|k","Forever"),nil)
     eq(C.Actor("Kaelan",secret),nil);eq(C.Actor("Kaelan-Forever","Other").id,"Kaelan-Forever")
 end)
-test("unavailable membership and wrong client fail closed",function()
-    member=false;eq(C.Current(),nil);member=true
+test("own guild club confirms self even while roster lookup fails",function()
+    member=false;local context=assert(C.Current());eq(C.lastCheck.member,"own_guild_club")
+    assert(C.Member(context.owner,context))
+    eq(C.Member({id="Kaelan-Forever",name="Kaelan",realm="Forever"},context),false)
+    member=true
+end)
+test("wrong client fails closed",function()
     WOW_PROJECT_ID=1;eq(C.Current(),nil);WOW_PROJECT_ID=18
 end)
 test("enum zero means prefix registered and enqueued not acknowledged",function()
