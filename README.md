@@ -39,6 +39,7 @@ Si `restricted`, `send_code_11` ou une identité inaccessible est signalé, reco
 | `/srsave` | Vérifier et préparer la sauvegarde locale |
 | `/srsync` | Afficher l'état du partage et ses sous-commandes |
 | `/srdemo` | Ouvrir les exemples, uniquement avec le compagnon installé |
+| `/srkill debut`, `/srkill bilan`, `/srkill fin` | Diagnostic optionnel de preuve de kill, avec le compagnon de diagnostic récent ; aucun point attribué |
 
 WoW écrit les sauvegardes au rechargement, à la déconnexion ou à la fermeture normale. Les réglages de fenêtre, le registre personnel et le cache partagé sont conservés par personnage. Les exemples restent séparés et ne sont jamais partagés. Pour mettre à jour, remplacer les fichiers de l'addon en conservant les sauvegardes dans `WTF/` ; ne pas supprimer ce dossier.
 

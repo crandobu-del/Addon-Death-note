@@ -8,4 +8,5 @@ MapCatalog.lua
 MapAudit.lua
 PvpProbe.lua
 ChatDeathProbe.lua
+KillProofProbe.lua
 Demo.lua
