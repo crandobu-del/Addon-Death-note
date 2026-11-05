@@ -83,7 +83,7 @@ function C.Start()
 end
 function C.Show()
     local r=C.report
-    if not r then print("DEATH NOTE : /srchat debut active le test du message personnel de mort.");return end
+    if not r then print("DEATH NOTE : test inactif. Tape /srchat debut ; après rechargement, il faut le réactiver.");return end
     print("DEATH NOTE — test du message : "..(r.running and "actif" or "arrêté").." ; morts observées="..r.deaths..", candidats associés="..r.correlated)
     for _,event in ipairs({"CHAT_MSG_SYSTEM","CHAT_MSG_COMBAT_MISC_INFO"}) do
         local row=r.events[event]
@@ -95,7 +95,9 @@ function C.Show()
 end
 SLASH_SYNDICATROUGECHATDEATH1="/srchat"
 SlashCmdList.SYNDICATROUGECHATDEATH=function(command)
+    command=(command or ""):lower():gsub("é","e"):match("^%s*(.-)%s*$")
     if command=="debut" then C.Start();C.Show()
     elseif command=="fin" then C.Stop();C.Show()
-    else C.Show() end
+    elseif command=="" or command=="bilan" then C.Show()
+    else print("DEATH NOTE : commande inconnue. Utilise /srchat debut, /srchat bilan ou /srchat fin.") end
 end

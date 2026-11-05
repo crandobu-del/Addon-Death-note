@@ -40,5 +40,12 @@ C.Start();now=300;C.Receive("CHAT_MSG_SYSTEM",'Vous avez été tué par JoueurX'
 check(C.report.correlated==0,"stale candidate never reused")
 local frame=C.frame;C.Stop()
 check(not C.report.running and next(frame.events)==nil and frame.scripts.OnEvent==nil,"stop removes all subscriptions")
+SlashCmdList.SYNDICATROUGECHATDEATH("  début  ")
+check(C.report.running,"accented start command with spaces is accepted")
+SlashCmdList.SYNDICATROUGECHATDEATH(" FIN ")
+check(not C.report.running,"stop command accepts case and spaces")
+local report=C.report
+SlashCmdList.SYNDICATROUGECHATDEATH("invalid")
+check(C.report==report and not C.report.running,"invalid command does not silently start or reset probe")
 issecretvalue,GetTime,WOW_PROJECT_ID,WOW_PROJECT_CAMELOT=oldGuard,oldClock,oldId,oldCamelot
 return {passed=passed}

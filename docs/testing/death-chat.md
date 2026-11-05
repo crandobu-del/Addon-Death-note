@@ -1,5 +1,7 @@
 # Test ciblé du message personnel de mort
 
+Retour utilisateur suivant : capture du message d'aide initial, donc aucune session de chat diagnostiquée active à cet instant. La commande exacte saisie et un éventuel rechargement antérieur ne sont pas connus ; ce n'est pas une preuve d'échec de lecture du message de mort. La commande accepte maintenant début/debut, majuscules et espaces de bord ; elle affiche un avertissement distinct pour un argument inconnu et précise qu'il faut réactiver après rechargement. Trois contrôles de commande ajoutés (22 tests du module), passés. Le fichier installé est sauvegardé, remplacé et vérifié. Le prochain résultat attendu est d'abord « test du message : actif », avant toute occurrence réelle.
+
 Phrase fournie par l'utilisateur : `Vous avez été tué par "JoueurX"`. Il rapporte qu'elle apparaît dans Général et Journal de combat. Son événement d'origine, sa provenance Blizzard/serveur/autre addon, sa lisibilité en contexte et sa corrélation avec une mort réelle ne sont pas encore observés par l'agent.
 
 Module ajouté au compagnon seulement : ChatDeathProbe.lua. Aucun abonnement à COMBAT_LOG_MESSAGE ni au journal restreint ; aucune lecture de cadre ou de chaîne protégée par une autre voie. Les événements testés sont CHAT_MSG_SYSTEM, CHAT_MSG_COMBAT_MISC_INFO et PLAYER_DEAD. Le premier est déclaré SecretInChatMessagingLockdown dans ChatInfoDocumentation.lua au commit Forever eac30af597e5aaa43a60f6675ef5fdcea100375f ; sa présence dans le chat n'implique donc pas qu'il soit toujours lisible.
