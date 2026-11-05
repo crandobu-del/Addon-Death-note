@@ -35,6 +35,8 @@ Si `restricted`, `send_code_11` ou une identité inaccessible est signalé, reco
 
 ## Commandes et sauvegarde
 
+Un bouton **TP** à gauche de la minicarte ouvre et ferme **Tableau des primes** avec un clic gauche. Le survol indique le nom et l'action. Il utilise le même registre que `/sr`. Présent dans les sources et l'installation mises à jour ; les archives antérieures à cet ajout ne contiennent pas encore le bouton.
+
 Dans **Notifications**, une vengeance acceptée déclenche une alerte et apparaît pour chaque victime concernée, y compris après rattrapage. Le bouton **Remercier** enregistre une demande volontaire puis affiche **En attente**. Lorsque le vengeur l'a reçue, l'état devient **Merci reçu** ; le vengeur voit le remerciement dans son propre onglet et peut le marquer comme lu. Les mercis ne rapportent aucun point supplémentaire.
 
 L'envoi est repris après rechargement et retenté tant que la réception n'est pas confirmée. Les deux personnages doivent finir par être connectés ensemble, avec le partage actif et la version 0.5 installée. Un ancien merci enregistré uniquement localement propose **Envoyer le merci** : il ne part pas sans nouveau clic. Les messages ciblés passent par le canal technique GUILD ; ils ne sont pas privés vis-à-vis des autres clients de guilde. [Livraison, tests et limites](docs/testing/notification-delivery.md).

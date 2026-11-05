@@ -31,6 +31,8 @@ Permettre aux membres d'une guilde de partager un registre de joueurs ennemis à
 | REQ-018 | Utilisateur | La guilde s'appelle exactement « Le Syndicat Rouge ». Afficher ce nom dans l'identité de l'interface. Supprimer les références textuelles aux Défias, y compris devises et inscriptions décoratives. Le nom affiché de l'addon est désormais « Tableau des primes », selon la demande du 5 novembre 2026. | Requis |
 | REQ-019 | Utilisateur | Prévoir des notifications Discord en cas d'événement, désactivables et configurables par catégorie. Propositions de catégories : nouveau recherché, prime augmentée, vengeance accomplie et récapitulatif du classement. Un événement partagé entre plusieurs membres ne doit produire qu'une notification logique ; stratégie de déduplication et cas de résultat réseau incertain à définir. | Requis ; catégories proposées, intégration non configurée |
 
+| REQ-020 | Utilisateur, 5 novembre 2026 | Bouton à côté de la minicarte en haut à droite du jeu pour ouvrir l'interface ; clic gauche ouvre/ferme le même registre que `/sr`. | Implémenté, installé ; présence et fonctionnement confirmés par l'utilisateur |
+
 ## Proposition de première version — non encore acceptée
 
 - Liste « Recherchés » triée par indice, avec nombre de morts, nombre de victimes distinctes et dernière zone connue.

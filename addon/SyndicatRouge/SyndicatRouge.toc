@@ -30,4 +30,5 @@ UI/Portrait.lua
 UI/Map.lua
 UI/Window.lua
 UI/Views.lua
+UI/Minimap.lua
 Bootstrap.lua

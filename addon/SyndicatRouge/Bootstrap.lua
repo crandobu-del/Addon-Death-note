@@ -69,6 +69,7 @@ events:SetScript("OnEvent", function(_, event, name)
             realView();local f=ns.UI.Create();ns.UI.Refresh();f:Show()
         else ns.UI.Toggle() end
     end
+    ns.UI.Minimap.Initialize(SlashCmdList.SYNDICATROUGE)
     SLASH_SYNDICATROUGESAVE1="/srsave"
     SlashCmdList.SYNDICATROUGESAVE=function()
         if ns.UI.provider and ns.UI.provider.demo then print("Tableau des primes : les exemples ne sont pas sauvegardés. /sr ouvre ton registre personnel.");return end

@@ -1,0 +1,11 @@
+# Bouton de minicarte — Tableau des primes
+
+5 novembre 2026, Forever 1.60.1.70790. Source Forever re-résolue à **eac30af597e5aaa43a60f6675ef5fdcea100375f**. `Blizzard_Minimap.toc` charge explicitement les variantes Camelot et les fichiers de famille ; `Mainline/Minimap.xml` déclare le global `Minimap`. `Camelot/Minimap.lua` utilise les atlas `UI-HUD-Minimap-Frame-Circle` et `UI-HUD-Minimap-Frame-Cycle`. Le composant vérifie leur présence avant de les utiliser, avec fond simple de secours. La famille Minimap utilise aussi le tooltip ancré à gauche. Pas de bibliothèque externe ni API de combat.
+
+`UI/Minimap.lua` crée un bouton **TP**, 34 px, à gauche de la minicarte, légèrement sous son centre. Parent Minimap : suit sa visibilité et son déplacement. Clic gauche appelle exactement la fonction de `/sr` (registre réel ou sortie explicite de la démonstration) ; second clic ferme. Survol : titre et instruction, aucune donnée de joueur. Si Minimap n'est pas prêt, attend ADDON_LOADED/PLAYER_LOGIN et retire ces abonnements une fois le bouton créé. Une seule instance ; aucun réglage ou CVar de minicarte modifié. Position fixe pour cette première tranche ; pas de déplacement libre du bouton livré.
+
+Validation : `node tools/test-native.mjs`, 25 contrôles UI dont cinq sur parent/présence, ouverture/fermeture, clic droit sans effet et réinitialisation sans doublon ; autres contrôles conservés. Total natif/cycle **178**, plus le parcours de livraison à deux VM. Pas de capture/rendu réel de ce bouton par l'agent. Le client doit confirmer visibilité, absence de chevauchement avec ses autres addons, clics et infobulle après `/reload`. Les commandes existantes restent disponibles si un autre addon masque la minicarte.
+
+Installation locale : trois fichiers copiés et vérifiés par empreintes, anciens fichiers sous `dist/client-backups/minimap-20261105-210233`. Après le test demandé `/reload` puis clic gauche, l'utilisateur confirme **« Oui, le bouton fonctionne »** : présence et ouverture/fermeture validées par retour utilisateur. Pas de capture de l'agent ; placement visuel détaillé et infobulle non attestés séparément.
+
+Pas de modification des règles de kill, des sauvegardes ni des messages réseau. Les paquets déjà publiés restent inchangés ; prochain paquet généré avec ce composant.

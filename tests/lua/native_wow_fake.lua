@@ -47,6 +47,7 @@ for _,method in ipairs({"SetAllPoints","ClearAllPoints","SetTextColor","SetJusti
     methods[method]=function() end
 end
 UIParent = new("Frame","UIParent")
+Minimap = new("Minimap","Minimap",UIParent)
 Enum={UIMapType={Zone=3}}
 C_Map = {
     GetMapInfo=function(id) if id==101 then return {mapID=id,name="Strangleronce"} end end,
