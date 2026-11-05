@@ -2,7 +2,19 @@
 
 Projet d'addon de guilde pour **WoW Forever uniquement** : joueurs recherchés, incidents, vengeances, réputation, classement, notifications et relais Discord optionnel.
 
-Le socle Lua, le protocole de partage logique et un aperçu interactif hors jeu sont développés. La démonstration utilise des données fictives et le même moteur de règles que les modules de l'addon. Aucun addon installable n'est encore livré et aucune connexion Discord n'est active.
+Le socle Lua, le protocole de partage logique et un aperçu interactif hors jeu sont développés. La version 0.4.0-dev ajoute une première interface native Lua, avec quatre onglets et le moteur existant. Deux archives de développement sont générées : l'addon seul et l'addon accompagné d'une extension de démonstration distincte. Aucun client réel n'est validé et aucune connexion Discord n'est active.
+
+## Interface native Forever
+
+Voir [le guide et les résultats de test](docs/testing/native-ui.md). Ouvrir avec `/syndicat` ou `/sr` ; `/srdemo` charge les exemples lorsque l'extension de démonstration est installée. Le paquet principal démarre vide : collecte et sauvegarde réelle restent à connecter.
+
+```text
+node tools/prepare-native.mjs
+node tools/test-native.mjs
+python tools/package-native.py
+```
+
+Les textures TGA et la police manuscrite libre sont incluses. Les sources graphiques et leur conversion reproductible sont documentées dans `addon/SyndicatRouge/Media/ASSETS.txt`. L'archive avec démonstration peut être importée dans UIForever sans posséder le jeu.
 
 ## Essayer sans WoW
 

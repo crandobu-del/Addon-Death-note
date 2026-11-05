@@ -1,6 +1,6 @@
 # Death Note — suivi de réalisation
 
-Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jour : 4 novembre 2026.
+Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jour : 5 novembre 2026. La tranche native IMP-020 ci-dessous complète les états historiques des lignes IMP-005/010/011/015/016.
 
 | Travail | Exigences | Résultat attendu | Dépendances | État / preuve |
 |---|---|---|---|---|
@@ -23,6 +23,7 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 | IMP-017 | REQ-002/004/005/007/008/009/010/011/012/014/015/016/018 | Première tranche hors jeu : règles Lua et aperçu à quatre onglets | « ok go » après proposition du socle puis de l'interface | Implémentée pour le périmètre hors jeu ; 16 tests Lua et parcours navigateur passés. Voir docs/testing/offline-core.md. Le périmètre réel Forever reste ouvert |
 | IMP-018 | REQ-003/006/008/009/010/011 | Partage entre registres simulés, rattrapage et conflits | « ok la suite », après IMP-017 | Implémenté hors jeu ; 18 tests Lua de partage et parcours navigateur dédiés passés. Voir docs/testing/offline-sync.md ; transport et arbitrage réel non livrés |
 | IMP-019 | REQ-019, REQ-018 | Export et annonces Discord testables sans réseau | « ok la suite », après IMP-018 | Module Lua, relais Python, exemples navigateur et téléchargement JSON fictif réalisés. Tests dans docs/testing/offline-discord.md ; aucune requête réelle envoyée à Discord |
+| IMP-020 | REQ-001/004/005/007/009/010/011/012/014/015/016/018 | Programmer les quatre onglets natifs sur l'identité v3 | « commence à programmer l'interface » | UI Lua, TOC de développement Forever, police manuscrite, textures, recherche, dossiers, classement, journal, lu/remercié et paquets séparés livrés. 18 tests UI + 39 moteur passés ; rendu et remerciement observés dans UIForever. Voir docs/testing/native-ui.md. Carte/portrait de démonstration, tampon illustré et finitions ouverts ; aucune collecte/sauvegarde native réelle |
 
 ## Vérifications
 
@@ -36,6 +37,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 - Aperçu Discord : `node tools/test-discord-demo.mjs` vérifie catégories, compact/déplié, téléchargement fictif, ouverture directe et absence de requêtes extérieures. Livraison de démonstration 0.3.0, trois pages, sans secret ni relais actif.
 
 ## Point de reprise
+
+Dernière tranche : IMP-020, base `c9aa7401aaa457e71e2034d023136b8ad061d348`. L'interface native et les paquets 0.4.0-dev sont préparés. Le détail de la comparaison visuelle et les limites du dernier import se trouvent dans `docs/testing/native-ui.md`. Les paragraphes ci-dessous conservent l'historique de la tranche Discord ; la prochaine priorité est de compléter les portraits/tampon et le fournisseur de données/persistance Forever, avant transport et combats réels.
 
 - Dépôt : https://github.com/crandobu-del/Addon-Death-note ; branche `codex/structure-syndicat-rouge`.
 - Révision de départ de la tranche Discord : `0dcd50ecb8d4e2b6ac9e10559af0a6ecdb533fe5`. Lire le HEAD courant et comparer les changements avant reprise ; IMP-019 est livré dans le commit suivant cette base.

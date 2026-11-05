@@ -1,3 +1,3 @@
 local _, ns = ...
 ns.target = "forever"
-ns.version = "0.3.0-dev"
+ns.version = "0.4.0-dev"

@@ -1,0 +1,6 @@
+Register.tga: original generated artwork for this project, source art/native/register.png.
+Portraits.tga: illustrative concept atlas, generated for this project; demo only.
+IllustrativeMap.tga: fictional map generated for this project; demo only, never geographic evidence.
+TGA conversions: uncompressed RGB24, power-of-two dimensions. No embedded interactive labels.
+Handlee-Regular.ttf: Joe Prince / Vissol Ltd.; SIL OFL 1.1, see Fonts/OFL.txt.
+Upstream font: https://github.com/google/fonts/tree/main/ofl/handlee
