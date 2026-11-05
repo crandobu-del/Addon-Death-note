@@ -2,8 +2,9 @@
 ## Title: DEATH NOTE — Démonstration
 ## Dependencies: SyndicatRouge
 ## Version: 0.4.0-dev
-## SavedVariables: SyndicatRougeMapAudit
+## SavedVariables: SyndicatRougeMapAudit, SyndicatRougePvpProbe
 MapLocations.lua
 MapCatalog.lua
 MapAudit.lua
+PvpProbe.lua
 Demo.lua

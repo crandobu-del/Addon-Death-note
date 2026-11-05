@@ -16,7 +16,7 @@ function lua(value) {
 }
 await mkdir(new URL('dev/SyndicatRougeDemo/',root), {recursive:true});
 await writeFile(new URL('dev/SyndicatRougeDemo/SyndicatRougeDemo.toc',root),
-  '## Interface: 16001\n## Title: DEATH NOTE — Démonstration\n## Dependencies: SyndicatRouge\n## Version: 0.4.0-dev\n## SavedVariables: SyndicatRougeMapAudit\nMapLocations.lua\nMapCatalog.lua\nMapAudit.lua\nDemo.lua\n');
+  '## Interface: 16001\n## Title: DEATH NOTE — Démonstration\n## Dependencies: SyndicatRouge\n## Version: 0.4.0-dev\n## SavedVariables: SyndicatRougeMapAudit, SyndicatRougePvpProbe\nMapLocations.lua\nMapCatalog.lua\nMapAudit.lua\nPvpProbe.lua\nDemo.lua\n');
 await writeFile(new URL('dev/SyndicatRougeDemo/Demo.lua',root),
   '-- Generated from demo/src/scenario.js; DEVELOPMENT ONLY. No persistence.\n'+
   'local _, demo = ...\nlocal function show() SyndicatRouge.ShowDemo(demo.MapLocations('+lua(incidents)+'),'+[vengeances,guildId,viewer.id].map(lua).join(',')+') end\n'+

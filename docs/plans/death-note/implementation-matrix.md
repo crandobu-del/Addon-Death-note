@@ -38,6 +38,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Première tranche d'étude PvP : diagnostic explicite `/srpvp debut` installé dans le compagnon, 16 contrôles dédiés passés (119 Lua au total). Sources : PLAYER_DEAD sans tueur ; journal de combat déclaré restreint/callback ; récapitulatif non établi pour camelot. Aucun accès interne/sécurisé ou lecture de payload, aucune création d'incident. Retour réel des restrictions/validité/catégorie demandé à l'utilisateur, en attente. Voir docs/testing/pvp-capabilities.md avant tout branchement automatique ou affirmation de faisabilité.
+
 Bilan réel transmis par l'utilisateur après `/sraudit lancer` : 50 cartes détectées, 50 fonds chargés, 0 anomalie technique, 0 en attente. Chargement positif pour ces 50 zones ; contrôle visuel individuel encore limité à la capture de Strangleronce. Fichier détaillé non retrouvé, persistance de la nouvelle variable à vérifier après redémarrage complet. Ne pas confondre ce bilan utilisateur avec une capture/lecture automatique de l'agent ni affirmer la couverture de racines non recensées.
 
 Contrôle exhaustif demandé : toutes les cartes de zones de Forever. Catalogue + galerie + contrôle séquentiel des tuiles ajoutés au compagnon uniquement ; `/sraudit lancer`, puis sauvegarde du rapport via la déclaration SavedVariables. Capture native toujours indisponible ; aucun outil de contexte connecté. L'utilisateur confirme un contrôle terminé mais aucun fichier de rapport n'est retrouvé ; compteurs demandés et prise en compte de la nouvelle déclaration au redémarrage complet à vérifier. Seule Strangleronce dispose d'une capture positive reçue. Voir docs/testing/all-zone-maps.md ; ne pas annoncer toutes les cartes comme vérifiées.

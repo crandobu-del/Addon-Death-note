@@ -13,8 +13,8 @@ function CreateFrame(kind,name,parent) return new(kind,name,parent) end
 function methods:CreateTexture() return new("Texture",nil,self) end
 function methods:CreateFontString() return new("FontString",nil,self) end
 function methods:SetScript(name,fn) self.scripts[name]=fn end
-function methods:RegisterEvent(name) self.event=name end
-function methods:UnregisterEvent() self.event=nil end
+function methods:RegisterEvent(name) self.event=name;self.events=self.events or {};self.events[name]=true;return true end
+function methods:UnregisterEvent(name) if self.events then self.events[name]=nil end;if self.event==name then self.event=nil end end
 function methods:SetText(text)
     self.text=text
     if self.scripts.OnTextChanged then self.scripts.OnTextChanged(self) end
