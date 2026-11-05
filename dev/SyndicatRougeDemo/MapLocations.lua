@@ -6,8 +6,13 @@ local names = {
     ["Les Paluns"] = {"Les Paluns", "Wetlands"},
     ["Hautes-terres d’Arathi"] = {"Hautes-terres d’Arathi", "Hautes-terres Arathi", "Arathi Highlands"},
 }
+-- The Forever frFR map catalogue uses straight apostrophes; fixture typography
+-- may use curly ones. Keep full-name matching and ambiguity checks intact.
+local function normalized(name)
+    return type(name)=="string" and name:gsub("’", "'"):gsub("‘", "'") or nil
+end
 local function matches(name, zone)
-    for _, alias in ipairs(names[zone] or {zone}) do if name == alias then return true end end
+    for _, alias in ipairs(names[zone] or {zone}) do if normalized(name) == normalized(alias) then return true end end
     return false
 end
 function demo.MapLocations(incidents)

@@ -49,4 +49,17 @@ local nested={{location={zone="Strangleronce · Grom’gol"}}}
 ns.MapLocations(nested)
 check(nested[1].location.mapId==502,"demo finds localized alias through player's world and direct descendants")
 C_Map.GetMapInfo=getInfo;C_Map.GetBestMapForUnit=getBest;C_Map.GetMapChildrenInfo=children
+-- Exact name/mapID transcribed from the user's saved Forever map audit.
+C_Map.GetMapChildrenInfo=function()return {{mapID=1417,name="Hautes-terres d'Arathi"}}end
+local arathi={{location={zone="Hautes-terres d’Arathi"}}}
+ns.MapLocations(arathi)
+check(arathi[1].location.mapId==1417,"Forever straight apostrophe matches curly demo typography")
+check(arathi[1].location.x==nil and arathi[1].location.y==nil,"zone-only demo does not gain invented coordinates")
+C_Map.GetMapChildrenInfo=function()return {{mapID=1417,name="Hautes-terres d'Arathi"},{mapID=9000,name="Hautes-terres d’Arathi"}}end
+arathi[1].location.mapId=nil;ns.MapLocations(arathi)
+check(arathi[1].location.mapId==nil,"typographic aliases do not bypass duplicate-map ambiguity")
+C_Map.GetMapChildrenInfo=function()return {{mapID=1417,name="Hautes-terres d'Arathi - autre zone"}}end
+ns.MapLocations(arathi)
+check(arathi[1].location.mapId==nil,"apostrophe normalization does not introduce partial-name guesses")
+C_Map.GetMapChildrenInfo=children
 return {passed=passed}

@@ -1,5 +1,7 @@
 # Contrôle des cartes de zones Forever
 
+Mise à jour du 5 novembre : le fichier propre `SyndicatRougeDemo.lua` est maintenant présent dans les SavedVariables du compte et a été lu de façon ciblée pour Arathi : mapID 1417, `Hautes-terres d'Arathi`, 12 tuiles chargées, `visual=not_checked`. La différence d'apostrophe avec le nom de démonstration a été corrigée ; l'utilisateur confirme ensuite l'affichage de cette carte dans le dossier. Cela ne transforme pas les autres cartes en validations visuelles. [Détail du correctif](arathi-map-fix.md). Les difficultés d'enregistrement ci-dessous décrivent les contrôles précédents.
+
 ## Bilan transmis par l'utilisateur
 
 Après exécution du contrôle dans le jeu : **50 cartes, 50 fonds chargés, 0 anomalie, 0 en attente**. Ce sont les compteurs relevés par l'utilisateur, pas un rapport lu automatiquement ni une capture effectuée par l'agent. Le contrôle technique de chargement est donc positif pour les 50 zones détectées. Les identifiants individuels, racines, build du rapport et éventuelles limites de découverte n'ont pas été reçus ; ne pas étendre ce résultat à des racines non détectées.
