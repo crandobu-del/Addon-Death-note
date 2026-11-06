@@ -40,6 +40,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Publication du 6 novembre 2026 : **0.5.6-dev** disponible sur GitHub, tag `v0.5.6-alpha.1`, commit `9d79d32`. Archive principale déposée sur CurseForge, fichier **9472153**, Alpha Forever 1.60.1, publication automatique après approbation ; état de traitement dans [le suivi des publications](../../releasing.md). Le projet et le fichier 0.4.0 sont approuvés. Nouvelle consigne permanente : mettre à jour CurseForge après chaque grosse modification livrée. Aucune détection automatique réelle supplémentaire validée.
+
 Cible wanted **0.5.6** finale : superposition du libellé corrigée (textes enfants du cadre de légende). Réinstallée avec sauvegarde `guild-transport-20261106-014028`, archives finales/empreintes dans [rapport](../../testing/wanted-nameplates.md). Capture `wanted-target-complete-056.jpg` issue du simulateur avec correction du parentage appliquée à l'instance chargée ; pas de second import frais du ZIP corrigé après import très lent. Cible et légende visibles, 218 contrôles/scénarios et trois parcours VM passent. Validation sur vraie plaque toujours à faire.
 
 Direction du marqueur affinée à la demande « cible genre wanted graphiquement » : **0.5.6-dev** installé (34 fichiers, sauvegarde `guild-transport-20261106-010017`). Géométrie native de réticule rouge/bronze, petite légende et réputation dessous ; mêmes règles d'identité, d'accès, de test et de retrait qu'en 0.5.5. 218 contrôles/scénarios et trois parcours VM passent. ZIPs locaux distincts, empreintes et suivi du contrôle visuel dans [rapport](../../testing/wanted-nameplates.md). Fonctionnement sur une vraie plaque/PvP toujours non confirmé ; aucune publication externe.
