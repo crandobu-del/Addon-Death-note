@@ -34,6 +34,8 @@ L'élu tente `C_ChatInfo.SendChatMessage(message,"GUILD")` après le contrôle d
 
 ## Essai utilisateur sans mort réelle
 
+Livraison : installation locale vérifiée (37 fichiers principaux et compagnon), archives publiées sur [GitHub v0.6.0-alpha.1](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.6.0-alpha.1), commit `d8a59d403d655a1d270f520ea3cdb7028f444bbf`. Empreintes des deux assets GitHub comparées aux archives vérifiées. CurseForge **9473302**, canal Release, état **Processing** observé après rechargement du portail ; publication automatique après approbation, disponibilité publique pas encore confirmée. Capture `screenshots/curseforge-060-submitted.jpg`. Archive principale SHA256 `a4e279bf42b3adc4c0b6d1d36b94671f274d1db5fcf3b8f58e02a1baca538587`, avec démo `974499b8197116235cf374db7ad86f432c7ed9c784ac101c8fbc8acc9fb689fa`.
+
 1. Mettre la même version 0.6.0 sur les deux clients, `/reload`, puis `/srsync activer` et test dans les deux sens.
 2. Chacun lance `/srtest debut`. Un seul membre lance `/srtest gank` : six morts fictives de TEST Traqueur ; dossier GANK, récompense 24 de test.
 3. L'autre membre lance `/srtest venger traqueur` : 24 réputation de test, notification et merci comme dans le scénario existant. Refaire la commande ne doit pas créditer à nouveau.
