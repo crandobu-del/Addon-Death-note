@@ -18,4 +18,4 @@ Regrouper les petites retouches avant publication. Conserver GitHub pour les sou
 ## Historique
 
 - **0.4.0-dev** : fichier CurseForge **9455678**, Alpha Forever 1.60.1 ; projet et fichier approuvés, vérifiés dans le portail le 6 novembre 2026.
-- **0.5.6-dev** : préversion GitHub `v0.5.6-alpha.1`, commit `9d79d32cb9a2732d84ee4d195e1f8236c0403bfa`. Archive principale déposée sur CurseForge le 6 novembre 2026, fichier **9472153**, Alpha Forever 1.60.1, publication automatique après approbation. État à mettre à jour après traitement. SHA256 : `508b008d88573b504ad198bb1495617a732844aa0eb0483fbcee3980b93312fa`.
+- **0.5.6-dev** : préversion GitHub `v0.5.6-alpha.1`, commit `9d79d32cb9a2732d84ee4d195e1f8236c0403bfa`. Archive principale déposée sur CurseForge le 6 novembre 2026, fichier **9472153**, Alpha Forever 1.60.1, publication automatique après approbation. Dernier état vérifié après rechargement du portail : **Processing** ; approbation et disponibilité publique pas encore confirmées. Capture locale : `testing/screenshots/curseforge-056-submitted.jpg`. SHA256 : `508b008d88573b504ad198bb1495617a732844aa0eb0483fbcee3980b93312fa`.
