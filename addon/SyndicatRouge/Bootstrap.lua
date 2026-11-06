@@ -3,7 +3,7 @@ local live
 local function save()
     if not live then return false,"not_initialized" end
     local preferences=live.root and type(live.root)=="table" and live.root.ui or nil
-    if ns.UI.window and ns.UI.provider and not ns.UI.provider.demo then preferences=ns.UI.CapturePreferences() end
+    if ns.UI.window and ns.UI.provider and not ns.UI.provider.demo and not ns.UI.provider.test then preferences=ns.UI.CapturePreferences() end
     return ns.Persistence.Checkpoint(live,preferences)
 end
 local function provider(db, viewerId, demo)
@@ -25,6 +25,7 @@ local function provider(db, viewerId, demo)
     end
     return {
         demo = demo, readOnly=not demo and not live.writable,
+        test=not demo and ns.GuildNative.testMode==true,
         shared=not demo and ns.GuildNative.channel~=nil,
         View = function()
             if not demo and ns.GuildNative.channel then
@@ -54,7 +55,7 @@ events:SetScript("OnEvent", function(_, event, name)
     else print("Tableau des primes : sauvegarde conservée sans modification ; registre en lecture seule ("..live.status..").") end
     events:RegisterEvent("PLAYER_LOGOUT")
     ns.UI.OnPreferencesChanged=function()
-        if ns.UI.provider and not ns.UI.provider.demo then save() end
+        if ns.UI.provider and not ns.UI.provider.demo and not ns.UI.provider.test then save() end
     end
     realView()
     ns.GuildNative.Bind(live,function()
@@ -62,6 +63,7 @@ events:SetScript("OnEvent", function(_, event, name)
             ns.UI.SetProvider(provider(nil,nil,false));ns.UI.Refresh()
         end
     end)
+    ns.WantedMarkers.Initialize(live)
     SLASH_SYNDICATROUGE1 = "/syndicat"
     SLASH_SYNDICATROUGE2 = "/sr"
     SlashCmdList.SYNDICATROUGE = function()

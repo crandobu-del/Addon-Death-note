@@ -6,11 +6,12 @@ function UI.Refresh()
     local f = UI.window
     if not f then return end
     f.view = UI.provider:View()
-    f.mode:SetText(UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or UI.provider.shared and "Registre de guilde · partage activé" or "Registre personnel · sauvegarde activée")
+    f.mode:SetText(UI.provider.test and "TEST PARTAGÉ · événements fictifs · réputation de test" or UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or UI.provider.shared and "Registre de guilde · partage activé" or "Registre personnel · sauvegarde activée")
     for i, button in ipairs(f.tabs) do
         local unread=0
         if i==4 then for _,note in ipairs(f.view.notifications) do if not note.read then unread=unread+1 end end end
-        button.label:SetText((i == f.tab and "• " or "") .. names[i] .. (unread>0 and " ("..unread..")" or ""))
+        button.label:SetText(names[i] .. (unread>0 and " ("..unread..")" or ""))
+        W.SetSelected(button,i==f.tab)
     end
     -- Each view owns a bounded pool and only updates existing widgets on refresh.
     UI.Render(f)
@@ -59,12 +60,12 @@ function UI.Create()
     W.Text(f, "Tableau des primes", 180, 24, 450, 38, W.ink)
     W.Text(f, "Le Syndicat Rouge", 640, 28, 320, 28, W.red, true)
     f.mode = W.Text(f, "", 180, 65, 700, 12)
-    W.Button(f, "X", 1010, 25, 36, 34, function() f:Hide() end)
+    W.Button(f, "", 1010, 25, 36, 34, function() f:Hide() end,false,"close")
     f.tabs, f.tab, f.selection, f.query = {}, ns.Persistence.UI(UI.preferences).tab, {}, ""
     for i, name in ipairs(names) do
         f.tabs[i] = W.Button(f, name, 43 + (i - 1) * 249, 86, 238, 38, function()
             f.tab = i; f.query = ""; f.search:SetText(""); UI.Refresh(); changed()
-        end)
+        end,false,"tab")
     end
     W.Text(f, "Rechercher", 44, 145, 130, 15)
     local edit = W.Frame(f, 170, 139, 470, 30, "EditBox")

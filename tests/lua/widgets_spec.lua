@@ -1,0 +1,40 @@
+local ns=...
+local W=ns.UI.Widgets
+local passed=0
+local function test(name,fn)local ok,reason=pcall(fn);assert(ok,name..": "..tostring(reason));passed=passed+1 end
+local function eq(a,b)assert(a==b,tostring(a).." ~= "..tostring(b))end
+test("scrollbar wheel slider and arrows share clamped scroll position",function()
+    local child,scroll=W.Scroll(UIParent,0,0,325,100)
+    child:SetHeight(500);scroll.UpdateBar()
+    eq(scroll.slider.maximum,400);eq(scroll.up.disabled,true);eq(scroll.down.disabled,false)
+    scroll.scripts.OnMouseWheel(scroll,-2);eq(scroll:GetVerticalScroll(),96);eq(scroll.slider.value,96)
+    scroll.slider:SetValue(250);eq(scroll:GetVerticalScroll(),250)
+    scroll.down.scripts.OnClick();eq(scroll:GetVerticalScroll(),400);eq(scroll.down.disabled,true)
+    scroll.up.scripts.OnClick();eq(scroll:GetVerticalScroll(),240)
+    scroll.scripts.OnMouseWheel(scroll,100);eq(scroll:GetVerticalScroll(),0);eq(scroll.up.disabled,true)
+end)
+test("shrinking content resets overflow and disables a useless scrollbar",function()
+    local child,scroll=W.Scroll(UIParent,0,0,325,100)
+    child:SetHeight(500);scroll.UpdateBar();scroll.slider:SetValue(400)
+    child:SetHeight(100);scroll.UpdateBar()
+    eq(scroll:GetVerticalScroll(),0);eq(scroll.slider.disabled,true);eq(scroll.up.disabled,true);eq(scroll.down.disabled,true)
+    eq(scroll.thumb:IsShown(),false)
+end)
+test("selected button survives hover and disabled state clears pressed styling",function()
+    local button=W.Button(UIParent,"Remercier",0,0,205,38,function()end,false,"primary")
+    W.SetSelected(button,true);button.scripts.OnEnter(button);button.scripts.OnMouseDown(button)
+    eq(button.selected,true);eq(button.pressed,true)
+    button:Disable();eq(button.disabledStyle,true);eq(button.pressed,false)
+    button:Enable();button.scripts.OnLeave(button);eq(button.selected,true);eq(button.disabledStyle,false)
+    assert(button.label.width>0);eq(button.label.height,34)
+end)
+test("rendered journal refreshes range and search removes stale overflow",function()
+    SlashCmdList.SYNDICATROUGEDEMO()
+    local f=ns.UI.window;f.tabs[3].scripts.OnClick()
+    local scroll=f.panels[3].listScroll
+    assert(scroll.slider.maximum>240);scroll.slider:SetValue(240);eq(scroll:GetVerticalScroll(),240)
+    f.search:SetText("aucun résultat unique 999")
+    eq(scroll:GetVerticalScroll(),0);eq(scroll.slider.disabled,true);eq(scroll.thumb:IsShown(),false)
+    f.search:SetText("")
+end)
+return {passed=passed}

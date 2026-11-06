@@ -1,5 +1,6 @@
 local _,ns=...
 local C={};ns.GuildContext=C
+C.regionalRealm="forever-regional"
 function C.Public(value)
     if type(issecretvalue)~="function" then return false end
     local ok,secret=pcall(issecretvalue,value)
@@ -29,12 +30,55 @@ function C.LocalRealm()
     local ok,realm=pcall(GetNormalizedRealmName)
     if ok and text(realm) then return realm:gsub("%s","") end
 end
+function C.NameMode()
+    if type(RegionalUniqueNamesEnabled)~="function" then return nil,"name_mode_api_unavailable" end
+    local ok,value=pcall(RegionalUniqueNamesEnabled)
+    if not ok or not C.Public(value) or type(value)~="boolean" then return nil,"name_mode_unavailable" end
+    return value and "regional" or "realm"
+end
+function C.RegionalSelf()
+    if type(UnitNameUnmodified)~="function" then return nil,"self_name_unavailable" end
+    local ok,name,second=pcall(UnitNameUnmodified,"player")
+    if not ok or not C.Public(name) or not C.Public(second) then return nil,"self_name_unavailable" end
+    if not text(name) or (second~=nil and second~="" and not text(second)) then return nil,"self_name_unavailable" end
+    local full=name..((second~=nil and second~="") and " "..second or "")
+    return C.Named(full,C.regionalRealm)
+end
+function C.Sender(full,context)
+    if context.nameMode=="regional" then return C.Named(full,C.regionalRealm) end
+    return C.Actor(full,context.owner.realm)
+end
+-- Diagnostic only: regional names are delivered as "Name Surname", rather
+-- than a realm-qualified name. Never rewrite persisted ledger identities here.
+function C.ProbeSender(full,context)
+    if not text(full) then return "invalid" end
+    if type(RegionalUniqueNamesEnabled)~="function" then return nil end
+    local ok,unique=pcall(RegionalUniqueNamesEnabled)
+    if not ok or not C.Public(unique) then return "name_mode_unavailable" end
+    if unique==false then return nil end
+    if unique~=true then return "name_mode_unavailable" end
+    if type(UnitNameUnmodified)~="function" then return "self_name_unavailable" end
+    local nameOK,name,second=pcall(UnitNameUnmodified,"player")
+    if not nameOK or not C.Public(name) or not C.Public(second) then return "self_name_unavailable" end
+    if not text(name) or (second~=nil and second~="" and not text(second)) then return "self_name_unavailable" end
+    local own=name..((second~=nil and second~="") and " "..second or "")
+    if full==own then return "self" end
+    if not C_GuildInfo or type(C_GuildInfo.MemberExistsByName)~="function" then return "membership_unavailable" end
+    local memberOK,member=pcall(C_GuildInfo.MemberExistsByName,full)
+    if memberOK and C.Public(member) and member==true then return "verified_member" end
+    return "membership_unavailable"
+end
 function C.Member(actor,context)
     if type(actor)~="table" then return false end
     local canonical=C.Named(actor.name,actor.realm)
     if not canonical or canonical.id~=actor.id then return false end
     if context and context.owner and canonical.id==context.owner.id
         and canonical.name==context.owner.name and canonical.realm==context.owner.realm then return true end
+    if context and context.nameMode=="regional" then
+        if canonical.realm~=C.regionalRealm then return false end
+        local ok,result=pcall(C_GuildInfo.MemberExistsByName,canonical.name)
+        return ok and C.Public(result) and result==true
+    end
     local ok,result=pcall(C_GuildInfo.MemberExistsByName,canonical.id)
     if not ok or not C.Public(result) then return false end
     if result==true then return true end
@@ -62,6 +106,16 @@ function C.Current()
     local infoOK,info=pcall(C_Club.GetClubInfo,clubId)
     if not infoOK or not C.Public(info) or type(info)~="table" or not text(info.name) then return nil,"guild_name_unavailable" end
     if info.name~=ns.Config.guildName then return nil,"different_guild" end
+    local nameMode,modeReason=C.NameMode()
+    if not nameMode then return nil,modeReason end
+    if nameMode=="regional" then
+        local owner,reason=C.RegionalSelf()
+        if not owner then return nil,reason end
+        C.lastCheck.name="public_regional";C.lastCheck.realm="regional_namespace";C.lastCheck.member="own_guild_club"
+        -- Separate storage/protocol scope preserves the old caches exactly and
+        -- prevents old ambiguous Name-Realm identities from merging silently.
+        return {guildId="guild:"..id..":regional-v1",legacyGuildId="guild:"..id,owner=owner,nameMode=nameMode}
+    end
     local nameOK,name,realm=pcall(UnitFullName,"player")
     if not nameOK then return nil,"player_name_query_failed" end
     if not C.Public(name) or not C.Public(realm) then
@@ -83,7 +137,7 @@ function C.Current()
     -- above. A roster name lookup can omit self or be uninitialized; it is not
     -- needed to establish this local membership. Remote actors remain checked.
     C.lastCheck.member="own_guild_club"
-    return {guildId="guild:"..id,owner=owner}
+    return {guildId="guild:"..id,owner=owner,nameMode=nameMode}
 end
 function C.Roster(context,snapshot,message,sender)
     local map={[context.owner.id]=context.owner}

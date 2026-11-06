@@ -1,0 +1,232 @@
+{
+  "formatVersion": 1,
+  "testOnly": true,
+  "importableInProduction": false,
+  "instructions": "Référence fictive du scénario /srtest. Dans le jeu, les rôles A/B sont remplacés par les identités publiques des deux testeurs. Ce JSON ne s’importe pas avec /sr.",
+  "roles": {
+    "A": {
+      "id": "Victime Exemple-forever-regional",
+      "name": "Victime Exemple",
+      "realm": "forever-regional"
+    },
+    "B": {
+      "id": "Vengeur Exemple-forever-regional",
+      "name": "Vengeur Exemple",
+      "realm": "forever-regional"
+    }
+  },
+  "guildId": "test:forever:dataset-v1",
+  "incidents": [
+    {
+      "id": "test:v1:morne:1",
+      "guildId": "test:forever:dataset-v1",
+      "enemy": {
+        "id": "TEST Mornecroc-forever-test",
+        "name": "TEST Mornecroc",
+        "realm": "forever-test",
+        "race": "Orc",
+        "class": "Guerrier",
+        "raceID": 2,
+        "classID": 1,
+        "sex": "male",
+        "level": 60
+      },
+      "victim": {
+        "id": "Victime Exemple-forever-regional",
+        "name": "Victime Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793904600,
+      "source": "demo",
+      "location": {
+        "mapId": 1434,
+        "zone": "Vallée de Strangleronce",
+        "x": 0.32,
+        "y": 0.29
+      }
+    },
+    {
+      "id": "test:v1:morne:2",
+      "guildId": "test:forever:dataset-v1",
+      "enemy": {
+        "id": "TEST Mornecroc-forever-test",
+        "name": "TEST Mornecroc",
+        "realm": "forever-test",
+        "race": "Orc",
+        "class": "Guerrier",
+        "raceID": 2,
+        "classID": 1,
+        "sex": "male",
+        "level": 60
+      },
+      "victim": {
+        "id": "Victime Exemple-forever-regional",
+        "name": "Victime Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793904700,
+      "source": "demo",
+      "location": {
+        "mapId": 1434,
+        "zone": "Vallée de Strangleronce",
+        "x": 0.4,
+        "y": 0.35
+      }
+    },
+    {
+      "id": "test:v1:selene:1",
+      "guildId": "test:forever:dataset-v1",
+      "enemy": {
+        "id": "TEST Sélénombre-forever-test",
+        "name": "TEST Sélénombre",
+        "realm": "forever-test",
+        "race": "Elfe de la nuit",
+        "class": "Mage",
+        "raceID": 4,
+        "classID": 8,
+        "sex": "female",
+        "level": 60
+      },
+      "victim": {
+        "id": "Victime Exemple-forever-regional",
+        "name": "Victime Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793904800,
+      "source": "demo",
+      "location": {
+        "mapId": 1434,
+        "zone": "Vallée de Strangleronce",
+        "x": 0.45,
+        "y": 0.5
+      }
+    },
+    {
+      "id": "test:v1:brise:1",
+      "guildId": "test:forever:dataset-v1",
+      "enemy": {
+        "id": "TEST Brisecroc-forever-test",
+        "name": "TEST Brisecroc",
+        "realm": "forever-test",
+        "race": "Nain",
+        "class": "Paladin",
+        "raceID": 3,
+        "classID": 2,
+        "sex": "male",
+        "level": 60
+      },
+      "victim": {
+        "id": "Victime Exemple-forever-regional",
+        "name": "Victime Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793904900,
+      "source": "demo",
+      "location": {
+        "mapId": 1417,
+        "zone": "Hautes-terres d’Arathi",
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "id": "test:v1:noctis:1",
+      "guildId": "test:forever:dataset-v1",
+      "enemy": {
+        "id": "TEST Noctis-forever-test",
+        "name": "TEST Noctis",
+        "realm": "forever-test",
+        "race": "Humain",
+        "class": "Voleur",
+        "raceID": 1,
+        "classID": 4,
+        "sex": "male",
+        "level": 60
+      },
+      "victim": {
+        "id": "Vengeur Exemple-forever-regional",
+        "name": "Vengeur Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793905000,
+      "source": "demo",
+      "location": {
+        "mapId": 1417,
+        "zone": "Hautes-terres d’Arathi",
+        "x": 0.6,
+        "y": 0.4
+      }
+    }
+  ],
+  "vengeances": [
+    {
+      "id": "test:v1:vengeance:mornecroc",
+      "guildId": "test:forever:dataset-v1",
+      "enemyId": "TEST Mornecroc-forever-test",
+      "avenger": {
+        "id": "Vengeur Exemple-forever-regional",
+        "name": "Vengeur Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793905200,
+      "incidentIds": [
+        "test:v1:morne:1",
+        "test:v1:morne:2"
+      ]
+    },
+    {
+      "id": "test:v1:vengeance:brisecroc",
+      "guildId": "test:forever:dataset-v1",
+      "enemyId": "TEST Brisecroc-forever-test",
+      "avenger": {
+        "id": "Vengeur Exemple-forever-regional",
+        "name": "Vengeur Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793905200,
+      "incidentIds": [
+        "test:v1:brise:1"
+      ]
+    },
+    {
+      "id": "test:v1:vengeance:noctis",
+      "guildId": "test:forever:dataset-v1",
+      "enemyId": "TEST Noctis-forever-test",
+      "avenger": {
+        "id": "Victime Exemple-forever-regional",
+        "name": "Victime Exemple",
+        "realm": "forever-regional"
+      },
+      "occurredAt": 1793905200,
+      "incidentIds": [
+        "test:v1:noctis:1"
+      ]
+    }
+  ],
+  "expected": {
+    "initial": {
+      "incidents": 5,
+      "wanted": 4,
+      "openIncidents": 5,
+      "rewards": {
+        "TEST Mornecroc": 2,
+        "TEST Sélénombre": 1,
+        "TEST Brisecroc": 1,
+        "TEST Noctis": 1
+      }
+    },
+    "afterThreeSimulations": {
+      "closedIncidents": 4,
+      "openIncidents": 1,
+      "ranking": {
+        "B": 3,
+        "A": 1
+      },
+      "vengeanceNotifications": {
+        "A": 2,
+        "B": 1
+      }
+    },
+    "thanks": "A remercie B dans Notifications après la vengeance de Mornecroc ; B reçoit le merci ; la confirmation ferme la demande, sans point supplémentaire."
+  }
+}

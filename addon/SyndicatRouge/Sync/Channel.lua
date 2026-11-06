@@ -28,7 +28,13 @@ function Channel.Envelope(c,kind,id,target)
     return {version=1,guildId=c.context.guildId,senderId=c.context.owner.id,kind=kind,id=id,target=target}
 end
 function Channel.State(c,id,target)
-    for _,row in pairs(c.session.incidents) do if row.source=="demo" then return nil,"demo_not_shareable" end end
+    for _,row in pairs(c.session.incidents) do
+        if row.source=="demo" and not c.context.test then return nil,"demo_not_shareable" end
+        if c.context.test and (row.source~="demo" or row.id:sub(1,5)~="test:") then return nil,"test_records_only" end
+    end
+    if c.context.test then
+        for _,row in pairs(c.session.claims) do if row.id:sub(1,5)~="test:" then return nil,"test_records_only" end end
+    end
     local msg,reason=ns.Protocol.Export(c.session)
     if not msg then return nil,reason end
     local out=Channel.Envelope(c,"state",id,target);out.message=msg;return out
@@ -43,7 +49,14 @@ function Channel.Receive(c,envelope,sender,roster)
     if envelope.kind=="state" then
         if type(envelope.message)~="table" or type(envelope.message.incidents)~="table" then return false,"invalid_state" end
         for _,row in pairs(envelope.message.incidents) do
-            if type(row)~="table" or row.source=="demo" then return false,"demo_not_shareable" end
+            if type(row)~="table" or (row.source=="demo" and not c.context.test) then return false,"demo_not_shareable" end
+            if c.context.test and (row.source~="demo" or type(row.id)~="string" or row.id:sub(1,5)~="test:") then return false,"test_records_only" end
+        end
+        if c.context.test then
+            if type(envelope.message.claims)~="table" then return false,"invalid_state" end
+            for _,row in pairs(envelope.message.claims)do
+                if type(row)~="table" or type(row.id)~="string" or row.id:sub(1,5)~="test:" then return false,"test_records_only" end
+            end
         end
         local candidate,reason=G.Restore(G.Snapshot(c.session),c.context.guildId,c.context.owner.id,roster)
         if not candidate then return false,reason end
@@ -67,7 +80,11 @@ function Channel.Receive(c,envelope,sender,roster)
     return true,envelope.kind
 end
 function Channel.Change(c,operation,payload)
-    if operation=="incident" and type(payload)=="table" and payload.source=="demo" then return false,"demo_not_shareable" end
+    if operation=="incident" and type(payload)=="table" and payload.source=="demo" and not c.context.test then return false,"demo_not_shareable" end
+    if c.context.test and (operation=="incident" or operation=="claim") then
+        if type(payload)~="table" or type(payload.id)~="string" or payload.id:sub(1,5)~="test:"
+            or (operation=="incident" and payload.source~="demo") then return false,"test_records_only" end
+    end
     if operation=="read" and type(payload)=="string" and payload:sub(1,7)=="thanks:" then
         local delivery,reason=ns.Delivery.Read(c.delivery,payload)
         if not delivery then return false,reason end

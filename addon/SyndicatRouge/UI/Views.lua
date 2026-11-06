@@ -1,11 +1,16 @@
 local _, ns = ...
 local UI, W, M = ns.UI, ns.UI.Widgets, ns.UI.Model
 local function set(label, text) label:SetText(M.Text(text)) end
+local function refreshBars(panel)
+    for _,scroll in ipairs({panel.listScroll,panel.detailScroll})do
+        scroll:UpdateScrollChildRect();scroll.UpdateBar()
+    end
+end
 local function rowAt(panel, index)
     local row = panel.rows[index]
     if not row then
         row = W.Frame(panel.list, 0, (index - 1) * 76, 300, 72, "Button")
-        row.fill = W.Fill(row, {0.38, 0.14, 0.04, 0.12})
+        W.Skin(row,"paper",300)
         row.title = W.Text(row, "", 12, 9, 276, 21, W.ink, true, 28)
         row.sub = W.Text(row, "", 12, 40, 276, 12, W.ink, false, 26)
         row:SetScript("OnClick", function()
@@ -39,7 +44,7 @@ local function makePanel(f)
     end)
     p.thank = W.Button(p.detail, "Remercier", 235, 150, 205, 38, function()
         if p.current then UI.provider:Thank(p.current.id); UI.Refresh() end
-    end)
+    end,false,"primary")
     return p
 end
 local key = function(row) return row.id or row.enemy and row.enemy.id or row.member.id end
@@ -67,7 +72,7 @@ function UI.Render(f)
     p.current = current
     for i, item in ipairs(rows) do
         local row = rowAt(p, i); row.key = key(item)
-        row.fill:SetColorTexture(0.45, 0.11, 0.025, current == item and 0.28 or 0.10)
+        W.SetSelected(row,current==item)
         if f.tab == 1 then
             set(row.title, item.enemy.name)
             set(row.sub, item.openCount > 0 and (item.openCount .. " à venger · " .. item.reward .. " réputation") or "VENGÉ · dossier archivé")
@@ -91,7 +96,7 @@ function UI.Render(f)
     if not current then
         set(p.title, "Le registre est silencieux")
         set(p.meta, f.query ~= "" and "Aucun résultat pour cette recherche." or "Aucune entrée disponible dans cet onglet.")
-        set(p.summary, ""); set(p.status, ""); p.detail:SetHeight(445); return
+        set(p.summary, ""); set(p.status, ""); p.detail:SetHeight(445);refreshBars(p);return
     end
     if f.tab == 1 then
         local enemy, incident = current.enemy, current.lastIncident
@@ -152,4 +157,5 @@ function UI.Render(f)
         detailLine(p, 3, "Discord : non configuré. Aucun message envoyé.")
         p.detail:SetHeight(445)
     end
+    refreshBars(p)
 end
