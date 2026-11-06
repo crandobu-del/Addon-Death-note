@@ -32,9 +32,10 @@ local function provider(db, viewerId, demo)
         shared=not demo and ns.GuildNative.channel~=nil,
         View = function()
             if not demo and ns.GuildNative.channel then
-                local c=ns.GuildNative.channel;return ns.Sightings.Decorate(ns.Delivery.View(c.delivery,c.session))
+                local c=ns.GuildNative.channel;return ns.ReportsRuntime.Decorate(ns.Sightings.Decorate(ns.Delivery.View(c.delivery,c.session)))
             end
-            return ns.Core.View(current(), viewerId)
+            local view=ns.Core.View(current(), viewerId)
+            return demo and view or ns.ReportsRuntime.Decorate(view)
         end,
         Read = function(_, id) return change(ns.Notifications.Read,id) end,
         Thank = function(_, id) return change(ns.Notifications.Thank,id) end,
@@ -77,6 +78,7 @@ events:SetScript("OnEvent", function(_, event, name)
     end
     ns.UI.Minimap.Initialize(SlashCmdList.SYNDICATROUGE)
     ns.Access.Initialize();ns.Sightings.Initialize()
+    ns.ReportsRuntime.Initialize(live)
     SLASH_SYNDICATROUGESAVE1="/srsave"
     SlashCmdList.SYNDICATROUGESAVE=function()
         if not ns.Access.Require()then return end

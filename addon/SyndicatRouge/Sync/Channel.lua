@@ -35,7 +35,15 @@ function Channel.State(c,id,target)
     if c.context.test then
         for _,row in pairs(c.session.claims) do if row.id:sub(1,5)~="test:" then return nil,"test_records_only" end end
     end
-    local msg,reason=ns.Protocol.Export(c.session)
+    -- Collected reports have their own paged, author-confirmed route. Never
+    -- republish the full report-derived bounty ledger as a legacy union.
+    local legacy={guildId=c.session.guildId,ownerId=c.session.ownerId,members=c.session.members,incidents={},claims={}}
+    for id,row in pairs(c.session.incidents)do if id:sub(1,7)~="report:"then legacy.incidents[id]=row end end
+    for id,row in pairs(c.session.claims)do
+        local complete=true;for _,ref in ipairs(row.incidentIds)do if not legacy.incidents[ref]then complete=false;break end end
+        if complete then legacy.claims[id]=row end
+    end
+    local msg,reason=ns.Protocol.Export(legacy)
     if not msg then return nil,reason end
     local out=Channel.Envelope(c,"state",id,target);out.message=msg;return out
 end
@@ -50,12 +58,19 @@ function Channel.Receive(c,envelope,sender,roster)
         if type(envelope.message)~="table" or type(envelope.message.incidents)~="table" then return false,"invalid_state" end
         for _,row in pairs(envelope.message.incidents) do
             if type(row)~="table" or (row.source=="demo" and not c.context.test) then return false,"demo_not_shareable" end
+            if not c.context.test and ns.ReportsRuntime and not ns.ReportsRuntime.AllowIncident(row,sender,c.session)then return false,"report_author_confirmation_required"end
             if c.context.test and (row.source~="demo" or type(row.id)~="string" or row.id:sub(1,5)~="test:") then return false,"test_records_only" end
         end
         if c.context.test then
             if type(envelope.message.claims)~="table" then return false,"invalid_state" end
             for _,row in pairs(envelope.message.claims)do
                 if type(row)~="table" or type(row.id)~="string" or row.id:sub(1,5)~="test:" then return false,"test_records_only" end
+            end
+        end
+        if not c.context.test then
+            if type(envelope.message.claims)~="table"then return false,"invalid_state"end
+            for _,claim in pairs(envelope.message.claims)do
+                if type(claim)~="table" or (not c.session.claims[claim.id] and (type(claim.avenger)~="table" or claim.avenger.id~=sender))then return false,"claim_author_confirmation_required"end
             end
         end
         local candidate,reason=G.Restore(G.Snapshot(c.session),c.context.guildId,c.context.owner.id,roster)
@@ -72,6 +87,9 @@ function Channel.Receive(c,envelope,sender,roster)
         if not delivery then return false,reason end
         local ok,errorCode=Channel.Commit(c,c.session,delivery)
         if not ok then return false,errorCode end
+    elseif envelope.kind=="report" then
+        if c.context.test then return false,"reports_not_in_simulation"end
+        if type(envelope.report)~="table"then return false,"invalid_report_envelope"end
     elseif envelope.kind=="sighting" then
         if not ns.Sightings.Validate(envelope.sighting,c.context)then return false,"invalid_sighting"end
     elseif envelope.kind=="ack" then

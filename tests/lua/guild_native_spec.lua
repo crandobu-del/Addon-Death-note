@@ -333,7 +333,7 @@ test("shared fixture mode preserves production state and refuses production data
     GetServerTime=function()return 1793900000 end
     guild=123;member=true
     local real=ns.Runtime;local before=V.Copy(real.root)
-    assert(T.Enter());assert(N.testMode);eq(N.prefix,"SRGuildTest2");assert(ns.UI.provider.test)
+    assert(T.Enter());assert(N.testMode);eq(N.prefix,"SRGuildTest4");assert(ns.UI.provider.test)
     local c=N.channel;assert(c.context.guildId:sub(-8)==":test-v1")
     assert(T.Load("Kaelan-Forever"));eq(V.Count(c.session.incidents),5);eq(V.Count(c.session.claims),0)
     for _,row in pairs(c.session.incidents)do eq(row.source,"demo");eq(row.id:sub(1,5),"test:")end
@@ -346,7 +346,7 @@ test("shared fixture mode preserves production state and refuses production data
     local changed,reason=ns.Channel.Change(c,"incident",row);eq(changed,false);eq(reason,"test_records_only")
     local ctx=c.context;c.context=V.Copy(ctx);c.context.test=false
     local state,errorCode=ns.Channel.State(c,"blocked");eq(state,nil);eq(errorCode,"demo_not_shareable");c.context=ctx
-    assert(T.Leave());eq(N.testMode,false);eq(N.prefix,"SRGuild2");assert(not ns.UI.provider.test)
+    assert(T.Leave());eq(N.testMode,false);eq(N.prefix,"SRGuild4");assert(not ns.UI.provider.test)
     root=V.Copy(real.root);root.guildTest=nil;assert(V.Same(root,expected))
     local retained=real.root.guildTest;real.root.guildTest={version=999,keep=true}
     local rejected=V.Copy(real.root);eq(T.Enter(),false);assert(V.Same(rejected,real.root));eq(N.testMode,false)

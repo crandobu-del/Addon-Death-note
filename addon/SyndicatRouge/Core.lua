@@ -23,6 +23,10 @@ function ns.Core.Execute(snapshot, guildId, operation, payload, viewerId)
     local db, reason
     if snapshot then db, reason = ns.Store.Restore(snapshot, guildId) else db, reason = ns.Store.New(guildId) end
     if not db then return { ok = false, reason = reason } end
+    if operation == "incident" or operation == "vengeance" then
+        payload, reason = ns.PvpScope.Prepare(payload)
+        if not payload then return { ok = false, reason = reason, snapshot = ns.Store.Snapshot(db), view = ns.Core.View(db, viewerId) } end
+    end
     local ok, result = true, nil
     if operation == "incident" then ok, result = ns.Incidents.Add(db, payload)
     elseif operation == "vengeance" then ok, result = ns.Vengeance.Resolve(db, payload)

@@ -89,6 +89,18 @@ Version 0.3.0 : exporteur Lua de démonstration, relais Python, file persistante
 
 ## Livraison
 
+REQ-027 — Détection PLAYER_DEAD, fenêtre d'attaques PvP de 15 s si journal autorisé, récapitulatif différé, propriétaire de familier seulement connu, coup fatal overkill >= 0, confiance explicite ; ignorer PvE pur et rendre les fins mixtes configurables. Exclusions BG/arène/duel conservées.
+
+REQ-028 — Rapport unique/stable, date/victime/responsable/assistants, identité et lieu facultatifs sans inventions ; enrichissement par GUID sans nouveau rapport. Sous-sauvegarde versionnée séparant personnel/partagé, rétention/plafonds configurables, ancien profil préservé.
+
+REQ-029 — GUILD natif existant uniquement, protocoles et files bornés, débit/priorités/déduplication ; portée limitée aux membres effectivement joignables. Pas de canal personnalisé supposé, pas de simulation publiée. Action de reprise dans l'UI si nécessaire.
+
+REQ-030 — Demande légère après connexion, offres décalées, deux sources sélectionnées, pages bornées, délais/interruption/trois essais ; relais TTL et un saut sans boucle. Rapport direct : victime=expéditeur ; relayé sans effet sur primes/classement avant confirmation de l'auteur. Aucun contrôle ne vaut preuve serveur.
+
+REQ-031 — Pas de scan global permanent, caches/fenêtres/files/nettoyage bornés, petits lots. Interface existante conservée avec réglages/états nécessaires ; tester PvP/PvE/familier/inconnu/doublon/enrichissement/malformation/reconnexion/saturation, séparer tests locaux et jeu.
+
+REQ-026 — Exclure les nouvelles morts et vengeances en champ de bataille et en arène : aucune prime, récidive ni réputation créée. Contrôle du contexte au moment de l'événement, refus si contexte inconnu ; préserver consultation, réception extérieure et historique. [Réalisation et contrôles 0.6.1](../../testing/pvp-instance-exclusion-061.md).
+
 REQ-022 — Repeaufiner les boutons et ascenseurs dans la charte parchemin/cuir/bronze/rouge, priorité aux contrôles. Conserver la disposition acceptée, ajouter des états lisibles et un défilement par curseur cohérent avec molette/flèches. [Réalisation et preuves](../../testing/buttons-polish.md).
 
 REQ-021 — Jeu de données demandé par l'utilisateur, choix « Tout » (interface, partage et remerciements à deux). Fournir des incidents/vengeances fictifs, des résultats attendus et un mode partagé explicitement activé, avec registre, données sauvegardées, réputation et préfixe réseau séparés du mode normal. Permettre sortie/reprise/effacement du test sans réattribuer de vrais événements ni points. Les commandes de simulation ne constituent pas une validation manuelle des vengeances réelles : l'exigence de preuve automatique reste intacte. [Scénario](../../testing/jeu-de-test.md).

@@ -1,5 +1,6 @@
 -- Minimal widget/event contract double, NOT an emulator or visual proof.
 SR_TEST_FRAMES = {}
+IsInInstance = function() return false, "none" end
 SlashCmdList = {}; UISpecialFrames = {}
 RegionalUniqueNamesEnabled = function() return false end
 unpack = table.unpack or unpack
@@ -11,6 +12,8 @@ local function new(kind, name, parent)
     return f
 end
 function CreateFrame(kind,name,parent) return new(kind,name,parent) end
+function methods:GetFrameLevel()return self.frameLevel or 1 end
+function methods:SetFrameLevel(level)self.frameLevel=level end
 function methods:CreateTexture() return new("Texture",nil,self) end
 function methods:CreateLine()return new("Line",nil,self)end
 function methods:SetStartPoint(...)self.startPoint={...}end

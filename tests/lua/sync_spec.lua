@@ -144,12 +144,14 @@ test("a member ID cannot disguise a different name or realm", function()
     ok,reason=G.Receive(a,message,"lyra");eq(ok,false);eq(reason,"member_identity_mismatch")
     eq(reputation(a),0)
 end)
-test("two separately bounded messages cannot overflow the merged register", function()
+test("two separately bounded messages cannot exceed the configured register cap", function()
+    local original=ns.Config.maxRecords;ns.Config.maxRecords=P.maxRecords
     local a,b=fresh(),fresh("kaelan")
     local message=export(a)
     for index=1,P.maxRecords do message.incidents[index]=incident("i"..index) end
     assert(G.Receive(a,message,"lyra"));G.AddIncident(b,incident("extra"))
     local before=G.Snapshot(a);local ok,reason=send(b,a)
     eq(ok,false);eq(reason,"message_limit");assert(V.Same(before,G.Snapshot(a)))
+    ns.Config.maxRecords=original
 end)
 return { passed = passed }

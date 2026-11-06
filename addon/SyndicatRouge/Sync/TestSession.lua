@@ -41,7 +41,7 @@ function T.Enter()
 end
 function T.Leave()
     if not N.testMode then say("mode test déjà arrêté.");return true end
-    N.testMode=false;N.runtime=T.realRuntime;N.prefix="SRGuild2"
+    N.testMode=false;N.runtime=T.realRuntime;N.prefix="SRGuild4"
     local ok,reason=true
     if T.resumeReal or N.runtime.root.syncEnabled==true then ok,reason=N.Start() else N.Suspend() end
     say("mode test arrêté ; données fictives conservées séparément."..(ok and " Registre normal rétabli." or " Reprise normale en attente : "..tostring(reason).."."))

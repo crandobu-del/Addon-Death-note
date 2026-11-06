@@ -7,6 +7,8 @@ function UI.Refresh()
     local f = UI.window
     if not f then return end
     f.view = UI.provider:View()
+    if f.reportStatus then f.reportStatus:SetText((UI.provider.demo or UI.provider.test) and "Simulation · aucun rapport réel diffusé" or ns.ReportsRuntime.Status())end
+    if f.reportSettings and f.reportSettings:IsShown()then f.reportSettings.Update()end
     f.mode:SetText(UI.provider.test and "TEST PARTAGÉ · événements fictifs · réputation de test" or UI.provider.demo and "DÉMONSTRATION · données fictives" or UI.provider.readOnly and "Sauvegarde à vérifier · lecture seule" or UI.provider.shared and "Registre de guilde · partage activé" or "Registre personnel · sauvegarde activée")
     for i, button in ipairs(f.tabs) do
         local unread=0
@@ -81,9 +83,47 @@ function UI.Create()
         UI.Refresh()
     end)
     f.search = edit
-    W.Text(f, "Molette : faire défiler", 800, 146, 230, 12)
+    W.Button(f,"Rapports",710,139,135,32,function()
+        local p=f.reportSettings
+        if not p then
+            p=W.Frame(f,42,181,996,450);f.reportSettings=p
+            W.Fill(p,{.84,.65,.37,1});W.Skin(p,"paper",996)
+            p:SetFrameLevel(f:GetFrameLevel()+20);p:EnableMouse(true)
+            W.Text(p,"Rapports PvP",16,14,420,25,W.red,true)
+            W.Text(p,"Partage GUILDE uniquement · aucune diffusion universelle",480,17,490,12)
+            local actions={
+                {"enabled",function(c)return "Collecte : "..(c.enabled and "active" or "arrêtée")end},
+                {"sharing",function(c)return "Partage des rapports : "..(c.sharing and "activé" or "arrêté")end},
+                {"mixed",function(c)return "Fin PvE / chute : "..(c.mixed=="ignore" and "ignorer" or "estimation seule")end},
+                {"days",function(c)return "Conservation : "..c.days.." jours"end},
+                {"limit",function(c)return "Plafond partagé : "..c.maxShared end},
+                {"personalLimit",function(c)return "Plafond personnel : "..c.maxPersonal end},
+                {"diagnostic",function(c)return "Diagnostic : "..(c.diagnostic and "visible" or "masqué")end},
+            }
+            p.controls={}
+            for i,item in ipairs(actions)do
+                local action,label=item[1],item[2]
+                local b=W.Button(p,"",16,70+(i-1)*43,430,36,function()ns.ReportsRuntime.Control(action);UI.Refresh()end)
+                p.controls[i]={button=b,label=label}
+            end
+            p.note=W.Text(p,"",480,70,490,14,W.ink,false,160)
+            W.Button(p,"Fermer",825,398,145,32,function()p:Hide()end)
+            p.Update=function()
+                local c=ns.ReportStore.Settings()
+                for _,item in ipairs(p.controls)do item.button.label:SetText(item.label(c));if ns.ReportStore.writable and not UI.provider.demo and not UI.provider.test then item.button:Enable()else item.button:Disable()end end
+                p.note:SetText(c.diagnostic and ("Détection : "..ns.DeathDetector.status.."\nTransport : "..ns.GuildNative.status.." · Rapports : "..ns.ReportSync.status.."\n"..ns.ReportsRuntime.status) or "Les relais attendent la confirmation de la victime. Une estimation ne crée aucune prime. Données accessibles au client, sans preuve serveur.")
+            end
+            p:Hide()
+        end
+        p:SetShown(not p:IsShown());if p:IsShown()then p.Update()end
+    end)
+    W.Button(f,"Synchroniser",855,139,180,32,function()ns.ReportsRuntime.Control("sync");UI.Refresh()end,false,"primary")
     f.content = W.Frame(f, 42, 185, 996, 450)
-    f.footer = W.Text(f, "", 46, 668, 970, 13, W.gold)
+    f.reportStatus=W.Text(f,"",46,643,820,12,W.gold)
+    f.footer = W.Text(f, "", 46, 679, 820, 12, W.gold)
+    f.pages={}
+    f.previous=W.Button(f,"Préc.",894,651,68,32,function()f.pages[f.tab]=math.max(1,(f.pages[f.tab]or 1)-1);f.selection[f.tab]=nil;UI.Refresh()end)
+    f.next=W.Button(f,"Suiv.",970,651,68,32,function()f.pages[f.tab]=(f.pages[f.tab]or 1)+1;f.selection[f.tab]=nil;UI.Refresh()end)
     if UISpecialFrames then table.insert(UISpecialFrames, "SyndicatRougeWindow") end
     UI.ApplyPreferences(UI.preferences)
     f:SetScript("OnHide",changed)

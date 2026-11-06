@@ -5,6 +5,8 @@ ns.Incidents = {}
 function ns.Incidents.Add(db, input)
     if type(input) ~= "table" or not V.String(input.id) or input.guildId ~= db.guildId
         or not V.Integer(input.occurredAt) then return false, "invalid_incident" end
+    local scopeOK, scopeReason = ns.PvpScope.Validate(input.instanceType)
+    if not scopeOK then return false, scopeReason end
     local enemy, victim, location = V.Actor(input.enemy), V.Actor(input.victim), V.Location(input.location)
     if not enemy or not victim or not location or enemy.id == victim.id then return false, "invalid_incident" end
     if input.source ~= "demo" and input.source ~= "manual" and input.source ~= "observed" then
@@ -12,6 +14,7 @@ function ns.Incidents.Add(db, input)
     end
     local record = { id = input.id, guildId = db.guildId, enemy = enemy, victim = victim,
         location = location, occurredAt = input.occurredAt, source = input.source }
+    record.instanceType = input.instanceType
     if db.incidents[record.id] then
         local old = V.Copy(db.incidents[record.id]); old.vengeanceId = nil
         return false, V.Same(old, record) and "duplicate" or "incident_id_conflict"

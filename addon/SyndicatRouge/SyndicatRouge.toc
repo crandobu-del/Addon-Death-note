@@ -2,13 +2,14 @@
 ## Title: Tableau des primes — Le Syndicat Rouge
 ## Notes: Registre de guilde — Forever — développement, client réel non validé
 ## Author: Le Syndicat Rouge
-## Version: 0.6.0-dev
+## Version: 0.7.0-dev
 ## SavedVariablesPerCharacter: SyndicatRougeCharacterDB
 
 Init.lua
 Config.lua
 Data/Validation.lua
 Data/Store.lua
+Features/PvpScope.lua
 Features/Incidents.lua
 Features/BountyRules.lua
 Features/Wanted.lua
@@ -27,6 +28,12 @@ Sync/Channel.lua
 Sync/Native.lua
 Sync/TestSession.lua
 Sync/Sightings.lua
+Reports/Schema.lua
+Reports/Store.lua
+Reports/Observer.lua
+Reports/Detector.lua
+Reports/Sync.lua
+Reports/Runtime.lua
 Export/DiscordOutbox.lua
 UI/Model.lua
 UI/Widgets.lua

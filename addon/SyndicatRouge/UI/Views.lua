@@ -49,6 +49,7 @@ local function makePanel(f)
 end
 local key = function(row) return row.id or row.enemy and row.enemy.id or row.member.id end
 local function searchable(row)
+    if row.report then local r=row.report;return (r.victim.name or "").." "..(r.killer and r.killer.name or "").." "..(r.location.zone or "").." "..r.confidence end
     if row.kind=="sighting"then return row.enemy.name.." "..row.zone.." "..row.observer.name end
     if row.incident then return row.incident.enemy.name .. " " .. row.incident.victim.name .. " " .. row.incident.location.zone end
     if row.vengeance then return row.enemy.name .. " " .. row.vengeance.avenger.name end
@@ -66,7 +67,13 @@ function UI.Render(f)
     for _, line in ipairs(p.lines) do line:Hide() end
     p.map:Hide(); p.mapNote:Hide(); p.portrait:Hide(); p.read:Hide(); p.thank:Hide()
     local data = ({f.view.wanted, f.view.ranking, f.view.journal, f.view.notifications})[f.tab]
-    local rows = M.Filter(data, f.query, searchable)
+    local filtered = M.Filter(data, f.query, searchable)
+    local count=#filtered;local pages=math.max(1,math.ceil(count/100))
+    f.pages=f.pages or {};local page=math.min(f.pages[f.tab]or 1,pages);f.pages[f.tab]=page
+    local rows={};for i=(page-1)*100+1,math.min(page*100,count)do rows[#rows+1]=filtered[i]end
+    f.previous:SetShown(pages>1);f.next:SetShown(pages>1)
+    if page==1 then f.previous:Disable()else f.previous:Enable()end
+    if page==pages then f.next:Disable()else f.next:Enable()end
     local current = M.Selected(rows, f.selection[f.tab], key)
     f.selection[f.tab] = current and key(current) or nil
     if not current or not p.current or key(p.current) ~= key(current) then p.detailScroll:SetVerticalScroll(0) end
@@ -82,7 +89,7 @@ function UI.Render(f)
             for position, ranked in ipairs(data) do if ranked.member.id == item.member.id then rank = position; break end end
             set(row.title, rank .. ". " .. item.member.name); set(row.sub, item.reputation .. " réputation · " .. item.victimsAvenged .. " membres vengés")
         elseif f.tab == 3 then
-            set(row.title, item.kind == "incident" and item.incident.enemy.name or (item.vengeance.avenger.name .. " · vengeance"))
+            set(row.title,item.report and ((item.report.killer and item.report.killer.name or "Responsable inconnu").." · rapport") or item.kind == "incident" and item.incident.enemy.name or (item.vengeance.avenger.name .. " · vengeance"))
             set(row.sub, M.Date(item.occurredAt))
         elseif item.kind=="sighting"then
             set(row.title,item.enemy.name.." · REPÉRÉ")
@@ -96,7 +103,7 @@ function UI.Render(f)
         end
     end
     p.list:SetHeight(math.max(445, #rows * 76))
-    set(f.footer, #rows .. " résultat(s)  ·  /syndicat ou /sr  ·  " .. (UI.provider.demo and "Aucune donnée réelle modifiée" or UI.provider.shared and "Registre partagé · sauvegarde activée" or "Registre personnel · sauvegarde activée"))
+    set(f.footer, count .. " résultat(s) · page "..page.."/"..pages.." · " .. (UI.provider.demo and "Aucune donnée réelle modifiée" or UI.provider.shared and "Registre partagé · sauvegarde activée" or "Registre personnel · sauvegarde activée"))
     if not current then
         set(p.title, "Le registre est silencieux")
         set(p.meta, f.query ~= "" and "Aucun résultat pour cette recherche." or "Aucune entrée disponible dans cet onglet.")
@@ -131,6 +138,18 @@ function UI.Render(f)
         for i, claim in ipairs(current.vengeances) do detailLine(p, i, M.Date(claim.occurredAt) .. " · " .. #claim.incidentIds .. " incident(s) vengé(s)") end
         p.detail:SetHeight(math.max(445, 244 + #current.vengeances * 40))
     elseif f.tab == 3 then
+        if current.report then
+            local r=current.report
+            set(p.title,"Rapport de mort PvP");set(p.meta,M.Date(r.at))
+            p.summary:ClearAllPoints();p.summary:SetPoint("TOPLEFT",p.detail,"TOPLEFT",14,-94)
+            set(p.summary,"Victime : "..r.victim.name.."\nResponsable : "..(r.killer and r.killer.name or "inconnu"))
+            set(p.status,r.confidence=="confirmed" and "Coup fatal identifié côté client" or r.confidence=="estimated" and "ESTIMATION · aucune prime créée" or "Attribution inconnue · aucune prime créée")
+            detailLine(p,1,"Provenance : "..(current.trust=="author" and "confirmé par l’auteur" or "relayé · auteur non confirmé"))
+            detailLine(p,2,"Source : "..r.source.." · "..(r.location.zone or "Lieu inconnu"))
+            detailLine(p,3,"Ces contrôles ne constituent pas une preuve serveur.")
+            for i,a in ipairs(r.attackers)do detailLine(p,i+3,"Attaquant : "..(a.name or "Identité incomplète")..(a.class and " · "..a.class or "")..(a.level and " · niv. "..a.level or ""))end
+            p.detail:SetHeight(math.max(445,244+(#r.attackers+3)*40));refreshBars(p);return
+        end
         local incident, claim = current.incident, current.vengeance
         set(p.title, incident and "Une dette de sang" or "La dette est réglée")
         set(p.meta, M.Date(current.occurredAt))

@@ -21,7 +21,7 @@ end
 local function rebuild(session, incidents, claims, privateState)
     local candidate = { guildId = session.guildId, ownerId = session.ownerId,
         members = session.members, incidents = incidents, claims = claims }
-    local message, reason = ns.Protocol.Export(candidate)
+    local message, reason = ns.Protocol.Export(candidate,true)
     if not message then return nil, reason end
     local db = ns.Store.New(session.guildId)
     local incidentMap, claimMap, owners = {}, {}, {}
@@ -92,6 +92,8 @@ function G.Receive(session, message, transportSender)
 end
 
 function G.AddIncident(session, input)
+    local reason; input, reason = ns.PvpScope.Prepare(input)
+    if not input then return false, reason end
     local db = ns.Store.Restore(ns.Store.Snapshot(session.db), session.guildId)
     local ok, record = ns.Incidents.Add(db, input)
     if not ok then return false, record end
@@ -102,7 +104,8 @@ function G.AddIncident(session, input)
 end
 
 function G.Claim(session, input)
-    input=V.Copy(input)
+    local reason; input, reason = ns.PvpScope.Prepare(input)
+    if not input then return false, reason end
     if type(input)=="table" and input.rewardRule==nil then input.rewardRule=2 end
     if type(input) ~= "table" or type(input.avenger) ~= "table" or input.avenger.id ~= session.ownerId then
         return false, "claim_owner_mismatch"
@@ -133,7 +136,7 @@ function G.Restore(snapshot, guildId, ownerId, roster)
     if type(snapshot) ~= "table" or snapshot.version ~= 1 or snapshot.guildId ~= guildId
         or snapshot.ownerId ~= ownerId then return nil, "invalid_session" end
     for _, key in ipairs({"incidents", "claims"}) do
-        if type(snapshot[key]) ~= "table" or V.Count(snapshot[key]) > ns.Protocol.maxRecords then return nil, "session_limit" end
+        if type(snapshot[key]) ~= "table" or V.Count(snapshot[key]) > ns.Config.maxRecords then return nil, "session_limit" end
         for id, row in pairs(snapshot[key]) do
             if type(row) ~= "table" or row.id ~= id then return nil, "invalid_session_key" end
         end
@@ -176,7 +179,7 @@ function G.Execute(snapshot, guildId, ownerId, roster, operation, payload, sende
         ok, result = fn(session.db, payload, ownerId)
         for id, state in pairs(session.db.notificationState) do session.notificationState[id] = V.Copy(state) end
     elseif operation ~= "view" and operation ~= "export" then ok, result = false, "unknown_operation" end
-    local message, exportError = ns.Protocol.Export(session)
+    local message, exportError = ns.Protocol.Export(session,true)
     if not message then return { ok = false, reason = exportError } end
     return { ok = ok, reason = result, snapshot = G.Snapshot(session), view = G.View(session), message = message }
 end

@@ -19,4 +19,10 @@ await import('./test-persistence-reload.mjs');
 const huntEngine=createEngine(sources);
 try { const result=huntEngine.test(await readFile(new URL('tests/lua/guild_hunt_spec.lua',root),'utf8'));console.log(`guild_hunt_spec.lua: ${result.passed} bounty/access/sighting scenarios passed (not in-game validation).`); }
 finally { huntEngine.close(); }
+const scopeEngine=createEngine(sources);
+try {const result=scopeEngine.test(await readFile(new URL('tests/lua/pvp_scope_spec.lua',root),'utf8'));console.log(`pvp_scope_spec.lua: ${result.passed} instance-exclusion scenarios passed (not in-game validation).`);}
+finally {scopeEngine.close();}
+const reportsEngine=createEngine(sources);
+try {const result=reportsEngine.test(await readFile(new URL('tests/lua/reports_spec.lua',root),'utf8'));console.log(`reports_spec.lua: ${result.passed} report/collector/trust/queue scenarios passed (not in-game validation).`);}
+finally {reportsEngine.close();}
 await import('./test-delivery-lifecycle.mjs');

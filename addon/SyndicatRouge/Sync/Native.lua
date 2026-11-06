@@ -1,5 +1,5 @@
 local _,ns=...
-local N={prefix="SRGuild2",queue={},pool={},pending={},counter=0,status="inactive",clock=0};ns.GuildNative=N
+local N={prefix="SRGuild4",queue={},pool={},pending={},counter=0,status="inactive",clock=0};ns.GuildNative=N
 local C,Ch=ns.GuildContext,ns.Channel
 local function say(s) print("Tableau des primes : "..s) end
 local function refresh()
@@ -7,8 +7,10 @@ local function refresh()
     if ns.WantedMarkers then ns.WantedMarkers.Refresh() end
 end
 local function clear(reason)
+    if ns.ReportSync then ns.ReportSync.Reset()end
+    if ns.ReportsRuntime then ns.ReportsRuntime.projection={};ns.ReportsRuntime.projectKeys=nil end
     if ns.Sightings then ns.Sightings.Reset()end
-    N.channel=nil;N.queue={};N.pool={};N.pending={};N.sightingPackets={};N.status=reason;refresh()
+    N.channel=nil;N.queue={};N.pool={};N.pending={};N.sightingPackets={};N.packetRates={};N.sendPaused=false;N.sendRetries=0;N.status=reason;refresh()
 end
 function N.Suspend() clear("inactive") end
 local function current()
@@ -114,6 +116,7 @@ function N.Enqueue(envelope,expectsAck)
     local packets,reason=ns.Wire.Packets(envelope,envelope.id)
     if not packets then return false,reason end
     if #N.queue+#packets>1500 then return false,"queue_limit" end
+    if expectsAck and ns.Validation.Count(N.pending)>=128 then return false,"pending_limit"end
     for _,packet in ipairs(packets) do N.queue[#N.queue+1]=packet end
     if expectsAck then N.pending[envelope.id]={kind=envelope.kind,at=N.clock,peers={}} end
     return true
@@ -123,6 +126,7 @@ local function state(target)
     if not envelope then return false,reason end
     return N.Enqueue(envelope,true)
 end
+function N.SendLegacyState(target)return state(target)end
 function N.Publish()
     if not N.channel then return false,"sharing_inactive" end
     local ok,reason=state(nil)
@@ -181,7 +185,7 @@ function N.Start()
     if C_GuildInfo and C_GuildInfo.GuildRoster then pcall(C_GuildInfo.GuildRoster) end
     local context,reason=current()
     if not context then N.status=reason;return false,reason end
-    N.prefix=N.testMode and "SRGuildTest2" or "SRGuild2"
+    N.prefix=N.testMode and "SRGuildTest4" or "SRGuild4"
     if not C_ChatInfo or not C_ChatInfo.RegisterAddonMessagePrefix or not C_ChatInfo.SendAddonMessage then N.status="chat_api_unavailable";return false,N.status end
     local ok,result=pcall(C_ChatInfo.RegisterAddonMessagePrefix,N.prefix)
     if not ok or not C.Public(result) or (result~=0 and result~=1) then N.status="prefix_registration_failed";return false,N.status end
@@ -199,8 +203,9 @@ function N.Start()
     if context.legacyGuildId and saved and saved[context.legacyGuildId] and not N.legacyNotice then
         N.legacyNotice=true;say("ancien registre de guilde conservé séparément ; nouveau registre aux noms régionaux. Aucun ancien événement ni point réattribué.")
     end
-    N.Enqueue(Ch.Envelope(N.channel,"hello",nextId()),false)
+    if N.testMode or not ns.ReportStore or not ns.ReportStore.writable then N.Enqueue(Ch.Envelope(N.channel,"hello",nextId()),false)end
     N.Notify()
+    if ns.ReportSync then ns.ReportSync.Start(context)end
     refresh();return true
 end
 function N.Receive(prefix,packet,distribution,sender)
@@ -211,6 +216,13 @@ function N.Receive(prefix,packet,distribution,sender)
     local actor=C.Sender(sender,context)
     if not actor or actor.id==context.owner.id then return end
     if not C.Member(actor,context) then N.lastError="sender_membership_unavailable";return end
+    N.packetRates=N.packetRates or {}
+    local rate=N.packetRates[actor.id]
+    if not rate or N.clock-rate.at>=10 then
+        if ns.Validation.Count(N.packetRates)>=128 then N.lastError="sender_rate_capacity";return end
+        rate={at=N.clock,n=0};N.packetRates[actor.id]=rate
+    end
+    rate.n=rate.n+1;if rate.n>60 then N.lastError="packet_rate_limit";return end
     local envelope,reason=ns.Wire.Receive(N.pool,actor.id,packet,N.clock)
     if not envelope then if reason~="pending" then N.lastError=reason end;return end
     if type(envelope)~="table" then N.lastError="invalid_envelope";return end
@@ -219,7 +231,11 @@ function N.Receive(prefix,packet,distribution,sender)
     if not roster then N.lastError=reason;return end
     local ok,kind=Ch.Receive(N.channel,envelope,actor.id,roster)
     if not ok then if kind~="duplicate" and kind~="other_target" then N.lastError=kind end;return end
-    if kind=="sighting" then ns.Sightings.Receive(envelope.sighting,actor);return
+    if kind=="report" then
+        local accepted,errorCode=ns.ReportSync.Receive(envelope,actor)
+        if not accepted and errorCode~="duplicate"then N.lastError=errorCode end
+        return
+    elseif kind=="sighting" then ns.Sightings.Receive(envelope.sighting,actor);return
     elseif kind=="thank" then
         local ack=Ch.Envelope(N.channel,"thank_ack",nextId(),actor.id)
         ack.notificationId=envelope.notificationId;ack.claimId=envelope.claimId
@@ -233,6 +249,7 @@ function N.Receive(prefix,packet,distribution,sender)
             say("réception confirmée par "..actor.name.." ("..request.kind..").")
         end
     elseif kind=="hello" then
+        if not N.testMode and ns.ReportStore and ns.ReportStore.writable then return end
         N.nextThanks=N.clock+3
         if not N.cooldowns[actor.id] or N.clock-N.cooldowns[actor.id]>30 then
             N.cooldowns[actor.id]=N.clock;state(actor.id)
@@ -241,7 +258,7 @@ function N.Receive(prefix,packet,distribution,sender)
         local ack=Ch.Envelope(N.channel,"ack",nextId(),actor.id);ack.ack=envelope.id;N.Enqueue(ack,false)
         if kind=="state" then
             -- One targeted union in response to a targeted catch-up; a broadcast has no reply loop.
-            if envelope.target then state(nil) end
+            if envelope.target and (N.testMode or not ns.ReportStore or not ns.ReportStore.writable)then state(nil)end
             N.Notify();refresh()
         elseif kind=="test" then say("signal de partage reçu de "..actor.name..".") end
     end
@@ -250,6 +267,10 @@ function N.Tick(elapsed)
     N.clock=N.clock+elapsed
     if N.probe and not N.probe.finished and N.clock-N.probe.at>=120 then N.probe.finished=true;probeSummary() end
     for id,p in pairs(N.pending) do if N.clock-p.at>600 then N.pending[id]=nil end end
+    if N.clock>=(N.nextPacketSweep or 0)then
+        N.nextPacketSweep=N.clock+30
+        for peer,r in pairs(N.packetRates or {})do if N.clock-r.at>30 then N.packetRates[peer]=nil end end
+    end
     if not N.channel then
         if N.runtime and N.runtime.writable and N.runtime.root.syncEnabled==true and N.clock>=(N.nextConnect or 0) then
             N.nextConnect=N.clock+15;N.Start()
@@ -265,16 +286,26 @@ function N.Tick(elapsed)
     N.restrictionReason=restriction
     if blocked then N.status="restricted";return end
     N.status="active"
+    if N.sendPaused then N.status="user_retry_required";return end
     if N.clock>=(N.nextThanks or 0) then N.nextThanks=N.clock+15;N.PumpThanks() end
     if #N.queue==0 then return end
     local ok,result=pcall(C_ChatInfo.SendAddonMessage,N.prefix,N.queue[1],"GUILD")
     if not ok or not C.Public(result) then N.lastError="send_failed";N.wait=3;return end
     if result==0 then
+        N.sendRetries=0
         local packet=table.remove(N.queue,1)
         local sighting=N.sightingPackets and N.sightingPackets[packet]
         if sighting then N.sightingPackets[packet]=nil;ns.Sightings.Sent(sighting.row,sighting.owner)end
-    elseif result==3 or result==8 or result==11 then N.lastError="send_code_"..result;N.wait=3
+    elseif result==3 or result==8 or result==11 then
+        N.lastError="send_code_"..result;N.sendRetries=(N.sendRetries or 0)+1;N.wait=3*N.sendRetries
+        if N.sendRetries>=3 then N.sendPaused=true;N.status="user_retry_required"end
     else N.lastError="send_code_"..tostring(result);N.queue={};say("envoi interrompu ("..N.lastError.."). /srsync reprendre pour réessayer.") end
+end
+function N.UserSend()
+    N.sendPaused=false;N.sendRetries=0;N.wait=0
+    -- Called by the existing interface's synchronization button. Gates remain
+    -- enforced; if this client needs a hardware action, this sends one fragment.
+    N.Tick(0)
 end
 function N.Change(operation,payload)
     if not N.channel then return false,"sharing_inactive" end
@@ -282,6 +313,7 @@ function N.Change(operation,payload)
     if not context or context.guildId~=N.channel.context.guildId or context.owner.id~=N.channel.context.owner.id then clear("guild_context_changed");return false,N.status end
     if operation~="read" and operation~="thank" and operation~="incident" and operation~="claim" then return false,"invalid_operation" end
     if operation=="incident" or operation=="claim" then
+        if operation=="incident" and not N.testMode and (type(payload)~="table" or type(payload.victim)~="table" or payload.victim.id~=context.owner.id)then return false,"direct_victim_mismatch"end
         local message={incidents=operation=="incident" and {payload} or {},claims=operation=="claim" and {payload} or {}}
         local roster,reason=C.Roster(context,ns.Guild.Snapshot(N.channel.session),message)
         if not roster then return false,reason end
@@ -329,6 +361,7 @@ function N.Bind(runtime,changed)
             N.lastRequest=N.clock
             local ok,reason
             if command=="test" then ok,reason=N.Enqueue(Ch.Envelope(N.channel,"test",nextId()),true)
+            elseif ns.ReportStore and ns.ReportStore.writable and not N.testMode then ok,reason=ns.ReportSync.Request()
             else ok,reason=N.Enqueue(Ch.Envelope(N.channel,"hello",nextId()),false) end
             say(ok and "demande mise en file ; en attente d’un membre connecté." or "demande refusée ("..tostring(reason)..").")
         else

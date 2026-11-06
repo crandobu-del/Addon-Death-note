@@ -12,6 +12,8 @@ function ns.Vengeance.Normalize(db, input)
     if type(input) ~= "table" or not V.String(input.id) or input.guildId ~= db.guildId
         or not V.String(input.enemyId) or not V.Integer(input.occurredAt)
         or type(input.incidentIds) ~= "table" then return nil, "invalid_vengeance" end
+    local scopeOK, scopeReason = ns.PvpScope.Validate(input.instanceType)
+    if not scopeOK then return nil, scopeReason end
     local avenger = V.Actor(input.avenger)
     if not avenger or avenger.id == input.enemyId then return nil, "invalid_avenger" end
     local ids, unique = {}, {}
@@ -28,6 +30,7 @@ function ns.Vengeance.Normalize(db, input)
     table.sort(ids)
     local record = { id = input.id, guildId = db.guildId, enemyId = input.enemyId,
         avenger = avenger, occurredAt = input.occurredAt, incidentIds = ids }
+    record.instanceType = input.instanceType
     if input.rewardRule~=nil and input.rewardRule~=1 and input.rewardRule~=2 then return nil,"unsupported_reward_rule" end
     if input.rewardRule==2 then record.rewardRule=2 end
     for _, id in ipairs(ids) do

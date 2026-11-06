@@ -3,6 +3,7 @@
   "Config.lua",
   "Data/Validation.lua",
   "Data/Store.lua",
+  "Features/PvpScope.lua",
   "Features/Incidents.lua",
   "Features/BountyRules.lua",
   "Features/Wanted.lua",
@@ -21,5 +22,11 @@
   "Sync/Native.lua",
   "Sync/TestSession.lua",
   "Sync/Sightings.lua",
+  "Reports/Schema.lua",
+  "Reports/Store.lua",
+  "Reports/Observer.lua",
+  "Reports/Detector.lua",
+  "Reports/Sync.lua",
+  "Reports/Runtime.lua",
   "Export/DiscordOutbox.lua"
 ]

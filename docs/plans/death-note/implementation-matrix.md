@@ -1,5 +1,9 @@
 # Death Note — suivi de réalisation
 
+Checkpoint 0.7.0 du 6 novembre 2026 — **IMP-027..031 / REQ-027..031** : collecte et rapports implémentés dans six modules Reports, intégrés à la sauvegarde, au transport GUILD et aux quatre onglets existants. Rattrapage 2 sources/4 rapports par page, relais en attente d'auteur, stockage 30 jours/5000 partagés, enrichissement GUID, exclusions et gardes de secret. Revue indépendante et régressions couvrent les corrections ; essais en jeu non exécutés. [Rapport et compatibilité](../../testing/pvp-reports-070.md). Les autres checkpoints ci-dessous sont historiques. Aucun crédit de vengeance réelle ajouté.
+
+Checkpoint du 6 novembre 2026 — **IMP-026 / REQ-026** : filtre champs de bataille/arènes livré en correctif 0.6.1-dev aux entrées de mutation et à la validation des origines connues. Historique conservé, réception extérieure maintenue ; ancien transport isolé. 13 scénarios ciblés et suites de régression passent, contrôle en jeu encore à faire. Voir [rapport](../../testing/pvp-instance-exclusion-061.md). La collecte réelle reste non connectée/validée.
+
 Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jour : 5 novembre 2026. La tranche native IMP-020 ci-dessous complète les états historiques des lignes IMP-005/010/011/015/016.
 
 | Travail | Exigences | Résultat attendu | Dépendances | État / preuve |

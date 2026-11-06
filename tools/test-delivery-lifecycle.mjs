@@ -35,10 +35,12 @@ function H.Boot(owner,saved,regional)
     for _,f in ipairs(SR_TEST_FRAMES)do if f.events and f.events.ADDON_LOADED then f.scripts.OnEvent(f,"ADDON_LOADED","SyndicatRouge")end end
     assert(ns.GuildNative.Start());ns.Runtime.root.syncEnabled=true
 end
-function H.Seed()
+function H.SeedVictim()
     local guildId=ns.GuildNative.channel.context.guildId
     assert(ns.GuildNative.Change("incident",{id="i",guildId=guildId,enemy=actor("Enemy"),victim=actor("Lyra"),occurredAt=100,source="observed",location={zone="Elwynn"}}))
-    assert(ns.GuildNative.Change("claim",{id="v",guildId=guildId,enemyId=actor("Enemy").id,avenger=actor("Kaelan"),occurredAt=200,incidentIds={"i"}}))
+end
+function H.SeedClaim()
+    assert(ns.GuildNative.Change("claim",{id="v",guildId=ns.GuildNative.channel.context.guildId,enemyId=actor("Enemy").id,avenger=actor("Kaelan"),occurredAt=200,incidentIds={"i"}}))
 end
 function H.Pull()
     for i=1,300 do ns.GuildNative.Tick(.31)end
@@ -48,6 +50,9 @@ function H.Pull()
     local result=packets;packets={};return result
 end
 function H.Receive(packet)
+    -- Pull records a native-paced stream; replay its .31s fragment spacing
+    -- rather than turning ninety seconds of traffic into an impossible burst.
+    ns.GuildNative.clock=ns.GuildNative.clock+.31
     local text=packet.hex and packet.hex:gsub("%x%x",function(pair)return string.char(tonumber(pair,16))end) or packet.text
     ns.GuildNative.Receive(packet.prefix,text,"GUILD",packet.sender)
 end
@@ -64,8 +69,8 @@ function H.Read()
     panel.read.scripts.OnClick();assert(panel.read.disabled)
 end
 function H.Snapshot()return ns.Validation.Copy(ns.Runtime.root)end
-function H.EnterTest()assert(ns.SyncTest.Enter());assert(ns.UI.provider.test and ns.GuildNative.prefix=="SRGuildTest2")end
-function H.LeaveTest()assert(ns.SyncTest.Leave());assert(not ns.UI.provider.test and ns.GuildNative.prefix=="SRGuild2")end
+function H.EnterTest()assert(ns.SyncTest.Enter());assert(ns.UI.provider.test and ns.GuildNative.prefix=="SRGuildTest4")end
+function H.LeaveTest()assert(ns.SyncTest.Leave());assert(not ns.UI.provider.test and ns.GuildNative.prefix=="SRGuild4")end
 function H.LoadTest()assert(ns.SyncTest.Load())end
 function H.LoadGankTest()assert(ns.SyncTest.LoadGank())end
 function H.AvengeTest(target)return ns.SyncTest.Avenge(target)end
@@ -102,7 +107,7 @@ function forward(from,to,discard=false){const packets=call(from,'Pull');if(Array
 function cast(from,...targets){const packets=call(from,'Pull');if(Array.isArray(packets))for(const p of packets)for(const to of targets)call(to,'Receive',p);}
 try{
  for(const regional of [false,true]){
- let a=boot('Lyra',undefined,regional),b=boot('Kaelan',undefined,regional);call(b,'Seed');forward(b,a);forward(a,b);forward(b,a);
+ let a=boot('Lyra',undefined,regional),b=boot('Kaelan',undefined,regional);call(a,'SeedVictim');forward(a,b);call(b,'SeedClaim');forward(b,a);forward(a,b);forward(b,a);
  assert.equal(call(a,'Info').notifications,1);assert.equal(call(a,'Info').vengeanceAlerts,1);
  call(a,'Thank');assert.equal(call(a,'Info').pending,1);
  const savedA=call(a,'Snapshot');a.close();engines.delete(a);a=boot('Lyra',savedA,regional);
@@ -118,7 +123,7 @@ try{
  console.log('Delivery lifecycle ('+(regional?'Forever regional names, realm flag true':'realm-qualified names')+'): isolated native clients passed catch-up, UI click, sender reload, dropped ACK, receiver reload, retry, deduplication, confirmed delivery and persistent read. Not a game-client test.');
  }
  let a=boot('Lyra',undefined,true),b=boot('Kaelan',undefined,true),normal=boot('Lyra',undefined,true);
- call(b,'Seed');forward(b,a);forward(a,b);forward(b,a);
+ call(a,'SeedVictim');forward(a,b);call(b,'SeedClaim');forward(b,a);forward(a,b);forward(b,a);
  const mainA=call(a,'MainSnapshot'),mainB=call(b,'MainSnapshot'),mainNormal=call(normal,'MainSnapshot');
  call(a,'EnterTest');call(b,'EnterTest');cast(a,b,normal);cast(b,a,normal);cast(a,b,normal);
  call(a,'LoadTest');cast(a,b,normal);cast(b,a,normal);cast(a,b,normal);

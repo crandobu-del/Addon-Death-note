@@ -3,10 +3,10 @@ local V = ns.Validation
 local P = { version = 1, maxRecords = 128, maxBudget = 131072 }
 ns.Protocol = P
 
-local function array(value)
+local function array(value,limit)
     if type(value) ~= "table" then return nil end
     local count = V.Count(value)
-    if count > P.maxRecords then return nil end
+    if count > (limit or P.maxRecords) then return nil end
     for key in pairs(value) do if not V.Integer(key, 1, count) then return nil end end
     return count
 end
@@ -21,11 +21,12 @@ local function identityMatches(actor, member)
     return actor.id == member.id and actor.name == member.name and actor.realm == member.realm
 end
 
-function P.Decode(message, guildId, transportSender, members)
+function P.Decode(message, guildId, transportSender, members, internal)
     if type(message) ~= "table" or message.version ~= P.version then return nil, "protocol_version" end
     if message.guildId ~= guildId then return nil, "guild_mismatch" end
     if message.senderId ~= transportSender or not members[transportSender] then return nil, "sender_mismatch" end
-    if not array(message.incidents) or not array(message.claims) then return nil, "message_limit" end
+    local limit=internal and ns.Config.maxRecords or P.maxRecords
+    if not array(message.incidents,limit) or not array(message.claims,limit) then return nil, "message_limit" end
     local db = ns.Store.New(guildId)
     local normalized = { version = P.version, guildId = guildId, senderId = transportSender,
         incidents = {}, claims = {} }
@@ -46,13 +47,13 @@ function P.Decode(message, guildId, transportSender, members)
         seen[claim.id] = true
         normalized.claims[#normalized.claims + 1] = claim
     end
-    if budget(normalized) > P.maxBudget then return nil, "message_budget" end
+    if not internal and budget(normalized) > P.maxBudget then return nil, "message_budget" end
     table.sort(normalized.incidents, function(a,b) return a.id < b.id end)
     table.sort(normalized.claims, function(a,b) return a.id < b.id end)
     return normalized
 end
 
-function P.Export(session)
+function P.Export(session,internal)
     local message = { version = P.version, guildId = session.guildId, senderId = session.ownerId,
         incidents = {}, claims = {} }
     for _, row in pairs(session.incidents) do
@@ -60,5 +61,5 @@ function P.Export(session)
         message.incidents[#message.incidents + 1] = incident
     end
     for _, row in pairs(session.claims) do message.claims[#message.claims + 1] = V.Copy(row) end
-    return P.Decode(message, session.guildId, session.ownerId, session.members)
+    return P.Decode(message, session.guildId, session.ownerId, session.members,internal)
 end
