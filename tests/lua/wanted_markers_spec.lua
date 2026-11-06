@@ -1,4 +1,6 @@
 local ns=...
+-- Marker unit contracts are isolated; access lifecycle has its own fresh-VM suite.
+ns.Access.Allowed=function()return true end
 local M,C,V,N=ns.WantedMarkers,ns.GuildContext,ns.Validation,ns.GuildNative
 local passed=0
 local function test(name,fn)local ok,reason=pcall(fn);assert(ok,name..": "..tostring(reason));passed=passed+1 end

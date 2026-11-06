@@ -12,7 +12,7 @@ function ns.Reputation.Ranking(db)
                 victimsAvenged = 0, vengeances = {}, latestTime = -1, latestId = "" }
             groups[id] = group
         end
-        group.reputation = group.reputation + #claim.incidentIds * ns.Config.reputationPerIncident
+        group.reputation = group.reputation + ns.Vengeance.Reward(db,claim)
         group.vengeances[#group.vengeances + 1] = V.Copy(claim)
         if claim.occurredAt > group.latestTime or (claim.occurredAt == group.latestTime and claim.id < group.latestId) then
             group.member = V.Copy(claim.avenger); group.latestTime = claim.occurredAt; group.latestId = claim.id

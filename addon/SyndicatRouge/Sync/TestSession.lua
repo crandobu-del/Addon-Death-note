@@ -41,7 +41,7 @@ function T.Enter()
 end
 function T.Leave()
     if not N.testMode then say("mode test déjà arrêté.");return true end
-    N.testMode=false;N.runtime=T.realRuntime;N.prefix="SRGuild1"
+    N.testMode=false;N.runtime=T.realRuntime;N.prefix="SRGuild2"
     local ok,reason=true
     if T.resumeReal or N.runtime.root.syncEnabled==true then ok,reason=N.Start() else N.Suspend() end
     say("mode test arrêté ; données fictives conservées séparément."..(ok and " Registre normal rétabli." or " Reprise normale en attente : "..tostring(reason).."."))
@@ -99,9 +99,24 @@ function T.Load(friendName)
     say("5 incidents fictifs chargés, 4 recherchés ; "..(queued and "diffusion de test en file." or "sauvegardés mais diffusion en attente : "..tostring(queueError).."."))
     show();return true
 end
+local function gankIds()local ids={};for i=1,6 do ids[i]="test:gank:v1:"..i end;return ids end
+function T.LoadGank()
+    local c,reason=ready();if not c then return false,reason end
+    local ids=gankIds()
+    if c.session.incidents[ids[1]]then return false,"scénario gank déjà chargé dans ce registre de test."end
+    if V.Count(c.session.incidents)+6>ns.Protocol.maxRecords then return false,"registre de test plein."end
+    local time=now();if not time then return false,"heure publique indisponible."end
+    local enemy=C.Named("TEST Traqueur",c.context.owner.realm)
+    for i,id in ipairs(ids)do
+        local ok,errorCode=N.Change("incident",{id=id,guildId=c.context.guildId,enemy=enemy,victim=V.Copy(c.context.owner),
+            occurredAt=time-600+i*60,source="demo",location={zone="Strangleronce",mapId=1434,x=.32,y=.29}})
+        if not ok then return false,errorCode end
+    end
+    say("TEST GANK : 6 morts fictives, bonus ×4, récompense 24 réputation de test. L’ami : /srtest venger traqueur.");show();return true
+end
 function T.Avenge(target)
     local c,reason=ready();if not c then return false,reason end
-    local ids=T.targets[target]
+    local ids=target=="traqueur" and gankIds() or T.targets[target]
     if not ids then return false,"cible : mornecroc, selenombre, brisecroc ou noctis." end
     local incident=c.session.incidents[ids[1]]
     if not incident then return false,"données non reçues ; le premier joueur fait /srtest charger." end
@@ -109,25 +124,30 @@ function T.Avenge(target)
     local time=now();if not time then return false,"heure publique du client indisponible." end
     local ok,result=N.Change("claim",{id="test:v1:vengeance:"..target,guildId=c.context.guildId,enemyId=incident.enemy.id,
         avenger=V.Copy(c.context.owner),occurredAt=time,incidentIds=V.Copy(ids)})
-    if ok then say("vengeance SIMULÉE : "..target..", "..#ids.." point(s) de test ; aucune preuve de kill réel.");show() end
+    if ok then
+        local reward=N.channel.session.db.vengeances["test:v1:vengeance:"..target].reward
+        say("vengeance SIMULÉE : "..target..", "..reward.." point(s) de test ; aucune preuve de kill réel.");show()
+    end
     return ok,result
 end
 function T.Bind(runtime)
     T.realRuntime=runtime
     SLASH_SYNDICATROUGETEST1="/srtest"
     SlashCmdList.SYNDICATROUGETEST=function(command)
+        if not ns.Access.Require()then return end
         local action,arg=command:match("^%s*(%S*)%s*(.-)%s*$");action=action:lower()
         local ok,reason
         if action=="debut" then ok,reason=T.Enter()
         elseif action=="fin" then ok,reason=T.Leave()
         elseif action=="charger" then ok,reason=T.Load(arg)
+        elseif action=="gank" then ok,reason=T.LoadGank()
         elseif action=="venger" then ok,reason=T.Avenge(arg:lower())
         elseif action=="effacer" then
             if N.testMode then say("arrête d’abord le test avec /srtest fin.");return end
             if not runtime.writable then say("profil en lecture seule.");return end
             runtime.root.guildTest=nil;say("données de test effacées sur ce personnage uniquement. L’ami doit aussi arrêter/effacer son test pour recommencer.");return
         else
-            say("/srtest debut | charger [Nom complet de l’ami] | venger mornecroc | venger brisecroc | venger noctis | fin | effacer. Les deux joueurs entrent en test ; un seul charge les données.");return
+            say("/srtest debut | charger [Nom complet de l’ami] | gank | venger traqueur | venger mornecroc | fin | effacer. Les deux joueurs entrent en test ; un seul charge les données.");return
         end
         if not ok then say("action refusée : "..tostring(reason)) end
     end

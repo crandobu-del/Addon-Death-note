@@ -18,7 +18,11 @@ function ns.Wanted.List(db)
         if not incident.vengeanceId then group.openCount = group.openCount + 1 end
     end
     for _, group in pairs(groups) do
-        group.reward = group.openCount * ns.Config.reputationPerIncident
+        local open={}
+        for _,incident in ipairs(group.incidents)do if not incident.vengeanceId then open[#open+1]=incident end end
+        local reward,multiplier=ns.BountyRules.Calculate(open)
+        group.reward=reward or 0;group.rewardUnavailable=reward==nil
+        group.multiplier=multiplier or 1;group.repeatGank=group.multiplier>1
         group.victimCount = V.Count(group.victims); group.victims = nil
         rows[#rows + 1] = group
     end

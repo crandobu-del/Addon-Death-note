@@ -72,6 +72,8 @@ function Channel.Receive(c,envelope,sender,roster)
         if not delivery then return false,reason end
         local ok,errorCode=Channel.Commit(c,c.session,delivery)
         if not ok then return false,errorCode end
+    elseif envelope.kind=="sighting" then
+        if not ns.Sightings.Validate(envelope.sighting,c.context)then return false,"invalid_sighting"end
     elseif envelope.kind=="ack" then
         if not V.String(envelope.ack,64) then return false,"invalid_ack" end
     elseif envelope.kind~="hello" and envelope.kind~="test" then return false,"unknown_kind" end

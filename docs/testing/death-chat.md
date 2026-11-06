@@ -1,5 +1,13 @@
 # Test ciblé du message personnel de mort
 
+## Retour réel du Goulet des Chanteguerres — 6 novembre 2026
+
+Captures transmises par l'utilisateur après des morts en champ de bataille : diagnostic actif, **2 morts observées**, **0 candidat associé**. `CHAT_MSG_SYSTEM` : abonnement `registered`, 19 réceptions, 0 reconnu, 19 protégés. `CHAT_MSG_COMBAT_MISC_INFO` : abonnement `registered`, 0 réception, 0 reconnu, 0 protégé. Dernier résultat : `chat_message_protected`. Aucun incident ni point créé.
+
+Le compteur « protégés » additionne les valeurs secrètes et les textes contenant une enveloppe `|K`/`|k` ; ce bilan ne permet pas de distinguer les deux. Le code refuse ces entrées avant de rechercher une identité. Il ne s'agit donc pas d'un simple échec du motif de phrase pour les 19 messages reçus. La capture du journal de combat affiche des dégâts de plusieurs attaquants et « [Vous avez succombé.] » ; elle ne présente pas la phrase nominative attendue et ne prouve pas lequel a porté le coup fatal.
+
+Conclusion limitée à cette session : mort détectée, attribution du tueur non validée par les deux événements testés. Aucune conclusion générale sur les messages hors champ de bataille ou sur toutes les API Forever ; aucun contournement par lecture de cadres, décodage de noms protégés ou dernier attaquant supposé. Le diagnostic de preuve de kill `/srkill` reste un test indépendant, à relever après un kill ennemi si l'utilisateur en a l'occasion. Pas de modification de code, de paquet ou de publication pour ce seul retour.
+
 Retour utilisateur suivant : capture du message d'aide initial, donc aucune session de chat diagnostiquée active à cet instant. La commande exacte saisie et un éventuel rechargement antérieur ne sont pas connus ; ce n'est pas une preuve d'échec de lecture du message de mort. La commande accepte maintenant début/debut, majuscules et espaces de bord ; elle affiche un avertissement distinct pour un argument inconnu et précise qu'il faut réactiver après rechargement. Trois contrôles de commande ajoutés (22 tests du module), passés. Le fichier installé est sauvegardé, remplacé et vérifié. Le prochain résultat attendu est d'abord « test du message : actif », avant toute occurrence réelle.
 
 Phrase fournie par l'utilisateur : `Vous avez été tué par "JoueurX"`. Il rapporte qu'elle apparaît dans Général et Journal de combat. Son événement d'origine, sa provenance Blizzard/serveur/autre addon, sa lisibilité en contexte et sa corrélation avec une mort réelle ne sont pas encore observés par l'agent.

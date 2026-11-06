@@ -3,6 +3,7 @@ local UI, W, M = ns.UI, ns.UI.Widgets, ns.UI.Model
 local names = {"Recherchés", "Vengeurs", "Journal", "Notifications"}
 
 function UI.Refresh()
+    if ns.Access and not ns.Access.Allowed()then if UI.window then UI.window:Hide()end;return end
     local f = UI.window
     if not f then return end
     f.view = UI.provider:View()
@@ -91,6 +92,7 @@ function UI.Create()
 end
 
 function UI.Toggle()
+    if not ns.Access.Require()then return end
     if not UI.provider then return end
     local f = UI.Create()
     if f:IsShown() then f:Hide() else UI.Refresh(); f:Show() end

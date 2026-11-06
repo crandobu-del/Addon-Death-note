@@ -8,7 +8,7 @@ for(const name of toc.split(/\r?\n/).filter(x=>x&&!x.startsWith('#')))sources.pu
 sources.push({name:'two-client harness, tests only',source:`
 local _,ns=...
 local H={};ns.DeliveryHarness=H
-local packets,logs={},{}
+local packets,logs,guildChats={},{},{}
 local surnames={Lyra="Aube-Rouge",Kaelan="Ombrelune",Enemy="Crocsombre"}
 local function actor(name)
     local full=H.regional and name.." "..surnames[name] or name
@@ -64,9 +64,10 @@ function H.Read()
     panel.read.scripts.OnClick();assert(panel.read.disabled)
 end
 function H.Snapshot()return ns.Validation.Copy(ns.Runtime.root)end
-function H.EnterTest()assert(ns.SyncTest.Enter());assert(ns.UI.provider.test and ns.GuildNative.prefix=="SRGuildTest1")end
-function H.LeaveTest()assert(ns.SyncTest.Leave());assert(not ns.UI.provider.test and ns.GuildNative.prefix=="SRGuild1")end
+function H.EnterTest()assert(ns.SyncTest.Enter());assert(ns.UI.provider.test and ns.GuildNative.prefix=="SRGuildTest2")end
+function H.LeaveTest()assert(ns.SyncTest.Leave());assert(not ns.UI.provider.test and ns.GuildNative.prefix=="SRGuild2")end
 function H.LoadTest()assert(ns.SyncTest.Load())end
+function H.LoadGankTest()assert(ns.SyncTest.LoadGank())end
 function H.AvengeTest(target)return ns.SyncTest.Avenge(target)end
 function H.MainSnapshot()local root=ns.Validation.Copy(ns.Runtime.root);root.guildTest=nil;return root end
 function H.TestInfo()
@@ -83,6 +84,16 @@ function H.Info()
         thanksAlerts=thanksAlerts,vengeanceAlerts=vengeanceAlerts,notifications=#view.notifications,
         status=view.notifications[1] and view.notifications[1].deliveryStatus}
 end
+function H.SeedWanted()
+    C_ChatInfo.SendChatMessage=function(text,channel)assert(channel=="GUILD");guildChats[#guildChats+1]=text end
+    for i=1,3 do assert(ns.GuildNative.Change("incident",{id="hunt"..i,guildId=ns.GuildNative.channel.context.guildId,
+        enemy=actor("Enemy"),victim=actor("Lyra"),occurredAt=100+i,source="observed",location={zone="Elwynn"}}))end
+end
+function H.Sight()
+    C_ChatInfo.SendChatMessage=function(text,channel)assert(channel=="GUILD");guildChats[#guildChats+1]=text end
+    assert(ns.GuildNative.SendSighting({enemyId=actor("Enemy").id,mapId=101,zone="Elwynn",at=1793900000}))
+end
+function H.SightTick(dt)ns.Sightings.Tick(dt);return {chats=#guildChats,notes=#ns.Sightings.notes}end
 `});
 const engines=new Set();
 function boot(owner,saved,regional){const e=createEngine(sources);engines.add(e);e.call('DeliveryHarness','Boot',owner,saved,regional);return e;}
@@ -121,11 +132,27 @@ try{
  assert.equal(call(b,'AvengeTest','brisecroc'),true);cast(b,a,normal);cast(a,b,normal);
  assert.equal(call(a,'AvengeTest','noctis'),true);cast(a,b,normal);cast(b,a,normal);
  assert.equal(call(a,'TestInfo').ranking['Kaelan Ombrelune'],3);assert.equal(call(a,'TestInfo').ranking['Lyra Aube-Rouge'],1);
+ call(a,'LoadGankTest');cast(a,b,normal);cast(b,a,normal);
+ assert.equal(call(b,'AvengeTest','traqueur'),true);cast(b,a,normal);cast(a,b,normal);
+ assert.equal(call(a,'TestInfo').ranking['Kaelan Ombrelune'],27);
  assert.deepEqual(call(a,'MainSnapshot'),mainA);assert.deepEqual(call(b,'MainSnapshot'),mainB);assert.deepEqual(call(normal,'MainSnapshot'),mainNormal);
  const savedTest=call(a,'Snapshot');a.close();engines.delete(a);a=boot('Lyra',savedTest,true);
  assert.deepEqual(call(a,'MainSnapshot'),mainA);call(a,'EnterTest');cast(a,b,normal);cast(b,a,normal);
- assert.equal(call(a,'TestInfo').incidents,5);assert.equal(call(a,'TestInfo').claims,3);
+ assert.equal(call(a,'TestInfo').incidents,11);assert.equal(call(a,'TestInfo').claims,4);
  call(a,'LeaveTest');call(b,'LeaveTest');
  assert.deepEqual(call(a,'MainSnapshot'),mainA);assert.deepEqual(call(b,'MainSnapshot'),mainB);
- console.log('Shared test dataset: five demo incidents, real UI thanks delivery, simulated revenge, 3/1 test ranking, reload/resume and strict production-profile/third-client isolation passed. Not a game-client test.');
+ console.log('Shared test dataset: five base incidents plus six repeat-gank incidents, UI thanks delivery, simulated revenge, 24 bonus points and preserved real profiles, reload/resume and strict production-profile/third-client isolation passed. Not a game-client test.');
+ let observer=boot('Lyra',undefined,true),peer=boot('Kaelan',undefined,true);
+ call(observer,'SeedWanted');forward(observer,peer);forward(peer,observer);forward(observer,peer);
+ call(observer,'Sight');call(peer,'Sight');
+ // Neither queued candidacy is eligible to publish a guild chat yet.
+ assert.equal(call(observer,'SightTick',4).chats,0);assert.equal(call(peer,'SightTick',4).chats,0);
+ // Only the first observer's packets are sent. The second remains queued past
+ // the election; receiving the first signal closes that election on both VMs.
+ forward(observer,peer);
+ const first=call(observer,'SightTick',4),second=call(peer,'SightTick',4);
+ assert.equal(first.chats+second.chats,1);assert.equal(first.notes,1);assert.equal(second.notes,1);
+ forward(peer,observer);forward(observer,peer);
+ assert.equal(call(observer,'SightTick',4).chats+call(peer,'SightTick',4).chats,1);
+ console.log('Guild sightings: two isolated clients, actual wire frames, delayed outbound queue, one guild chat and one addon notification per client passed. Not a game-client test.');
 }finally{for(const e of engines)e.close();}

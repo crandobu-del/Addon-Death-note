@@ -52,12 +52,15 @@ function M.Rebuild()
     local channel=ns.GuildNative.channel
     local db=channel and channel.session.db or M.runtime and M.runtime.db
     if not db or type(db.incidents)~="table" then return end
+    local filtered={incidents={}}
+    for id,row in pairs(db.incidents)do if row.source~="demo"then filtered.incidents[id]=row end end
+    local rewards={};for _,row in ipairs(ns.Wanted.List(filtered))do rewards[row.enemy.id]=row.reward end
     for _,row in pairs(db.incidents)do
         if (row.source=="observed" or row.source=="manual") and not row.vengeanceId and type(row.enemy)=="table" then
             local actor=C.Named(row.enemy.name,row.enemy.realm)
             if actor and actor.id==row.enemy.id then
                 local item=M.index[actor.id] or {actor=actor,reward=0}
-                item.reward=item.reward+ns.Config.reputationPerIncident;M.index[actor.id]=item
+                item.reward=rewards[actor.id] or 0;M.index[actor.id]=item
             end
         end
     end
@@ -116,6 +119,7 @@ local function plateFor(unit)
     return plate
 end
 function M.Update(unit)
+    if not ns.Access.Allowed()then M.HideAll();return end
     if not token(unit) or not M.units[unit] then return end
     hide(M.assigned[unit]);M.assigned[unit]=nil
     if not M.enabled or M.behind[unit] then return end
@@ -146,6 +150,7 @@ function M.Update(unit)
     if ok then M.assigned[unit]=badge;M.lastReason="public_identity_matched" else M.lastReason="marker_display_unavailable" end
 end
 function M.Refresh()
+    if not ns.Access.Allowed()then M.HideAll();return end
     if not M.runtime then return end
     if WOW_PROJECT_CAMELOT==nil or WOW_PROJECT_ID~=WOW_PROJECT_CAMELOT then M.HideAll();M.lastReason="client_forever_required";return end
     if not M.enabled then M.HideAll();return end
@@ -221,6 +226,7 @@ function M.Initialize(runtime)
     f:SetScript("OnUpdate",function(_,elapsed)M.Tick(elapsed)end)
     SLASH_SYNDICATROUGEMARKERS1="/srmarque"
     SlashCmdList.SYNDICATROUGEMARKERS=function(command)
+        if not ns.Access.Require()then return end
         local runtime=M.runtime
         local action,arg=command:match("^%s*(%S*)%s*(.-)%s*$");action=action:lower()
         if action=="activer" or action=="arreter" then

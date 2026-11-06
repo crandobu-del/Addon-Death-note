@@ -1,5 +1,5 @@
 local _,ns=...
-local N={prefix="SRGuild1",queue={},pool={},pending={},counter=0,status="inactive",clock=0};ns.GuildNative=N
+local N={prefix="SRGuild2",queue={},pool={},pending={},counter=0,status="inactive",clock=0};ns.GuildNative=N
 local C,Ch=ns.GuildContext,ns.Channel
 local function say(s) print("Tableau des primes : "..s) end
 local function refresh()
@@ -7,7 +7,8 @@ local function refresh()
     if ns.WantedMarkers then ns.WantedMarkers.Refresh() end
 end
 local function clear(reason)
-    N.channel=nil;N.queue={};N.pool={};N.pending={};N.status=reason;refresh()
+    if ns.Sightings then ns.Sightings.Reset()end
+    N.channel=nil;N.queue={};N.pool={};N.pending={};N.sightingPackets={};N.status=reason;refresh()
 end
 function N.Suspend() clear("inactive") end
 local function current()
@@ -128,6 +129,18 @@ function N.Publish()
     if ok then N.Notify();refresh() end
     return ok,reason
 end
+function N.SendSighting(row)
+    if not N.channel or N.testMode or not ns.Access.Allowed()then return false end
+    local context=current()
+    if not context or context.guildId~=N.channel.context.guildId then return false end
+    local envelope=Ch.Envelope(N.channel,"sighting",nextId());envelope.sighting=row
+    local ok,reason=N.Enqueue(envelope,false)
+    if ok then
+        N.sightingPackets=N.sightingPackets or {}
+        N.sightingPackets[N.queue[#N.queue]]={row=ns.Validation.Copy(row),owner=ns.Validation.Copy(context.owner)}
+    end
+    return ok,reason
+end
 function N.Notify()
     if not N.channel then return end
     local delivery,vengeances,thanks=ns.Delivery.Alerts(N.channel.delivery,N.channel.session)
@@ -168,7 +181,7 @@ function N.Start()
     if C_GuildInfo and C_GuildInfo.GuildRoster then pcall(C_GuildInfo.GuildRoster) end
     local context,reason=current()
     if not context then N.status=reason;return false,reason end
-    N.prefix=N.testMode and "SRGuildTest1" or "SRGuild1"
+    N.prefix=N.testMode and "SRGuildTest2" or "SRGuild2"
     if not C_ChatInfo or not C_ChatInfo.RegisterAddonMessagePrefix or not C_ChatInfo.SendAddonMessage then N.status="chat_api_unavailable";return false,N.status end
     local ok,result=pcall(C_ChatInfo.RegisterAddonMessagePrefix,N.prefix)
     if not ok or not C.Public(result) or (result~=0 and result~=1) then N.status="prefix_registration_failed";return false,N.status end
@@ -206,7 +219,8 @@ function N.Receive(prefix,packet,distribution,sender)
     if not roster then N.lastError=reason;return end
     local ok,kind=Ch.Receive(N.channel,envelope,actor.id,roster)
     if not ok then if kind~="duplicate" and kind~="other_target" then N.lastError=kind end;return end
-    if kind=="thank" then
+    if kind=="sighting" then ns.Sightings.Receive(envelope.sighting,actor);return
+    elseif kind=="thank" then
         local ack=Ch.Envelope(N.channel,"thank_ack",nextId(),actor.id)
         ack.notificationId=envelope.notificationId;ack.claimId=envelope.claimId
         N.Enqueue(ack,false);N.Notify();refresh()
@@ -255,7 +269,10 @@ function N.Tick(elapsed)
     if #N.queue==0 then return end
     local ok,result=pcall(C_ChatInfo.SendAddonMessage,N.prefix,N.queue[1],"GUILD")
     if not ok or not C.Public(result) then N.lastError="send_failed";N.wait=3;return end
-    if result==0 then table.remove(N.queue,1)
+    if result==0 then
+        local packet=table.remove(N.queue,1)
+        local sighting=N.sightingPackets and N.sightingPackets[packet]
+        if sighting then N.sightingPackets[packet]=nil;ns.Sightings.Sent(sighting.row,sighting.owner)end
     elseif result==3 or result==8 or result==11 then N.lastError="send_code_"..result;N.wait=3
     else N.lastError="send_code_"..tostring(result);N.queue={};say("envoi interrompu ("..N.lastError.."). /srsync reprendre pour réessayer.") end
 end
@@ -286,6 +303,7 @@ function N.Bind(runtime,changed)
     SlashCmdList.SYNDICATROUGESYNC=function(command)
         local runtime=N.runtime
         command=command:lower():match("^%s*(.-)%s*$")
+        if command~="diagnostic" and not ns.Access.Require()then return end
         if command=="activer" or command=="reprendre" then
             if runtime.writable then runtime.root.syncEnabled=true end
             local ok,reason=N.Start()

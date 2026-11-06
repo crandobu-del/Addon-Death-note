@@ -129,5 +129,8 @@ function Audit.Start()
 end
 SLASH_SYNDICATROUGEMAPAUDIT1="/sraudit"
 SlashCmdList.SYNDICATROUGEMAPAUDIT=function(command)
+    if SyndicatRouge and SyndicatRouge.RequireAccess and not SyndicatRouge.RequireAccess()then return end
     if command=="lancer" then Audit.Start() else Audit.Open() end
 end
+
+if SyndicatRouge and SyndicatRouge.OnAccessRevoked then SyndicatRouge.OnAccessRevoked(Audit.Stop)end

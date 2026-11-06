@@ -102,6 +102,8 @@ function G.AddIncident(session, input)
 end
 
 function G.Claim(session, input)
+    input=V.Copy(input)
+    if type(input)=="table" and input.rewardRule==nil then input.rewardRule=2 end
     if type(input) ~= "table" or type(input.avenger) ~= "table" or input.avenger.id ~= session.ownerId then
         return false, "claim_owner_mismatch"
     end

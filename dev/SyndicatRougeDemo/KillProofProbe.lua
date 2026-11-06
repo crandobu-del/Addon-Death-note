@@ -83,9 +83,12 @@ function K.Show()
 end
 SLASH_SYNDICATROUGEKILLPROOF1="/srkill"
 SlashCmdList.SYNDICATROUGEKILLPROOF=function(command)
+    if SyndicatRouge and SyndicatRouge.RequireAccess and not SyndicatRouge.RequireAccess()then return end
     command=(command or ""):lower():gsub("é","e"):match("^%s*(.-)%s*$")
     if command=="debut" then K.Start();K.Show()
     elseif command=="fin" then K.Stop();K.Show()
     elseif command=="" or command=="bilan" then K.Show()
     else print("Tableau des primes : /srkill debut | bilan | fin") end
 end
+
+if SyndicatRouge and SyndicatRouge.OnAccessRevoked then SyndicatRouge.OnAccessRevoked(K.Stop)end

@@ -49,10 +49,11 @@ local function makePanel(f)
 end
 local key = function(row) return row.id or row.enemy and row.enemy.id or row.member.id end
 local function searchable(row)
+    if row.kind=="sighting"then return row.enemy.name.." "..row.zone.." "..row.observer.name end
     if row.incident then return row.incident.enemy.name .. " " .. row.incident.victim.name .. " " .. row.incident.location.zone end
     if row.vengeance then return row.enemy.name .. " " .. row.vengeance.avenger.name end
     if row.avenger then return row.enemy.name .. " " .. row.avenger.name .. " " .. row.victim.name end
-    return row.enemy and row.enemy.name or row.member.name
+    return row.enemy and (row.enemy.name..(row.repeatGank and " gank répété" or "")) or row.member.name
 end
 
 function UI.Render(f)
@@ -75,7 +76,7 @@ function UI.Render(f)
         W.SetSelected(row,current==item)
         if f.tab == 1 then
             set(row.title, item.enemy.name)
-            set(row.sub, item.openCount > 0 and (item.openCount .. " à venger · " .. item.reward .. " réputation") or "VENGÉ · dossier archivé")
+            set(row.sub, item.openCount > 0 and ((item.repeatGank and "GANK · " or "")..item.openCount .. " à venger · " .. (item.rewardUnavailable and "calcul indisponible" or item.reward .. " réputation")) or "VENGÉ · dossier archivé")
         elseif f.tab == 2 then
             local rank = i
             for position, ranked in ipairs(data) do if ranked.member.id == item.member.id then rank = position; break end end
@@ -83,6 +84,9 @@ function UI.Render(f)
         elseif f.tab == 3 then
             set(row.title, item.kind == "incident" and item.incident.enemy.name or (item.vengeance.avenger.name .. " · vengeance"))
             set(row.sub, M.Date(item.occurredAt))
+        elseif item.kind=="sighting"then
+            set(row.title,item.enemy.name.." · REPÉRÉ")
+            set(row.sub,item.zone.." · "..M.Date(item.occurredAt))
         elseif item.kind=="thanks" then
             set(row.title,item.victim.name.." · merci")
             set(row.sub,item.read and "Lu" or "Nouveau · remerciement reçu")
@@ -101,8 +105,8 @@ function UI.Render(f)
     if f.tab == 1 then
         local enemy, incident = current.enemy, current.lastIncident
         set(p.title, enemy.name); set(p.meta, M.Actor(enemy))
-        set(p.summary, "Prime : " .. current.bounty .. " incident(s)\nRécompense : " .. current.reward .. " réputation")
-        set(p.status, current.openCount == 0 and "[ VENGÉ ]" or current.openCount .. " dette(s) à régler")
+        set(p.summary, "Prime : " .. current.bounty .. " incident(s)\nRécompense : " .. (current.rewardUnavailable and "indisponible" or current.reward.." réputation"))
+        set(p.status, current.openCount == 0 and "[ VENGÉ ]" or current.repeatGank and "GANK RÉPÉTÉ · jusqu’à ×"..current.multiplier or current.openCount .. " dette(s) à régler")
         UI.Portraits.Display(p.portrait, enemy)
         detailLine(p, 1, "Dernier meurtre connu : " .. incident.location.zone)
         detailLine(p, 2, incident.victim.name .. " · " .. M.Date(incident.occurredAt))
@@ -134,6 +138,15 @@ function UI.Render(f)
         set(p.status, incident and (incident.vengeanceId and "[ VENGÉ ]" or "À VENGER") or "[ VENGÉ ]")
         detailLine(p, 1, incident and incident.location.zone or ("Cible : " .. current.enemy.name))
         detailLine(p, 2, incident and M.Actor(incident.enemy) or ("Réputation attribuée : " .. claim.reward))
+        p.detail:SetHeight(445)
+    elseif current.kind=="sighting"then
+        set(p.title,"Un recherché a été repéré")
+        set(p.meta,M.Date(current.occurredAt).." · observation récente")
+        set(p.summary,current.enemy.name.."\nRepéré depuis "..current.zone)
+        p.summary:ClearAllPoints();p.summary:SetPoint("TOPLEFT",p.detail,"TOPLEFT",14,-94)
+        set(p.status,"Observation de "..current.observer.name)
+        p.read:Show();if current.read then p.read:Disable()else p.read:Enable()end
+        detailLine(p,1,"Dernière observation, pas une position actuelle garantie. Aucun point attribué.")
         p.detail:SetHeight(445)
     elseif current.kind=="thanks" then
         set(p.title,"Le Syndicat te remercie")

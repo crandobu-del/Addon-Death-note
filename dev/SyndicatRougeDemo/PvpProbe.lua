@@ -89,7 +89,10 @@ function P.Show()
 end
 SLASH_SYNDICATROUGEPVPPROBE1="/srpvp"
 SlashCmdList.SYNDICATROUGEPVPPROBE=function(command)
+    if SyndicatRouge and SyndicatRouge.RequireAccess and not SyndicatRouge.RequireAccess()then return end
     if command=="debut" then P.Start();P.Show()
     elseif command=="fin" then P.Stop();P.Show()
     else if P.report and P.report.running then P.Sample() end;P.Show() end
 end
+
+if SyndicatRouge and SyndicatRouge.OnAccessRevoked then SyndicatRouge.OnAccessRevoked(P.Stop)end

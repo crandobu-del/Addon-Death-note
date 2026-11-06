@@ -91,3 +91,12 @@ C_CreatureInfo={
     GetRaceInfo=function(id) if id==2 then return {clientFileString="Orc",raceID=2} end end,
     GetClassInfo=function(id) if id==1 then return {classFile="WARRIOR",classID=1} end end,
 }
+
+-- Default authorised client; individual access tests replace these contracts.
+WOW_PROJECT_CAMELOT=18;WOW_PROJECT_ID=18
+issecretvalue=function()return false end
+UnitFullName=function()return 'Viewer','Forever' end
+GetNormalizedRealmName=function()return 'Forever' end
+C_Club={GetGuildClubId=function()return 1 end,GetClubInfo=function()return {name='Le Syndicat Rouge'}end}
+C_GuildInfo={MemberExistsByName=function()return true end}
+function methods:SetShown(value)if value then self:Show()else self:Hide()end end

@@ -16,4 +16,7 @@ const markerEngine=createEngine(sources);
 try { const result=markerEngine.test(await readFile(new URL('tests/lua/wanted_markers_spec.lua',root),'utf8'));console.log(`wanted_markers_spec.lua: ${result.passed} identity/lifecycle/security tests passed (not in-game validation).`); }
 finally { markerEngine.close(); }
 await import('./test-persistence-reload.mjs');
+const huntEngine=createEngine(sources);
+try { const result=huntEngine.test(await readFile(new URL('tests/lua/guild_hunt_spec.lua',root),'utf8'));console.log(`guild_hunt_spec.lua: ${result.passed} bounty/access/sighting scenarios passed (not in-game validation).`); }
+finally { huntEngine.close(); }
 await import('./test-delivery-lifecycle.mjs');

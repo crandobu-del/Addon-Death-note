@@ -2,6 +2,7 @@ local addonName, ns = ...
 local live
 local function save()
     if not live then return false,"not_initialized" end
+    if not ns.Access.Allowed()then return false,"guild_access_required"end
     local preferences=live.root and type(live.root)=="table" and live.root.ui or nil
     if ns.UI.window and ns.UI.provider and not ns.UI.provider.demo and not ns.UI.provider.test then preferences=ns.UI.CapturePreferences() end
     return ns.Persistence.Checkpoint(live,preferences)
@@ -9,6 +10,8 @@ end
 local function provider(db, viewerId, demo)
     local function current() return demo and db or live.db end
     local function change(method,id)
+        if not ns.Access.Require()then return false,"guild_access_required"end
+        if method==ns.Notifications.Read and ns.Sightings.Read(id)then return true end
         if demo then return method(db,id,viewerId) end
         if ns.GuildNative.channel then
             return ns.GuildNative.Change(method==ns.Notifications.Read and "read" or "thank",id)
@@ -29,7 +32,7 @@ local function provider(db, viewerId, demo)
         shared=not demo and ns.GuildNative.channel~=nil,
         View = function()
             if not demo and ns.GuildNative.channel then
-                local c=ns.GuildNative.channel;return ns.Delivery.View(c.delivery,c.session)
+                local c=ns.GuildNative.channel;return ns.Sightings.Decorate(ns.Delivery.View(c.delivery,c.session))
             end
             return ns.Core.View(current(), viewerId)
         end,
@@ -67,13 +70,16 @@ events:SetScript("OnEvent", function(_, event, name)
     SLASH_SYNDICATROUGE1 = "/syndicat"
     SLASH_SYNDICATROUGE2 = "/sr"
     SlashCmdList.SYNDICATROUGE = function()
+        if not ns.Access.Require()then return end
         if ns.UI.provider and ns.UI.provider.demo then
             realView();local f=ns.UI.Create();ns.UI.Refresh();f:Show()
         else ns.UI.Toggle() end
     end
     ns.UI.Minimap.Initialize(SlashCmdList.SYNDICATROUGE)
+    ns.Access.Initialize();ns.Sightings.Initialize()
     SLASH_SYNDICATROUGESAVE1="/srsave"
     SlashCmdList.SYNDICATROUGESAVE=function()
+        if not ns.Access.Require()then return end
         if ns.UI.provider and ns.UI.provider.demo then print("Tableau des primes : les exemples ne sont pas sauvegardés. /sr ouvre ton registre personnel.");return end
         local ok,reason=save()
         if not ok then print("Tableau des primes : sauvegarde non modifiée ("..tostring(reason)..").");return end
@@ -85,6 +91,7 @@ end)
 SyndicatRouge = {
     MapPreview = { Create = ns.UI.Maps.Create, Display = ns.UI.Maps.Display },
     ShowDemo = function(incidents, claims, guildId, viewerId)
+        if not ns.Access.Require()then return end
         save()
         local db = assert(ns.Core.New(guildId))
         for _, incident in ipairs(incidents) do assert(ns.Incidents.Add(db, incident)) end
@@ -95,4 +102,6 @@ SyndicatRouge = {
     ResetView = function()
         realView()
     end,
+    RequireAccess=function()return ns.Access.Require()end,
+    OnAccessRevoked=function(stop)if type(stop)=="function"then table.insert(ns.Access.revocations,stop)end end,
 }

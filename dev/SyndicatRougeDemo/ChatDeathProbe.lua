@@ -95,9 +95,12 @@ function C.Show()
 end
 SLASH_SYNDICATROUGECHATDEATH1="/srchat"
 SlashCmdList.SYNDICATROUGECHATDEATH=function(command)
+    if SyndicatRouge and SyndicatRouge.RequireAccess and not SyndicatRouge.RequireAccess()then return end
     command=(command or ""):lower():gsub("é","e"):match("^%s*(.-)%s*$")
     if command=="debut" then C.Start();C.Show()
     elseif command=="fin" then C.Stop();C.Show()
     elseif command=="" or command=="bilan" then C.Show()
     else print("Tableau des primes : commande inconnue. Utilise /srchat debut, /srchat bilan ou /srchat fin.") end
 end
+
+if SyndicatRouge and SyndicatRouge.OnAccessRevoked then SyndicatRouge.OnAccessRevoked(C.Stop)end
