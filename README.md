@@ -10,7 +10,7 @@ Dans `/sr`, **Rapports** règle la collecte, le partage, les fins PvE/chute (ign
 
 Tous les membres doivent installer **0.7.0** : le protocole natif utilise un nouveau préfixe. Portée : membres vérifiés du Syndicat Rouge effectivement joignables via **GUILD**, sans garantie inter-faction/inter-royaume ni diffusion universelle/instantanée. Aucun canal personnalisé ou relais externe. La preuve et le crédit des **vengeances réelles** restent à valider ; cette collecte ne valide pas un kill ennemi. Aucun service Discord actif.
 
-Les archives 0.7.0 sont préparées ; leur publication est suivie dans [le registre de livraison](docs/releasing.md). Les préversions ne constituent pas une certification en jeu.
+Les deux archives 0.7.0 sont [disponibles sur GitHub](https://github.com/crandobu-del/Addon-Death-note/releases/tag/v0.7.0-alpha.1). L'archive principale est déposée sur CurseForge, fichier **9477668**, canal Release / Forever 1.60.1, dernier état observé **Processing** ; approbation non confirmée. La 0.6.0 précédente est approuvée. [Suivi de livraison](docs/releasing.md). Les préversions et le canal de distribution ne constituent pas une certification en jeu.
 ## Gank répété, présence et accès de guilde
 
 Le bonus est calculé séparément pour chaque victime, sur les incidents ouverts ; son pic est conservé jusqu’à clôture. Les récompenses historiques ne sont pas réécrites. L’alerte de présence exige une cible réellement observée et identifiable, une prime ouverte et le partage actif. Elle indique la zone de l’observateur ; déduplication cinq minutes, pas de radar. La notification reste dans l’addon si le chat est refusé. `/srpresence` donne le bilan.
