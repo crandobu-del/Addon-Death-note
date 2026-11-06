@@ -40,6 +40,8 @@ Exigences : [requirements.md](requirements.md). Responsable : Codex. Mise à jou
 
 ## Point de reprise
 
+Demande « sort une release » du 6 novembre 2026 exécutée : fichier CurseForge **9472153** passé du canal Alpha à **Release**, titre « Tableau des primes 0.5.6-dev — Forever », limites fonctionnelles conservées et canal de distribution distingué du statut de développement. État confirmé **Under Review** ; publication automatique après approbation, disponibilité pas encore confirmée. Aucun changement de code ou d'archive. [Suivi](../../releasing.md).
+
 Publication du 6 novembre 2026 : **0.5.6-dev** disponible sur GitHub, tag `v0.5.6-alpha.1`, commit `9d79d32`. Archive principale déposée sur CurseForge, fichier **9472153**, Alpha Forever 1.60.1, publication automatique après approbation ; état de traitement dans [le suivi des publications](../../releasing.md). Le projet et le fichier 0.4.0 sont approuvés. Nouvelle consigne permanente : mettre à jour CurseForge après chaque grosse modification livrée. Aucune détection automatique réelle supplémentaire validée.
 
 Cible wanted **0.5.6** finale : superposition du libellé corrigée (textes enfants du cadre de légende). Réinstallée avec sauvegarde `guild-transport-20261106-014028`, archives finales/empreintes dans [rapport](../../testing/wanted-nameplates.md). Capture `wanted-target-complete-056.jpg` issue du simulateur avec correction du parentage appliquée à l'instance chargée ; pas de second import frais du ZIP corrigé après import très lent. Cible et légende visibles, 218 contrôles/scénarios et trois parcours VM passent. Validation sur vraie plaque toujours à faire.
